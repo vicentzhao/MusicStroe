@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+<LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+        <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+         >
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dip"
+        android:background="@drawable/pptv"
+        android:contentDescription="@string/app_name" />
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical" >
+    
+    <ProgressBar android:layout_width="150dip"
+		android:layout_height="18dip" 
+		android:layout_gravity="center"
+		style="?android:attr/progressBarStyleHorizontal"
+		android:visibility="gone"
+		android:id="@+id/progressBar" />
+    
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:gravity="center"
+		android:text="jfofj"
+		android:visibility="gone"
+		android:id="@+id/result" />
+	
+	</LinearLayout>
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="2"
+        android:orientation="vertical"
+         >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dip"
+        android:layout_marginTop="50dip"
+        android:textSize="20dip"
+        android:text="名称"
+         android:textColor="@color/white"
+         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dip"
+        android:text="简介"
+         android:textColor="@color/white"
+         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dip"
+        android:text="版本号"
+         android:textColor="@color/white"
+         />
+    </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="3"
+        android:gravity="right"
+        android:orientation="horizontal" >
+         <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="50dip"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/install"
+            android:layout_width="90dip"
+            android:layout_height="30dip"
+            android:layout_marginTop="20dip"
+            android:background="@drawable/tabhost_ringt"
+            android:contentDescription="@string/app_name"
+            android:text="安装" />
+
+        <Button
+            android:id="@+id/download"
+            android:layout_width="90dip"
+            android:layout_height="30dip"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="20dip"
+            android:background="@drawable/tabhost_ringt"
+            android:contentDescription="@string/app_name"
+            android:text="下载" />
+    </LinearLayout>
+</LinearLayout>
+</LinearLayout>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="570dip" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dip"
+        android:layout_toLeftOf="@+id/info"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/items01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <include
+                android:id="@+id/item_hor_01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_02" />
+
+            <include
+                android:id="@+id/item_hor_02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_03" />
+
+            <include
+                android:id="@+id/item_hor_03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_04" />
+
+            <include
+                android:id="@+id/item_hor_04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_05" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/items02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <include
+                android:id="@+id/item_hor_05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusLeft="@+id/item_hor_04"
+                android:nextFocusRight="@+id/item_hor_06" />
+
+            <include
+                android:id="@+id/item_hor_06"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_07" />
+
+            <include
+                android:id="@+id/item_hor_07"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_08" />
+
+            <include
+                android:id="@+id/item_hor_08"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_09" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/items03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <include
+                android:id="@+id/item_hor_09"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusLeft="@+id/item_hor_08"
+                android:nextFocusRight="@+id/item_hor_10" />
+
+            <include
+                android:id="@+id/item_hor_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_11" />
+
+            <include
+                android:id="@+id/item_hor_11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_12" />
+
+            <include
+                android:id="@+id/item_hor_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_12" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/info"
+        android:layout_width="323dip"
+        android:layout_height="500dip"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dip"
+        android:background="@drawable/epg_dian_ying_film_class_page_detail_bg"
+        android:paddingLeft="10dip" >
+
+        <com.rushfusion.fusionnetvideo.mat.utils.widget.MarqueeTextView
+            android:id="@+id/field_filmname"
+            style="@style/font.filmname"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dip"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:singleLine="true"
+            android:text="@string/field_title" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="-5dip"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/page_pre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/arrow_left_selector" />
+
+            <TextView
+                android:id="@+id/field_page_index"
+                style="@style/font.page_index"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dip"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="0/0" />
+
+            <Button
+                android:id="@+id/page_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/arrow_right_selector" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

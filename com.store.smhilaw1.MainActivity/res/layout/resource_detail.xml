@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+<LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+        <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+         >
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dip"  
+        android:background="@drawable/pptv"
+        android:contentDescription="@string/app_name" />
+    <VideoView 
+        android:id="@+id/videoView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
+        />
+      <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="5dip" >
+    
+    <ProgressBar android:layout_width="200dip"
+		android:layout_height="wrap_content" 
+		android:layout_gravity="center_horizontal"
+		android:background="#EEAC00"
+		android:visibility="gone"
+		style="?android:attr/progressBarStyleHorizontal"
+		android:id="@+id/progressBar" />
+    
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_gravity="center"
+		android:text="0 %"
+		android:textSize="30dip"
+		android:visibility="gone"
+		android:textColor="@color/orange"
+		android:id="@+id/result" />
+	
+	</LinearLayout>
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="2"
+        android:orientation="vertical"
+         >
+    <TextView
+        android:id="@+id/soft_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dip"
+        android:textSize="20dip"
+        android:text="名称"
+        android:textColor="@color/white"
+         />
+    <TextView
+        android:id="@+id/soft_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="5"
+        android:layout_margin="20dip"
+         android:textColor="@color/white"
+        android:text="简介"
+         />
+    <TextView
+        android:id="@+id/soft_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dip"
+         android:textColor="@color/white"
+        android:text="版本号"
+         />
+    </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="2"
+        android:gravity="right"
+        android:orientation="vertical" >
+    
+        <RadioGroup
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkedButton="@+id/maile"
+        android:layout_marginRight="50dip"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/price1"
+            android:textColor="@color/white"
+            android:checked="true"
+            android:text="月/¥44" />
+
+        <RadioButton
+            android:id="@+id/price2"
+             android:textColor="@color/white"
+            android:text="季度/¥100" />
+        
+          <RadioButton
+            android:id="@+id/price3"
+             android:textColor="@color/white"
+            android:text="年/¥200" />
+       
+        </RadioGroup>
+        
+         <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="50dip"
+        android:orientation="horizontal" >
+          
+          <Button
+            android:id="@+id/listentest"
+            android:layout_width="90dip"
+            android:layout_height="30dip"
+            android:layout_marginTop="20dip"
+            android:background="@drawable/tabhost_ringt"
+            android:contentDescription="@string/app_name"
+            android:visibility="gone"
+            android:text="试听" />
+
+        <Button
+            android:id="@+id/install"
+            android:layout_width="90dip"
+            android:layout_height="30dip"
+            android:layout_marginTop="20dip"
+            android:layout_marginLeft="20dip"
+            android:background="@drawable/tabhost_ringt"
+            android:contentDescription="@string/app_name"
+            android:text="下载" />
+
+        <Button
+            android:id="@+id/download"
+            android:layout_width="90dip" 
+            android:layout_height="30dip"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="20dip"
+            android:background="@drawable/tabhost_ringt"
+            android:contentDescription="@string/app_name"
+            android:text="订购" />
+        
+        <Button
+            android:id="@+id/pay_order"
+            android:layout_width="90dip"
+            android:layout_height="30dip"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="20dip"
+            android:background="@drawable/tabhost_ringt"
+            android:text="支付订单" />
+        
+    </LinearLayout>
+</LinearLayout>
+</LinearLayout>
