@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="570dip" >
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -49,15 +49,7 @@
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
                 android:nextFocusRight="@+id/item_hor_05" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/items02"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <include
+             <include
                 android:id="@+id/item_hor_05"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,7 +57,12 @@
                 layout="@layout/design_sketch_hor_item"
                 android:nextFocusLeft="@+id/item_hor_04"
                 android:nextFocusRight="@+id/item_hor_06" />
-
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/items02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
             <include
                 android:id="@+id/item_hor_06"
                 android:layout_width="wrap_content"
@@ -73,7 +70,6 @@
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
                 android:nextFocusRight="@+id/item_hor_07" />
-
             <include
                 android:id="@+id/item_hor_07"
                 android:layout_width="wrap_content"
@@ -89,15 +85,7 @@
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
                 android:nextFocusRight="@+id/item_hor_09" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/items03"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <include
+             <include
                 android:id="@+id/item_hor_09"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,7 +93,6 @@
                 layout="@layout/design_sketch_hor_item"
                 android:nextFocusLeft="@+id/item_hor_08"
                 android:nextFocusRight="@+id/item_hor_10" />
-
             <include
                 android:id="@+id/item_hor_10"
                 android:layout_width="wrap_content"
@@ -113,7 +100,12 @@
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
                 android:nextFocusRight="@+id/item_hor_11" />
-
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/items03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
             <include
                 android:id="@+id/item_hor_11"
                 android:layout_width="wrap_content"
@@ -121,17 +113,37 @@
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
                 android:nextFocusRight="@+id/item_hor_12" />
-
             <include
                 android:id="@+id/item_hor_12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
-                android:nextFocusRight="@+id/item_hor_12" />
+                android:nextFocusRight="@+id/item_hor_13" />
+            <include
+                android:id="@+id/item_hor_13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_14" />
+            <include
+                android:id="@+id/item_hor_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_15" />
+            <include
+                android:id="@+id/item_hor_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/design_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_15" />
         </LinearLayout>
     </LinearLayout>
-
+    <!--  
     <RelativeLayout
         android:id="@+id/info"
         android:layout_width="323dip"
@@ -141,8 +153,7 @@
         android:layout_marginRight="10dip"
         android:background="@drawable/epg_dian_ying_film_class_page_detail_bg"
         android:paddingLeft="10dip" >
-
-        <com.rushfusion.fusionnetvideo.mat.utils.widget.MarqueeTextView
+        <com.store.util.MarqueeTextView
             android:id="@+id/field_filmname"
             style="@style/font.filmname"
             android:layout_width="fill_parent"
@@ -177,7 +188,6 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="0/0" />
-
             <Button
                 android:id="@+id/page_next"
                 android:layout_width="wrap_content"
@@ -185,5 +195,6 @@
                 android:background="@drawable/arrow_right_selector" />
         </LinearLayout>
     </RelativeLayout>
+        -->
 
 </RelativeLayout>
