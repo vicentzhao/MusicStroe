@@ -1,0 +1,18 @@
+<resources>
+
+    <style name="AppTheme" parent="android:Theme.Light" />
+     <style name="font">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+       <style name="font.filmname">
+        <item name="android:textSize">38sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    
+    <style name="font.page_index">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+</resources>
