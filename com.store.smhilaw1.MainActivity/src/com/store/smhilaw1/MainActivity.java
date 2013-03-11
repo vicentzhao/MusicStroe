@@ -1,9 +1,6 @@
 package com.store.smhilaw1;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +12,6 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -25,18 +21,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
-//import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.method.KeyListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -46,7 +41,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MediaController;
@@ -64,7 +58,6 @@ import com.androidquery.AQuery;
 import com.store.adapter.DownLoadListAdapter;
 import com.store.adapter.OrderListAdapter;
 import com.store.adapter.PayOrderListAdapter;
-import com.store.adapter.RightFragmentGradAdapter;
 import com.store.adapter.TestMusicAdapter;
 import com.store.bean.OrderBean;
 import com.store.bean.PayOrderBean;
@@ -81,6 +74,7 @@ import com.store.http.HttpRequest.OnHttpResponseListener;
 import com.store.suffix.CryptUtil;
 import com.store.util.AuthoSharePreference;
 import com.store.util.JsonUtil;
+//import android.os.StrictMode;
 
 public class MainActivity extends FragmentActivity implements LeftSelectedListener, RightSelectedListener,OnClickListener{
 
@@ -98,6 +92,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	private static String right_grid_id =null;
 	public static String FILE_PATH =null;
 	public static View mainView;
+	public static View itemView;
 	//public static GridView gridDiew;
 	public static Button myMusic,store,serch;
 	public static TestMusicAdapter musicAdapter;
@@ -105,11 +100,14 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	private static AQuery aQuery;
 	private static SharedPreferences.Editor editor;
 	public  static boolean   isFragment =true;
-	
 	private boolean isfirst =true;
 	private static Button classify, the_news, recommend, movie, teleplay, anime,
 	music, record,soft;
 	SharedPreferences  sp;
+	private static  int[] horItems = {R.id.item_hor_01,R.id.item_hor_02,R.id.item_hor_03,
+			R.id.item_hor_04,R.id.item_hor_05,R.id.item_hor_06,
+			R.id.item_hor_07,R.id.item_hor_08,R.id.item_hor_09,
+			R.id.item_hor_10,R.id.item_hor_11,R.id.item_hor_12,R.id.item_hor_13,R.id.item_hor_14,R.id.item_hor_15};
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -117,7 +115,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 		setContentView(R.layout.activity_main_1920);
 		FILE_PATH =getPackageName();
-		
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites()       
         .detectNetwork()  
         .penaltyLog()       
@@ -127,7 +124,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
         .penaltyDeath()       
         .build());  
         sp =getPreferences(MODE_PRIVATE);
-        
         initView();
         editor = sp.edit(); 
         aQuery= new AQuery(MainActivity.this);
@@ -143,7 +139,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		myMusic.setText(getResources().getString(R.string.my_music));
 		myMusic.setSelected(true);
 		store.setText(getResources().getString(R.string.music_store));
-//		store.setSelected(false);
 	}
 	
 	@Override
@@ -176,8 +171,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				}
 				musicTestArrayList.add(hashMap);
 			}
-//			musicAdapter = new TestMusicAdapter(this, musicTestArrayList);
-//			gridDiew.setAdapter(musicAdapter);
 			//TODO
 			setView();
 			break;
@@ -263,9 +256,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			record.setOnClickListener(this);
 			soft.setOnClickListener(this);
 			classify.setSelected(true);
-			//TODO
-//			classify.setFocusable(true);
-//			classify.requestFocus();
 		}
 
 		// ½«fragment¼ÓÈëactivity
@@ -411,10 +401,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			RelativeLayout layout = new RelativeLayout(getActivity());
 //			View view = (View) inflater.inflate(R.layout.grid_view, container,
 //					false);
-			View view = inflater.inflate(R.layout.design_sketch_hor, container,false);
-			
+			itemView= inflater.inflate(R.layout.design_sketch_hor, container,false);
 //			gridDiew = (GridView) view.findViewById(R.id.gridview);
-			layout.addView(view);
 			musicTestArrayList = new ArrayList<HashMap<String,String>>();
 			HashMap<String, String> hashMap ;
 			for(int i = 0;i<15;i++){
@@ -429,10 +417,25 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 //			musicAdapter = new TestMusicAdapter(getActivity(), musicTestArrayList);
 //			gridDiew.setAdapter(musicAdapter);
 //			gridDiew.setOnItemClickListener(this);
-			setView();
+			layout.addView(itemView);
+			setViewbyNoAquery(itemView);
 			return layout;
 		}
-		
+		private void setViewbyNoAquery(View view) {
+			for (int i = 0; i < musicTestArrayList.size(); i++) {
+				((TextView) view.findViewById(horItems[i]).findViewById(R.id.ItemTitle)).setText(musicTestArrayList.get(i).get("info"));
+				if("QQ".equals(musicTestArrayList.get(i).get("info"))){
+				((ImageView)view.findViewById(horItems[i]).findViewById(R.id.ItemIcon)).setImageResource(R.drawable.qq);
+				}else{
+				((ImageView)view.findViewById(horItems[i]).findViewById(R.id.ItemIcon)).setImageResource(R.drawable.duomi);
+				}
+			}
+		((ImageView)view.findViewById(R.id.item_hor_15).findViewById(R.id.ItemIcon)).setImageResource(R.drawable.qq);
+		}
+
+		public void update(){
+			
+		}
 		private void openFile(File file) {
             // TODO Auto-generated method stub
 			String cmd = "chmod 777 " +file;  
@@ -1168,7 +1171,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		if(recommend.isFocused()||classify.isFocused()||the_news.isFocused()){
 			isFragment =true;
 		}
-		System.out.println(isFragment);
 			if(classify.isFocused()){
 				editor.clear();
 				editor.putString("from", "one");
@@ -1184,8 +1186,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				editor.putString("from", "three");
 				editor.commit();
 			}
-			String ss = sp.getString("from","none");
-			System.out.println(ss);
 			if(keyCode==KeyEvent.KEYCODE_DPAD_LEFT){
 		if(!isFragment){
 			if(!store.isFocused()){
@@ -1208,118 +1208,108 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			}
 		return super.onKeyDown(keyCode, event);
 	}
+	private void initInfoView(){
+//		filmNameText = (TextView) find(R.id.field_filmname);
+//		pageIndex = (TextView) find(R.id.field_page_index);
+//		preBtn = (Button) find(R.id.page_pre);
+//		preBtn.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				prePage();
+//			}
+//		});
+//		nextBtn = (Button) find(R.id.page_next);
+//		nextBtn.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				nextPage();
+//			}
+//		});
+	}
+	private void initHorizontalView(){
+		initInfoView();
+//		currentItems = horItems;
+//		initItems(horItems);
+		itemView.findViewById(R.id.item_hor_05).setNextFocusRightId(R.id.item_hor_06);
+		
+//		itemView.find(R.id.item_hor_04).setNextFocusRightId(R.id.item_hor_05);
+//		itemView.find(R.id.item_hor_05).setNextFocusLeftId(R.id.item_hor_04);
+//		itemView.find(R.id.item_hor_08).setNextFocusRightId(R.id.item_hor_09);
+//		itemView.find(R.id.item_hor_09).setNextFocusLeftId(R.id.item_hor_08);
+	}
+	
+//	public void initItems(int[] itemIds) {
+////		AQuery aq = new AQuery(contentView);
+//		for(int i=0;i<itemIds.length;i++){
+//			aq.find(itemIds[i]).clicked(new OnClickListener() {
+//				
+//				@Override
+//				public void onClick(View v) {
+//					// TODO Auto-generated method stub
+//					MovieBrief movie = (MovieBrief) v.getTag();
+//					Intent i = new Intent(context,ItemDetailPage.class);
+//					i.putExtra("id",movie.getId());
+//					context.startActivity(i);
+//				}
+//			}).focusChanged(new OnFocusChangeListener() {
+//				
+//				@Override
+//				public void onFocusChange(View v, boolean hasFocus) {
+//					// TODO Auto-generated method stub
+//					if(hasFocus){
+//						focusViewId = v.getId();
+//						MovieBrief movie = (MovieBrief) v.getTag();
+//						updateInfomation(movie);
+//					}
+//				}
+//			}).invisible();
+//		}
+//		aq.find(itemIds[0]).keyed(new OnKeyListener() {
+//			
+//			@Override
+//			public boolean onKey(View v, int keyCode, KeyEvent event) {
+//				if( event.getAction() == KeyEvent.ACTION_DOWN){
+//					if(keyCode == KeyEvent.KEYCODE_DPAD_LEFT){
+//						if(!loading)
+//							prePage();
+//						return true;
+//					}
+//				}
+//				return false;
+//			}
+//		});
+//		aq.find(itemIds[itemIds.length-1]).keyed(new OnKeyListener() {
+//			
+//			@Override
+//			public boolean onKey(View v, int keyCode, KeyEvent event) {
+//				if( event.getAction() == KeyEvent.ACTION_DOWN){
+//					
+//					if(keyCode == KeyEvent.KEYCODE_DPAD_RIGHT){
+//						if(!loading)
+//							nextPage();
+//						return true;
+//					}
+//				}
+//				return false;
+//			}
+//		});
+//	}
 	   public static void setView(){
-			aQuery.find(R.id.item_hor_01).find(R.id.ItemTitle).text(musicTestArrayList.get(0).get("info"));
-			aQuery.find(R.id.item_hor_02).find(R.id.ItemTitle).text(musicTestArrayList.get(1).get("info"));
-			aQuery.find(R.id.item_hor_03).find(R.id.ItemTitle).text(musicTestArrayList.get(2).get("info"));
-			aQuery.find(R.id.item_hor_04).find(R.id.ItemTitle).text(musicTestArrayList.get(3).get("info"));
-			aQuery.find(R.id.item_hor_05).find(R.id.ItemTitle).text(musicTestArrayList.get(4).get("info"));
-			aQuery.find(R.id.item_hor_06).find(R.id.ItemTitle).text(musicTestArrayList.get(5).get("info"));
-			aQuery.find(R.id.item_hor_07).find(R.id.ItemTitle).text(musicTestArrayList.get(6).get("info"));
-			aQuery.find(R.id.item_hor_08).find(R.id.ItemTitle).text(musicTestArrayList.get(7).get("info"));
-			aQuery.find(R.id.item_hor_09).find(R.id.ItemTitle).text(musicTestArrayList.get(8).get("info"));
-			aQuery.find(R.id.item_hor_10).find(R.id.ItemTitle).text(musicTestArrayList.get(9).get("info"));
-			aQuery.find(R.id.item_hor_11).find(R.id.ItemTitle).text(musicTestArrayList.get(10).get("info"));
-			aQuery.find(R.id.item_hor_12).find(R.id.ItemTitle).text(musicTestArrayList.get(11).get("info"));
-			aQuery.find(R.id.item_hor_13).find(R.id.ItemTitle).text(musicTestArrayList.get(12).get("info"));
-			aQuery.find(R.id.item_hor_14).find(R.id.ItemTitle).text(musicTestArrayList.get(13).get("info"));
-			aQuery.find(R.id.item_hor_15).find(R.id.ItemTitle).text(musicTestArrayList.get(14).get("info"));
-			
-			if(musicTestArrayList.get(0).get("info").equals("QQ") || musicTestArrayList.get(0).get("info").equals("QQ+")
-					||musicTestArrayList.get(0).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_01).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_01).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			
-			if(musicTestArrayList.get(1).get("info").equals("QQ") || musicTestArrayList.get(1).get("info").equals("QQ+")
-					||musicTestArrayList.get(1).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_02).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_02).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			
-			if(musicTestArrayList.get(2).get("info").equals("QQ") || musicTestArrayList.get(2).get("info").equals("QQ+")
-					||musicTestArrayList.get(2).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_03).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_03).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			
-			if(musicTestArrayList.get(3).get("info").equals("QQ") || musicTestArrayList.get(3).get("info").equals("QQ+")
-					||musicTestArrayList.get(3).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_04).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_04).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			
-			if(musicTestArrayList.get(4).get("info").equals("QQ") || musicTestArrayList.get(4).get("info").equals("QQ+")
-					||musicTestArrayList.get(4).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_05).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_05).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			
-			if(musicTestArrayList.get(5).get("info").equals("QQ") || musicTestArrayList.get(5).get("info").equals("QQ+")
-					||musicTestArrayList.get(5).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_06).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_06).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			
-			if(musicTestArrayList.get(6).get("info").equals("QQ") || musicTestArrayList.get(0).get("info").equals("QQ+")
-					||musicTestArrayList.get(6).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_07).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_07).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			if(musicTestArrayList.get(7).get("info").equals("QQ") || musicTestArrayList.get(7).get("info").equals("QQ+")
-					||musicTestArrayList.get(7).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_08).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_08).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			if(musicTestArrayList.get(8).get("info").equals("QQ") || musicTestArrayList.get(8).get("info").equals("QQ+")
-					||musicTestArrayList.get(8).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_09).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_09).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			if(musicTestArrayList.get(9).get("info").equals("QQ") || musicTestArrayList.get(9).get("info").equals("QQ+")
-					||musicTestArrayList.get(9).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_10).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_10).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			if(musicTestArrayList.get(10).get("info").equals("QQ") || musicTestArrayList.get(10).get("info").equals("QQ+")
-					||musicTestArrayList.get(10).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_11).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_11).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			if(musicTestArrayList.get(11).get("info").equals("QQ") || musicTestArrayList.get(11).get("info").equals("QQ+")
-					||musicTestArrayList.get(11).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_12).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_12).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			if(musicTestArrayList.get(12).get("info").equals("QQ") || musicTestArrayList.get(12).get("info").equals("QQ+")
-					||musicTestArrayList.get(12).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_13).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_13).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			if(musicTestArrayList.get(13).get("info").equals("QQ") || musicTestArrayList.get(13).get("info").equals("QQ+")
-					||musicTestArrayList.get(13).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_14).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_14).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
-			if(musicTestArrayList.get(14).get("info").equals("QQ") || musicTestArrayList.get(14).get("info").equals("QQ+")
-					||musicTestArrayList.get(14).get("info").equals("QQ++")){
-				aQuery.find(R.id.item_hor_15).find(R.id.ItemIcon).image(R.drawable.qq);
-			}else{
-				aQuery.find(R.id.item_hor_15).find(R.id.ItemIcon).image(R.drawable.duomi);
-			}
+		   for (int i = 0; i < musicTestArrayList.size(); i++) {
+			aQuery.find(horItems[i]).find(R.id.ItemTitle).text(musicTestArrayList.get(i).get("info"));
+		}	
+		   for (int i = 0; i < musicTestArrayList.size(); i++) {
+			   if(musicTestArrayList.get(i).get("info").equals("QQ") || musicTestArrayList.get(i).get("info").equals("QQ+")
+						||musicTestArrayList.get(i).get("info").equals("QQ++")){
+					aQuery.find(horItems[i]).find(R.id.ItemIcon).image(R.drawable.qq);
+				}else{
+					aQuery.find(horItems[i]).find(R.id.ItemIcon).image(R.drawable.duomi);
+				}
+
+		}
 	   }
 }
