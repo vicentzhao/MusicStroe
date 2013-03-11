@@ -103,6 +103,9 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	public static TestMusicAdapter musicAdapter;
 	public static ArrayList<HashMap<String, String>> musicTestArrayList;
 	private static AQuery aQuery;
+	private static SharedPreferences.Editor editor;
+	public  static boolean   isFragment =true;
+	
 	private boolean isfirst =true;
 	private static Button classify, the_news, recommend, movie, teleplay, anime,
 	music, record,soft;
@@ -124,8 +127,9 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
         .penaltyDeath()       
         .build());  
         sp =getPreferences(MODE_PRIVATE);
-        initView();
         
+        initView();
+        editor = sp.edit(); 
 	}
 	
 	public void initView(){
@@ -1140,43 +1144,63 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			
 		}
 		if(keyCode ==KeyEvent.KEYCODE_DPAD_UP){
-			System.out.println("KEYCODE_DPAD_UP"+"====="+gridDiew.getId()+"====="+""+gridDiew.getCount()+"====="+gridDiew.getCheckedItemPositions());
 			myMusic.setFocusable(true);
 			myMusic.requestFocus();
 			myMusic.setSelected(true);
 		}
 		if(keyCode ==KeyEvent.KEYCODE_DPAD_DOWN){
-			System.out.println("KEYCODE_DPAD_DOWN"+"====="+gridDiew.getId()+""+"====="+gridDiew.getCount()+"====="+gridDiew.getCheckedItemPositions());
 			myMusic.setFocusable(true);
 			myMusic.requestFocus();
 			myMusic.setSelected(true);
 		}
-
 		isfirst =false;
 		}
-		if(keyCode==KeyEvent.KEYCODE_DPAD_RIGHT){
-			if(classify.isFocusable()){
-				SharedPreferences.Editor edit = sp.edit ();
-				edit.putString("from", "one");
-				edit.commit();
-			}
-			if(the_news.isFocusable()){
-				SharedPreferences.Editor edit = sp.edit ();
-				edit.putString("from", "two");
-				edit.commit();
-			}
-			if(recommend.isFocusable()){
-				SharedPreferences.Editor edit = sp.edit ();
-				edit.putString("from", "three");
-				edit.commit();
-			}
+		
+		if(!recommend.isFocused()&!classify.isFocused()&!the_news.isFocused()){
+			isFragment =false;
 		}
-		if(keyCode==KeyEvent.KEYCODE_DPAD_LEFT){
-			
-			
-			
+		if(recommend.isFocused()||classify.isFocused()||the_news.isFocused()){
+			isFragment =true;
 		}
+		System.out.println(isFragment);
+			if(classify.isFocused()){
+				editor.clear();
+				editor.putString("from", "one");
+				editor.commit();
+			}
+			if(the_news.isFocused()){
+				editor.clear();
+				editor.putString("from", "two");
+				editor.commit();
+			}
+			if(recommend.isFocused()){
+				SharedPreferences.Editor edit = sp.edit ();
+				editor.putString("from", "three");
+				editor.commit();
+			}
+			String ss = sp.getString("from","none");
+			System.out.println(ss);
+			if(keyCode==KeyEvent.KEYCODE_DPAD_LEFT){
+		if(!isFragment){
+			if(!store.isFocused()){
+				System.out.println("leftŒ“÷¥––¡À°£");
+				String focuse = sp.getString("from","none");
+				if(focuse.equals("one")){
+					classify.setFocusable(true);
+					classify.requestFocus();
+				}
+				if(focuse.equals("three")){
+					recommend.setFocusable(true);
+					recommend.requestFocus();
+				}
+				if(focuse.equals("two")){
+					the_news.setFocusable(true);
+					the_news.requestFocus();
+				}
+
+		}}
+			}
 		return super.onKeyDown(keyCode, event);
 	}
-
+	   
 }
