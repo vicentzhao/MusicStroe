@@ -48,15 +48,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
-                android:nextFocusRight="@+id/item_hor_05" />
+                />
              <include
                 android:id="@+id/item_hor_05"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
-                android:nextFocusLeft="@+id/item_hor_04"
-                android:nextFocusRight="@+id/item_hor_06" />
+                 android:nextFocusRight="@+id/item_hor_06"
+                 android:nextFocusDown="@+id/itme_hor_10"
+                />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/items02"
@@ -91,15 +92,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
-                android:nextFocusLeft="@+id/item_hor_08"
-                android:nextFocusRight="@+id/item_hor_10" />
+                />
             <include
                 android:id="@+id/item_hor_10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
-                android:nextFocusRight="@+id/item_hor_11" />
+                android:nextFocusDown="@+id/item_hor_15"
+                android:nextFocusRight="@+id/item_hor_11"
+                android:nextFocusLeft="@+id/item_hor_09"
+                 />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/items03"
@@ -133,13 +136,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
-                android:nextFocusRight="@+id/item_hor_15" />
+                />
             <include
                 android:id="@+id/item_hor_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/design_sketch_hor_item"
+                android:nextFocusUp="@+id/item_hor_10"
+                android:nextFocusLeft="@+id/item_hor_14"
+                android:nextFocusDown="@+id/item_hor_15"
                 android:nextFocusRight="@+id/item_hor_15" />
         </LinearLayout>
     </LinearLayout>

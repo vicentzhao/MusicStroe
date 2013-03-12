@@ -77,7 +77,6 @@ import com.store.util.JsonUtil;
 //import android.os.StrictMode;
 
 public class MainActivity extends FragmentActivity implements LeftSelectedListener, RightSelectedListener,OnClickListener{
-
 	private static int left_type = Constant.FLFG;
 	// private static RightSecond rSecond;
 	private static boolean isSecondRFlag = false;// 右边第二级是否被选中
@@ -93,7 +92,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	public static String FILE_PATH =null;
 	public static View mainView;
 	public static View itemView;
-	//public static GridView gridDiew;
 	public static Button myMusic,store,serch;
 	public static TestMusicAdapter musicAdapter;
 	public static ArrayList<HashMap<String, String>> musicTestArrayList;
@@ -383,14 +381,14 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			public void oRightSelected(int left_type);
 		}
 
-		// 右侧栏加数据
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			// TODO Auto-generated method stub
-			super.onCreate(savedInstanceState);
-			commUtil = new CommUtil();
-			a = commUtil.GetRightTitle(left_type);
-		}
+//		// 右侧栏加数据
+//		@Override
+//		public void onCreate(Bundle savedInstanceState) {
+//			// TODO Auto-generated method stub
+//			super.onCreate(savedInstanceState);
+//			commUtil = new CommUtil();
+//			a = commUtil.GetRightTitle(left_type);
+//		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -402,6 +400,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 //			View view = (View) inflater.inflate(R.layout.grid_view, container,
 //					false);
 			itemView= inflater.inflate(R.layout.design_sketch_hor, container,false);
+			initHorizontalView();
 //			gridDiew = (GridView) view.findViewById(R.id.gridview);
 			musicTestArrayList = new ArrayList<HashMap<String,String>>();
 			HashMap<String, String> hashMap ;
@@ -453,7 +452,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
                             "application/vnd.android.package-archive");
             startActivity(intent);
     }
-
+  
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int idx,
 				long arg3) {
@@ -1104,13 +1103,11 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			}
 		}
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}  
-
 	// 实现activity基于left传值更新rightFragment
 	@Override
 	public void onLeftSelected(int left_type) {
@@ -1134,7 +1131,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	@Override
 	public void oRightSelected(int left_type) {
 		// TODO Auto-generated method stub
-
 	}
 	 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -1144,7 +1140,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			myMusic.setFocusable(true);
 			myMusic.requestFocus();
 			myMusic.setSelected(true);
-			
 		}
 		if(keyCode ==KeyEvent.KEYCODE_DPAD_RIGHT){
 			myMusic.setFocusable(true);
@@ -1187,25 +1182,68 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				editor.commit();
 			}
 			if(keyCode==KeyEvent.KEYCODE_DPAD_LEFT){
-		if(!isFragment){
-			if(!store.isFocused()){
-				System.out.println("left我执行了。");
-				String focuse = sp.getString("from","none");
-				if(focuse.equals("one")){
-					classify.setFocusable(true);
-					classify.requestFocus();
-				}
-				if(focuse.equals("three")){
-					recommend.setFocusable(true);
-					recommend.requestFocus();
-				}
-				if(focuse.equals("two")){
-					the_news.setFocusable(true);
-					the_news.requestFocus();
-				}
-
-		}}
+//		if(!isFragment){
+//			if(!store.isFocused()){
+//				System.out.println("left我执行了。");
+//				String focuse = sp.getString("from","none");
+//				if(focuse.equals("one")){
+//					classify.setFocusable(true);
+//					classify.requestFocus();
+//				}
+//				if(focuse.equals("three")){
+//					recommend.setFocusable(true);
+//					recommend.requestFocus();
+//				}
+//				if(focuse.equals("two")){
+//					the_news.setFocusable(true);
+//					the_news.requestFocus();
+//				}
+//
+//		}}
+				 if(itemView.findViewById(R.id.item_hor_01).isFocused()||itemView.findViewById(R.id.item_hor_06).isFocused()||itemView.findViewById(R.id.item_hor_11).isFocused()){
+					 String focuse = sp.getString("from","none");
+						if(focuse.equals("one")){
+							classify.setFocusable(true);
+							classify.requestFocus();
+						}
+						if(focuse.equals("three")){
+							recommend.setFocusable(true);
+							recommend.requestFocus();
+						}
+						if(focuse.equals("two")){
+							the_news.setFocusable(true);
+							the_news.requestFocus();
+						}
+				 }
+				
 			}
+			
+			
+//			if(keyCode==KeyEvent.KEYCODE_DPAD_DOWN){
+//				System.out.println("down键被执行");
+//				 if(itemView.findViewById(R.id.item_hor_05).isFocused()){
+//					 itemView.findViewById(R.id.item_hor_10).setFocusable(true);
+//					 itemView.findViewById(R.id.item_hor_10).requestFocus();
+//				 }
+//				 
+////				 if(itemView.findViewById(R.id.item_hor_10).isFocused()){
+////					 itemView.findViewById(R.id.item_hor_15).isFocusable();
+////					 itemView.setFocusable(true);
+////					 itemView.findViewById(R.id.item_hor_15).requestFocus();
+////				 }
+////				 if(itemView.findViewById(R.id.item_hor_15).isFocused()){
+////					 itemView.findViewById(R.id.item_hor_15).setFocusable(true);
+////					 itemView.findViewById(R.id.item_hor_15).requestFocus();
+////				 }
+////				 if(itemView.findViewById(R.id.item_hor_11).isFocused()){
+////					 itemView.findViewById(R.id.item_hor_11).setFocusable(true);
+////					 itemView.findViewById(R.id.item_hor_11).requestFocus();
+////				 }
+////				 if(itemView.findViewById(R.id.item_hor_12).isFocused()){
+////					 itemView.findViewById(R.id.item_hor_12).setFocusable(true);
+////					 itemView.findViewById(R.id.item_hor_12).requestFocus();
+////				 }
+//			}
 		return super.onKeyDown(keyCode, event);
 	}
 	private void initInfoView(){
@@ -1230,16 +1268,20 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 //			}
 //		});
 	}
-	private void initHorizontalView(){
-		initInfoView();
-//		currentItems = horItems;
-//		initItems(horItems);
+	private static void initHorizontalView(){
+	//	initInfoView();
 		itemView.findViewById(R.id.item_hor_05).setNextFocusRightId(R.id.item_hor_06);
+		itemView.findViewById(R.id.item_hor_10).setNextFocusRightId(R.id.item_hor_11);
+//		itemView.findViewById(R.id.item_hor_06).setNextFocusLeftId(R.id.item_hor_05);
+//		itemView.findViewById(R.id.item_hor_11).setNextFocusLeftId(R.id.item_hor_10);
+//		itemView.findViewById(R.id.item_hor_05).setNextFocusDownId(R.id.item_hor_10);
+//		itemView.findViewById(R.id.item_hor_10).setNextFocusDownId(R.id.item_hor_15);
+		itemView.findViewById(R.id.item_hor_11).setNextFocusDownId(R.id.item_hor_11);
+		itemView.findViewById(R.id.item_hor_12).setNextFocusDownId(R.id.item_hor_12);
+		itemView.findViewById(R.id.item_hor_13).setNextFocusDownId(R.id.item_hor_13);
+		itemView.findViewById(R.id.item_hor_14).setNextFocusDownId(R.id.item_hor_14);
+		itemView.findViewById(R.id.item_hor_15).setNextFocusDownId(R.id.item_hor_15);
 		
-//		itemView.find(R.id.item_hor_04).setNextFocusRightId(R.id.item_hor_05);
-//		itemView.find(R.id.item_hor_05).setNextFocusLeftId(R.id.item_hor_04);
-//		itemView.find(R.id.item_hor_08).setNextFocusRightId(R.id.item_hor_09);
-//		itemView.find(R.id.item_hor_09).setNextFocusLeftId(R.id.item_hor_08);
 	}
 	
 //	public void initItems(int[] itemIds) {
@@ -1299,6 +1341,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 //		});
 //	}
 	   public static void setView(){
+		   //我就是用你的
 		   for (int i = 0; i < musicTestArrayList.size(); i++) {
 			aQuery.find(horItems[i]).find(R.id.ItemTitle).text(musicTestArrayList.get(i).get("info"));
 		}	
