@@ -1,8 +1,9 @@
-#Fri Mar 01 09:40:36 CST 2013
+#Tue Mar 12 16:08:23 CST 2013
 eclipse.preferences.version=1
 encoding//src/com/store/adapter/SoftwareListAdapter.java=UTF-8
+encoding//src/com/store/http/CopyOfHttpRequest.java=UTF-8
 encoding//src/com/store/http/FileCache.java=UTF-8
-encoding//src/com/store/http/HttpRequest.java=UTF-8
 encoding//src/com/store/http/TokenHttpsUtil.java=UTF-8
 encoding//src/com/store/suffix/CryptUtil.java=UTF-8
 encoding//src/com/store/suffix/StrBinaryTurn.java=UTF-8
+encoding/<project>=UTF-8

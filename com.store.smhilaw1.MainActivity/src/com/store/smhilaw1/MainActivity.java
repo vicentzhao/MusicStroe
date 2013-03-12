@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -31,8 +32,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
@@ -55,6 +54,8 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
 import com.store.adapter.DownLoadListAdapter;
 import com.store.adapter.OrderListAdapter;
 import com.store.adapter.PayOrderListAdapter;
@@ -79,15 +80,15 @@ import com.store.util.JsonUtil;
 public class MainActivity extends FragmentActivity implements LeftSelectedListener, RightSelectedListener,OnClickListener{
 	private static int left_type = Constant.FLFG;
 	// private static RightSecond rSecond;
-	private static boolean isSecondRFlag = false;// ÓÒ±ßµÚ¶ş¼¶ÊÇ·ñ±»Ñ¡ÖĞ
+	private static boolean isSecondRFlag = false;// å³è¾¹ç¬¬äºŒçº§æ˜¯å¦è¢«é€‰ä¸­
 	public static String DETAIL_ID = null;
 	private static DetailFragment detailF;
 	private static RightFragment rFragment;
 	private static RelativeLayout leftlayout;
 	private static HttpRequest http;
 	public static ArrayList<SoftwareBean> softlist;
-	public static ArrayList<OrderBean> softOrderlist;//µ±Ç°¿É¶©¹ºÁĞ±í
-	public static ArrayList<PayOrderBean> payOrderlist;//¶©µ¥
+	public static ArrayList<OrderBean> softOrderlist;//å½“å‰å¯è®¢è´­åˆ—è¡¨
+	public static ArrayList<PayOrderBean> payOrderlist;//è®¢å•
 	private static String right_grid_id =null;
 	public static String FILE_PATH =null;
 	public static View mainView;
@@ -99,6 +100,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	private static SharedPreferences.Editor editor;
 	public  static boolean   isFragment =true;
 	private boolean isfirst =true;
+	Dialog builder;
 	private static Button classify, the_news, recommend, movie, teleplay, anime,
 	music, record,soft;
 	SharedPreferences  sp;
@@ -127,6 +129,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
         aQuery= new AQuery(MainActivity.this);
 	}
 	
+	 
+	
 	public void initView(){
 		myMusic = (Button)findViewById(R.id.myMusic);
 		store = (Button)findViewById(R.id.store);
@@ -147,13 +151,13 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		String duomi = "";
 		if(left_type == Constant.FLFG){
 			qq="QQ";
-			duomi = "¶àÃ×ÒôÀÖ";
+			duomi = "å¤šç±³éŸ³ä¹";
 		}else if(left_type == Constant.AL){
 			qq="QQ+";
-			duomi = "¶àÃ×ÒôÀÖ+";
+			duomi = "å¤šç±³éŸ³ä¹+";
 		}else if(left_type == Constant.FLWSYS){
 			qq="QQ++";
-			duomi = "¶àÃ×ÒôÀÖ++";
+			duomi = "å¤šç±³éŸ³ä¹++";
 		}
 		switch(v.getId()){
 		case R.id.myMusic:
@@ -188,14 +192,14 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			setView();
 			break;
 		case R.id.serch_button:
-			Toast.makeText(this, "ÔİÎŞ¹¦ÄÜ", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "æš‚æ— åŠŸèƒ½", Toast.LENGTH_SHORT).show();
 			break;
 			default :
 				break;
 		}
 	}
 
-	// ×ó²àÀ¸ËéÆ¬
+	// å·¦ä¾§æ ç¢ç‰‡
 	public static class LeftFragment extends Fragment implements
 			OnClickListener {
 		
@@ -203,7 +207,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		View view;
 		FragmentTransaction fragmentTransaction;
 
-		// £¡£¡£¡¿É»Ö¸´×´Ì¬Ê±ÓÃ
+		// ï¼ï¼ï¼å¯æ¢å¤çŠ¶æ€æ—¶ç”¨
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
@@ -223,7 +227,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			try {
 				oLeftSelectedListener = (OnLeftSelectedListener) activity;
 			} catch (Exception e) {
-				// Å×Ò»¸ö×Ô¼º¶¨Òå µÄÒì³£
+				// æŠ›ä¸€ä¸ªè‡ªå·±å®šä¹‰ çš„å¼‚å¸¸
 				throw new ClassCastException(activity.toString()
 						+ "must implement OnLeftSelectedListener");
 			}
@@ -234,7 +238,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		public void onActivityCreated(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onActivityCreated(savedInstanceState);
-			// ÓÃgetActivityÕÒµ½¶ÔÓ¦¿Ø¼ş
+			// ç”¨getActivityæ‰¾åˆ°å¯¹åº”æ§ä»¶
 			classify = (Button) getActivity().findViewById(R.id.flfg);
 			the_news = (Button) getActivity().findViewById(R.id.al);
 			recommend = (Button) getActivity().findViewById(R.id.flwsys);
@@ -256,7 +260,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			classify.setSelected(true);
 		}
 
-		// ½«fragment¼ÓÈëactivity
+		// å°†fragmentåŠ å…¥activity
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -284,7 +288,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			
 		}
 
-		// !!!!±£´æ×´Ì¬
+		// !!!!ä¿å­˜çŠ¶æ€
 		@Override
 		public void onPause() {
 			// TODO Auto-generated method stub
@@ -336,7 +340,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 
 
 	/**
-	 * ÓÒ²àÀ¸ËéÆ¬
+	 * å³ä¾§æ ç¢ç‰‡
 	 * 
 	 * @author sl
 	 * 
@@ -381,7 +385,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			public void oRightSelected(int left_type);
 		}
 
-//		// ÓÒ²àÀ¸¼ÓÊı¾İ
+//		// å³ä¾§æ åŠ æ•°æ®
 //		@Override
 //		public void onCreate(Bundle savedInstanceState) {
 //			// TODO Auto-generated method stub
@@ -409,7 +413,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				if(i%2==0){
 					hashMap.put("info", "QQ");
 				}else{
-					hashMap.put("info", "¶àÃ×ÒôÀÖ");
+					hashMap.put("info", "å¤šç±³éŸ³ä¹");
 				}
 				musicTestArrayList.add(hashMap);
 			}
@@ -460,7 +464,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			downLoadVideo("http://bcscdn.baidu.com/netdisk/BaiduYun_3.7.0.apk");
 			isSecondRFlag = true; 
 		}
-		//ĞÂÆğÒ»¸öÏß³Ì½øĞĞÎÄ¼şÏÂÔØ
+		//æ–°èµ·ä¸€ä¸ªçº¿ç¨‹è¿›è¡Œæ–‡ä»¶ä¸‹è½½
 				public void downLoadVideo(String downLoadPth) {
 					Toast.makeText(getActivity(), R.string.start_download,
 							Toast.LENGTH_LONG).show();
@@ -477,6 +481,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					thread.start();
 				}
 
+		@SuppressWarnings("unchecked")
 		private void updateRightFragmentBaseLeft(int left_type) {
 			// TODO Auto-generated method stub
 			myMusic.setSelected(true);
@@ -487,13 +492,46 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			String duomi = "";
 			if(left_type == Constant.FLFG){
 				qq="QQ";
-				duomi = "¶àÃ×ÒôÀÖ";
+				duomi = "å¤šç±³éŸ³ä¹";
 			}else if(left_type == Constant.AL){
 				qq="QQ+";
-				duomi = "¶àÃ×ÒôÀÖ+";
+				duomi = "å¤šç±³éŸ³ä¹+";
 			}else if(left_type == Constant.FLWSYS){
-				qq="QQ++";
-				duomi = "¶àÃ×ÒôÀÖ++";
+//				qq="QQ++";
+//				duomi = "å¤šç±³éŸ³ä¹++";
+//				String musicUrl= HttpRequest.URL_QUERY_LIST_MUSIC;
+				 String url = "http://192.168.1.32:8080/index/musicshop.action?token=myadmin&resultType=json";
+			        
+			        aQuery.ajax(url, String.class, new AjaxCallback<String>() {//è¿™é‡Œçš„å‡½æ•°æ˜¯ä¸€ä¸ªå†…åµŒå‡½æ•°å¦‚æœæ˜¯å‡½æ•°ä½“æ¯”è¾ƒå¤æ‚çš„è¯è¿™ç§æ–¹æ³•å°±ä¸å¤ªåˆé€‚äº†
+			                @Override
+			                public void callback(String url, String json, AjaxStatus status) {
+			                        //å¾—é€šè¿‡å¯¹ä¸€ä¸ªurlè®¿é—®è¿”å›çš„æ•°æ®å­˜æ”¾åœ¨JSONObject jsonä¸­ å¯ä»¥é€šè¿‡json.getContext()å¾—åˆ°
+			                        
+			                        if(json != null){
+			                        	System.out.println("ä½ è¿”å›çš„æ•°æ®æ˜¯ï¼š"+json);
+			                                //successful ajax call, show status code and json content
+			                        	ArrayList<JSONObject>  joList= new ArrayList<JSONObject>();
+			                        	try {
+			                        		JSONArray ja = new JSONArray(json);
+                     	             for (int i = 0; i < ja.length(); i++) {
+											JSONObject jsMusic= ja.getJSONObject(i);
+											joList.add(jsMusic);
+										}
+			                        	for (int i = 0; i < joList.size(); i++) {
+                             		String name = joList.get(i).getString("PNAME"); 
+			                        		System.out.println("name"+"=-=========="+name);
+										}
+			                        	} catch (Exception e) {
+											// TODO: handle exception
+										}
+			                       Toast.makeText(aQuery.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();//åœ¨ä¸€ä¸ªToastä¸­æ˜¾ç¤ºå‡ºå¾—åˆ°çš„å†…å®¹
+			                        ArrayList<SoftwareBean> list = JsonUtil.getProductList(json);
+			                        System.out.println(list.size());
+			                        }else{
+			                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+			                          }
+			                    }
+			            });
 			}
 			for(int i = 0;i<15;i++){
 				hashMap = new HashMap<String, String>();
@@ -504,8 +542,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				}
 				musicTestArrayList.add(hashMap);
 			}
-//			musicAdapter = new TestMusicAdapter(getActivity(), musicTestArrayList);
-//			gridDiew.setAdapter(musicAdapter);
 			setView();
 			
 		}
@@ -529,7 +565,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	}
 
 
-	// ÓÒ±ßµÚ¶ş¼¶ËéÆ¬
+	// å³è¾¹ç¬¬äºŒçº§ç¢ç‰‡
 	public static class DetailFragment extends Fragment implements
 			OnClickListener,OnHttpResponseListener,OnBitmapHttpResponseListener {
 		private EditText userName,passWord;
@@ -541,13 +577,13 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		private TextView sfotName,softInfo,softVersion;
 		private ImageView logo;
 		private VideoView videoView;
-		private ProgressBar myProgressBar;//ÏÔÊ¾½ø¶ÈÌõµÄProgressBar
+		private ProgressBar myProgressBar;//æ˜¾ç¤ºè¿›åº¦æ¡çš„ProgressBar
 		TextView resultView;
 		private MediaPlayer mMediaPlayer;
 		Thread thread;
 		
 		private  boolean isFinish = false;
-		//×ÓÏß³Ì·¢ËÍÏûÏ¢¸øUIÏß³ÌÀ´¸üĞÂProgressBarµÄ½ø¶È
+		//å­çº¿ç¨‹å‘é€æ¶ˆæ¯ç»™UIçº¿ç¨‹æ¥æ›´æ–°ProgressBarçš„è¿›åº¦
 		private Handler handler = new Handler() {
 			public void handleMessage(Message msg) {
 				if (!Thread.currentThread().isInterrupted()) {
@@ -557,7 +593,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 						long total = msg.getData().getLong("total");
 						int current = (int) (((float)size/ (float)total) * 100);
 						myProgressBar.setMax(100);
-						myProgressBar.setProgress(current);// ÉèÖÃµ±Ç°¿Ì¶È
+						myProgressBar.setProgress(current);// è®¾ç½®å½“å‰åˆ»åº¦
 						resultView.setText(current + "%");
 						if (myProgressBar.getMax() == myProgressBar.getProgress() && !isFinish) {
 							current=0;
@@ -608,7 +644,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 
 
 
-		// £¡£¡£¡¿É»Ö¸´×´Ì¬Ê±ÓÃ
+		// ï¼ï¼ï¼å¯æ¢å¤çŠ¶æ€æ—¶ç”¨
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
@@ -621,10 +657,10 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		public void onActivityCreated(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onActivityCreated(savedInstanceState);
-			// ÓÃgetActivityÕÒµ½¶ÔÓ¦¿Ø¼ş
+			// ç”¨getActivityæ‰¾åˆ°å¯¹åº”æ§ä»¶
 		}
 
-		// ½«fragment¼ÓÈëactivity
+		// å°†fragmentåŠ å…¥activity
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -632,7 +668,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			FragmentManager fragmentManager = getFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager
 					.beginTransaction();
-			// ÀûÓÃinflater·µ»Ø¸ù²¼¾Ö¸øactivity
+			// åˆ©ç”¨inflaterè¿”å›æ ¹å¸ƒå±€ç»™activity
 			View view = null;
 			http = new HttpRequest();
 			http.setHttpResponseListener(this);
@@ -666,7 +702,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					http.querySingleMovie(right_grid_id,Constant.SINGLE_RECORD, null);
 					http.queryListDowanloadSoft(right_grid_id,HttpRequest.URL_QUERY_LIST_MOVIE,Constant.DOWNLOAD_LIST, null);
 					listentest.setVisibility(View.VISIBLE);
-					listentest.setText("ÊÔ²¥");
+					listentest.setText("è¯•æ’­");
 				}
 			}else if ( left_type == Constant.AL) {
 				if(right_grid_id != null){
@@ -702,7 +738,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					http.queryListDowanloadSoft(right_grid_id,HttpRequest.URL_QUERY_LIST_TV,Constant.DOWNLOAD_LIST, null);
 					download.setEnabled(false);
 					listentest.setVisibility(View.VISIBLE);
-					listentest.setText("ÊÔ²¥");
+					listentest.setText("è¯•æ’­");
 				}
 
 			}else if (left_type == Constant.MUSIC) {
@@ -719,7 +755,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					download.setEnabled(false);
 				}
 			}else if(left_type == Constant.SOFT){
-				install.setText("°²×°");
+				install.setText("å®‰è£…");
 //				download.setEnabled(false);
 				if(right_grid_id != null){
 					http.querySingleSoft(right_grid_id,Constant.SINGLE_RECORD, null);
@@ -743,14 +779,14 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			  }
 		}
 
-		// !!!!±£´æ×´Ì¬
+		// !!!!ä¿å­˜çŠ¶æ€
 		@Override
 		public void onPause() {
 			// TODO Auto-generated method stub
 			super.onPause();
 		}
 		
-		//ĞÂÆğÒ»¸öÏß³Ì½øĞĞÎÄ¼şÏÂÔØ
+		//æ–°èµ·ä¸€ä¸ªçº¿ç¨‹è¿›è¡Œæ–‡ä»¶ä¸‹è½½
 		public void downLoadVideo(String downLoadPth) {
 			Toast.makeText(getActivity(), R.string.start_download,
 					Toast.LENGTH_LONG).show();
@@ -774,7 +810,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			
 			switch(v.getId()){
 			case R.id.install://download
-				//ÔÚSD¿¨ÉÏĞÂ½¨ÎÄ¼ş¼ĞÀ´½øĞĞÎÄ¼ş´æ´¢
+				//åœ¨SDå¡ä¸Šæ–°å»ºæ–‡ä»¶å¤¹æ¥è¿›è¡Œæ–‡ä»¶å­˜å‚¨
 //				login();
 				 if(AuthoSharePreference.getToken(getActivity()) == null || 
 	              AuthoSharePreference.getToken(getActivity()).equals("")){ 
@@ -963,17 +999,17 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 						e.printStackTrace();  
 					}  
 				break;
-			case Constant.ORDER_SOFT_LIST://¶©¹ºÁĞ±í
+			case Constant.ORDER_SOFT_LIST://è®¢è´­åˆ—è¡¨
 				if(value == null)return;
 				softOrderlist = JsonUtil.getOrderList(value);
 				getOrderList(softOrderlist);
 				break;
-			case Constant.ORDER_SOFT_SINGLE://¶©¹ºµ¥¸öÉÌÆ·
+			case Constant.ORDER_SOFT_SINGLE://è®¢è´­å•ä¸ªå•†å“
 				if(value == null)return;
-				value = value.equals("true")?"¶©¹º³É¹¦":"¶©¹ºÊ§°Ü";
+				value = value.equals("true")?"è®¢è´­æˆåŠŸ":"è®¢è´­å¤±è´¥";
 				Toast.makeText(getActivity(), value+"", Toast.LENGTH_SHORT).show();
 				break;
-			case Constant.ORDER_LIST://¶©¹ºµ¥ÁĞ±í
+			case Constant.ORDER_LIST://è®¢è´­å•åˆ—è¡¨
 				if(value == null)return;
 				try {
 					JSONObject json = new JSONObject(value);
@@ -985,7 +1021,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					e.printStackTrace();
 				}
 				break;
-			case Constant.ORDER_LIST_NUM://¶©¹ºµ¥num
+			case Constant.ORDER_LIST_NUM://è®¢è´­å•num
 				if(value == null)return;
 				try {
 					JSONObject json = new JSONObject(value);
@@ -996,7 +1032,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					e.printStackTrace();
 				}
 				break;
-			case Constant.ORDER_LIST_ID://»ñµÃ¶©µ¥ID
+			case Constant.ORDER_LIST_ID://è·å¾—è®¢å•ID
 				if(value == null)return;
 				try {
 					JSONObject json = new JSONObject(value);
@@ -1008,14 +1044,14 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					e.printStackTrace();
 				}
 				break;  
-			case Constant.ORDER_LIST_PAY://Ö§¸¶
+			case Constant.ORDER_LIST_PAY://æ”¯ä»˜
 				if(value == null)return;
 				value = JsonUtil.getPayResult(value)?getActivity().getResources().getString(R.string.pay_sucess):
 					getActivity().getResources().getString(R.string.pay_fail);
 				Toast.makeText(getActivity(), value+"", Toast.LENGTH_SHORT).show();
 				break;
 				
-			case Constant.USERLOGIN://µÇÂ¼
+			case Constant.USERLOGIN://ç™»å½•
 				if(value != null && value.equals("\"false\"")){
 					Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.login_fail), Toast.LENGTH_SHORT).show();
 					return;	
@@ -1023,7 +1059,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				JsonUtil.setLogin(value, getActivity());
 				Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.login_secuss), Toast.LENGTH_SHORT).show();
 				break;
-			case Constant.DOWN_SOFT_LIST://ÏÂÔØÁĞ±í
+			case Constant.DOWN_SOFT_LIST://ä¸‹è½½åˆ—è¡¨
 				if(value == null)return;
 				softOrderlist = JsonUtil.getOrderList(value);
 				getDownLoadList(softOrderlist);
@@ -1108,7 +1144,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}  
-	// ÊµÏÖactivity»ùÓÚleft´«Öµ¸üĞÂrightFragment
+	// å®ç°activityåŸºäºleftä¼ å€¼æ›´æ–°rightFragment
 	@Override
 	public void onLeftSelected(int left_type) {
 		if (rFragment == null) {
@@ -1184,7 +1220,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			if(keyCode==KeyEvent.KEYCODE_DPAD_LEFT){
 //		if(!isFragment){
 //			if(!store.isFocused()){
-//				System.out.println("leftÎÒÖ´ĞĞÁË¡£");
+//				System.out.println("leftæˆ‘æ‰§è¡Œäº†ã€‚");
 //				String focuse = sp.getString("from","none");
 //				if(focuse.equals("one")){
 //					classify.setFocusable(true);
@@ -1220,7 +1256,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			
 			
 //			if(keyCode==KeyEvent.KEYCODE_DPAD_DOWN){
-//				System.out.println("down¼ü±»Ö´ĞĞ");
+//				System.out.println("downé”®è¢«æ‰§è¡Œ");
 //				 if(itemView.findViewById(R.id.item_hor_05).isFocused()){
 //					 itemView.findViewById(R.id.item_hor_10).setFocusable(true);
 //					 itemView.findViewById(R.id.item_hor_10).requestFocus();
@@ -1341,7 +1377,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 //		});
 //	}
 	   public static void setView(){
-		   //ÎÒ¾ÍÊÇÓÃÄãµÄ
+		   //æˆ‘å°±æ˜¯ç”¨ä½ çš„
 		   for (int i = 0; i < musicTestArrayList.size(); i++) {
 			aQuery.find(horItems[i]).find(R.id.ItemTitle).text(musicTestArrayList.get(i).get("info"));
 		}	
@@ -1355,4 +1391,18 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 
 		}
 	   }
+	   private void initDialog() {
+		   builder= new Dialog(MainActivity.this);
+			builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			LayoutInflater inflater = LayoutInflater.from(this);
+			View view = inflater.inflate(R.layout.music_detail, null);
+			builder.setContentView(view);
+			Window dialogWindow = builder.getWindow();
+			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+			dialogWindow.setGravity(Gravity.CENTER);
+			lp.width = 800; 
+			lp.height = 640; 
+			dialogWindow.setAttributes(lp);
+		}
+
 }

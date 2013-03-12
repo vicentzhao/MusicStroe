@@ -42,7 +42,6 @@ public class RightFragmentGradAdapter extends BaseAdapter
 	{
 		return position;
 	}
-
 	// ªÒ»°Õº∆¨ID
 	public long getItemId(int position)
 	{
@@ -76,7 +75,6 @@ public class RightFragmentGradAdapter extends BaseAdapter
 		}
 		return convertView;
 	}
-	
 	class ViewHolder {
 		TextView info;
 //		TextView count;

@@ -41,69 +41,68 @@ import android.util.Log;
 
 public class HttpRequest {
      
-	public static  String WEB_ROOT = "http://192.168.1.32:8080/";  //外网
+	public static  String WEB_ROOT = "http://192.168.1.32:8080/";  
 //	http://192.168.1.32:8080
-//	public static  String WEB_ROOT = "http://42.121.6.154/"; //内网
+//	public static  String WEB_ROOT = "http://42.121.6.154/";
 	
 	static HttpClient mHttpClient = null;
-	
 	public static String URL_LOGIN = WEB_ROOT + "login.action?username=";
 	public static String URL ="http://www.baidu.com/images/1.gif";
-	public static String URL_QUERY_ALL_RECORD = WEB_ROOT + "index/tapeshop.action?resultType=json";
-	public static String URL_QUERY_SINGLE_RECORD = WEB_ROOT + "index/tapeshop!content.action?resultType=json&&id=";
-	public static String URL_QUERY_SINGLE_IMAGE = WEB_ROOT + "download.action?inputPath=";
-	public static String URL_QUERY_DOWNLOAD_URL = WEB_ROOT + "index/download.action?inputPath=";//下载文件
-	public static String URL_QUERY_DOWNLOAD_CHECK = WEB_ROOT + "index/softshop!getFile.action?";//下载验证
-	public static String URL_QUERY_SINGLE_IMAGE_TEST = WEB_ROOT + "download.action?";
-	public static String URL_QUERY_ALL_BOOK = WEB_ROOT + "index/bookshop.action?resultType=json";
-	public static String URL_QUERY_SINGLE_BOOK = WEB_ROOT + "index/bookshop!content.action?resultType=json&&id=";
-	public static String URL_QUERY_STROE_ALL_MOVIE = WEB_ROOT + "index/movieshop.action?resultType=json";
-	public static String URL_QUERY_SINGLE_MOVIE = WEB_ROOT + "index/movieshop!content.action?resultType=json&&id=";
-	public static String URL_QUERY_STROE_ALL_PRINT = WEB_ROOT + "index/journalshop.action?resultType=json";
-	public static String URL_QUERY_SINGLE_PRINT = WEB_ROOT + "index/journalshop!content.action?resultType=json&&id=";
-	public static String URL_QUERY_STROE_ALL_NEWSPAPER = WEB_ROOT + "index/papershop.action?resultType=json";
-	public static String URL_QUERY_SINGLE_NEWSPAPER = WEB_ROOT + "index/papershop!content.action?resultType=json&&id=";
-	public static String URL_QUERY_STROE_ALL_MUSIC = WEB_ROOT + "index/musicshop.action?resultType=json";
-	public static String URL_QUERY_SINGLE_MUSIC = WEB_ROOT + "index/musicshop!content.action?resultType=json&&id=";
-	public static String URL_QUERY_STROE_ALL_TV = WEB_ROOT + "index/tvplayshop.action?resultType=json";
-	public static String URL_QUERY_SINGLE_TV = WEB_ROOT + "index/tvplayshop!content.action?resultType=json&&id=";
-	public static String URL_QUERY_STROE_ALL_ANIME = WEB_ROOT + "index/cartoonshop.action?resultType=json";
-	public static String URL_QUERY_SINGLE_ANIME = WEB_ROOT + "index/cartoonshop!content.action?resultType=json&&id=";
-	public static String URL_QUERY_STROE_ALL_SOFT = WEB_ROOT + "index/softshop.action?resultType=json";
-	public static String URL_QUERY_SINGLE_SOFT = WEB_ROOT + "index/softshop!content.action?resultType=json&&id=";
+	public static String URL_QUERY_ALL_RECORD = WEB_ROOT + "index/tapeshop.action?token=myadmin&resultType=json";
+	public static String URL_QUERY_SINGLE_RECORD = WEB_ROOT + "index/tapeshop!content.action?token=myadmin&resultType=json&&id=";
+	public static String URL_QUERY_SINGLE_IMAGE = WEB_ROOT + "download.action?token=myadmin&inputPath=";
+	public static String URL_QUERY_DOWNLOAD_URL = WEB_ROOT + "index/download.action?token=myadmin&inputPath=";//下载文件
+	public static String URL_QUERY_DOWNLOAD_CHECK = WEB_ROOT + "index/softshop!getFile.action?token=myadmin&";//下载验证
+	public static String URL_QUERY_SINGLE_IMAGE_TEST = WEB_ROOT + "download.action?token=myadmin&";
+	public static String URL_QUERY_ALL_BOOK = WEB_ROOT + "index/bookshop.action?token=myadmin&resultType=json";
+	public static String URL_QUERY_SINGLE_BOOK = WEB_ROOT + "index/bookshop!content.action?token=myadmin&resultType=json&&id=";
+	public static String URL_QUERY_STROE_ALL_MOVIE = WEB_ROOT + "index/movieshop.action?token=myadmin&resultType=json";
+	public static String URL_QUERY_SINGLE_MOVIE = WEB_ROOT + "index/movieshop!content.action?token=myadmin&resultType=json&&id=";
+	public static String URL_QUERY_STROE_ALL_PRINT = WEB_ROOT + "index/journalshop.action?token=myadmin&resultType=json";
+	public static String URL_QUERY_SINGLE_PRINT = WEB_ROOT + "index/journalshop!content.action?token=myadmin&resultType=json&&id=";
+	public static String URL_QUERY_STROE_ALL_NEWSPAPER = WEB_ROOT + "index/papershop.action?token=myadmin&resultType=json";
+	public static String URL_QUERY_SINGLE_NEWSPAPER = WEB_ROOT + "index/papershop!content.action?token=myadmin&resultType=json&&id=";
+	public static String URL_QUERY_STROE_ALL_MUSIC = WEB_ROOT + "index/musicshop.action?token=myadmin&resultType=json";
+	public static String URL_QUERY_SINGLE_MUSIC = WEB_ROOT + "index/musicshop!content.action?token=myadmin&resultType=json&&id=";
+	public static String URL_QUERY_STROE_ALL_TV = WEB_ROOT + "index/tvplayshop.action?token=myadmin&resultType=json";
+	public static String URL_QUERY_SINGLE_TV = WEB_ROOT + "index/tvplayshop!content.action?token=myadmin&resultType=json&&id=";
+	public static String URL_QUERY_STROE_ALL_ANIME = WEB_ROOT + "index/cartoonshop.action?token=myadmin&resultType=json";
+	public static String URL_QUERY_SINGLE_ANIME = WEB_ROOT + "index/cartoonshop!content.action?token=myadmin&resultType=json&&id=";
+	public static String URL_QUERY_STROE_ALL_SOFT = WEB_ROOT + "index/softshop.action?token=myadmin&resultType=json";
+	public static String URL_QUERY_SINGLE_SOFT = WEB_ROOT + "index/softshop!content.action?token=myadmin&resultType=json&&id=";
 	
-	public static String URL_QUERY_LIST_RECORD = WEB_ROOT + "index/tapeshop!getworks.action?id=";
-	public static String URL_QUERY_LIST_BOOK = WEB_ROOT + "index/bookshop!getworks.action?id=";
-	public static String URL_QUERY_LIST_MOVIE = WEB_ROOT + "index/movieshop!getworks.action?id=";
-	public static String URL_QUERY_LIST_PRINT = WEB_ROOT + "index/journalshop!getworks.action?id=";
-	public static String URL_QUERY_LIST_NEWSPAPER = WEB_ROOT + "index/papershop!getworks.action?id=";
-	public static String URL_QUERY_LIST_MUSIC = WEB_ROOT + "index/musicshop!getworks.action?id=";
-	public static String URL_QUERY_LIST_TV = WEB_ROOT + "index/tvplayshop!getworks.action?id=";
-	public static String URL_QUERY_LIST_ANIME = WEB_ROOT + "index/cartoonshop!getworks.action?id=";  
-	public static String URL_QUERY_LIST_SOFT = WEB_ROOT + "index/softshop!getworks.action?id=";
+	public static String URL_QUERY_LIST_RECORD = WEB_ROOT + "index/tapeshop!getworks.action?token=myadmin&id=";
+	public static String URL_QUERY_LIST_BOOK = WEB_ROOT + "index/bookshop!getworks.action?token=myadmin&id=";
+	public static String URL_QUERY_LIST_MOVIE = WEB_ROOT + "index/movieshop!getworks.action?token=myadmin&id=";
+	public static String URL_QUERY_LIST_PRINT = WEB_ROOT + "index/journalshop!getworks.action?token=myadmin&id=";
+	public static String URL_QUERY_LIST_NEWSPAPER = WEB_ROOT + "index/papershop!getworks.action?token=myadmin&id=";
+	public static String URL_QUERY_LIST_MUSIC = WEB_ROOT + "index/musicshop!getworks.action?token=myadmin&id=";
+	public static String URL_QUERY_LIST_TV = WEB_ROOT + "index/tvplayshop!getworks.action?token=myadmin&id=";
+	public static String URL_QUERY_LIST_ANIME = WEB_ROOT + "index/cartoonshop!getworks.action?token=myadmin&id=";  
+	public static String URL_QUERY_LIST_SOFT = WEB_ROOT + "index/softshop!getworks.action?token=myadmin&id=";
 	
-	public static String URL_QUERY_LIST_ORDER_SOFT = WEB_ROOT + "index/softshop!getworks.action?resultType=json&id=";//软件订购列表
-	public static String URL_QUERY_SINGLE_ORDER_SOFT = WEB_ROOT + "index/softshop!singlebuy.action?type=soft&id=";//订购单个音乐商品
-	public static String URL_QUERY_LIST_ORDER_MUSIC = WEB_ROOT + "index/musicshop!getworks.action?resultType=json&id=";//音乐订购列表
-	public static String URL_QUERY_SINGLE_ORDER_MUSIC = WEB_ROOT + "index/musicshop!singlebuy.action?type=music&id=";//订购单个音乐商品
-	public static String URL_QUERY_LIST_ORDER_BOOK = WEB_ROOT + "index/bookshop!getworks.action?resultType=json&id=";
-	public static String URL_QUERY_SINGLE_ORDER_BOOK = WEB_ROOT + "index/bookshop!singlebuy.action?type=book&id=";
-	public static String URL_QUERY_LIST_ORDER_PAPER = WEB_ROOT + "index/papershop!getworks.action?resultType=json&id=";
-	public static String URL_QUERY_SINGLE_ORDER_PAPER = WEB_ROOT + "index/papershop!singlebuy.action?type=paper&id=";
-	public static String URL_QUERY_LIST_ORDER_PRINT = WEB_ROOT + "index/journalshop!getworks.action?resultType=json&id=";
-	public static String URL_QUERY_SINGLE_ORDER_PRINT = WEB_ROOT + "index/journalshop!singlebuy.action?type=journal&id=";
-	public static String URL_QUERY_LIST_ORDER_ANIM = WEB_ROOT + "index/cartoonshop!getworks.action?resultType=json&id=";
-	public static String URL_QUERY_SINGLE_ORDER_ANIM = WEB_ROOT + "index/cartoonshop!singlebuy.action?type=cartoon&id=";
-	public static String URL_QUERY_LIST_ORDER_MOVIE = WEB_ROOT + "index/movieshop!getworks.action?resultType=json&id=";
-	public static String URL_QUERY_SINGLE_ORDER_MOVIE = WEB_ROOT + "index/movieshop!singlebuy.action?type=movie&id=";
-	public static String URL_QUERY_LIST_ORDER_TV = WEB_ROOT + "index/tvplayshop!getworks.action?resultType=json&id=";
-	public static String URL_QUERY_SINGLE_ORDER_TV = WEB_ROOT + "index/tvplayshop!singlebuy.action?type=tvplay&id=";
-	public static String URL_QUERY_LIST_ORDER_RECORD = WEB_ROOT + "index/tapeshop!getworks.action?resultType=json&id=";
-	public static String URL_QUERY_SINGLE_ORDER_RECORD = WEB_ROOT + "index/tapeshop!singlebuy.action?type=tape&id=";
-	public static String URL_QUERY_LIST_ORDER = WEB_ROOT + "index/order.action?resultType=json";//订购列表  
+	public static String URL_QUERY_LIST_ORDER_SOFT = WEB_ROOT + "index/softshop!getworks.action?token=myadmin&resultType=json&id=";//软件订购列表
+	public static String URL_QUERY_SINGLE_ORDER_SOFT = WEB_ROOT + "index/softshop!singlebuy.action?token=myadmin&type=soft&id=";//订购单个音乐商品
+	public static String URL_QUERY_LIST_ORDER_MUSIC = WEB_ROOT + "index/musicshop!getworks.action?token=myadmin&resultType=json&id=";//音乐订购列表
+	public static String URL_QUERY_SINGLE_ORDER_MUSIC = WEB_ROOT + "index/musicshop!singlebuy.action?token=myadmin&type=music&id=";//订购单个音乐商品
+	public static String URL_QUERY_LIST_ORDER_BOOK = WEB_ROOT + "index/bookshop!getworks.action?token=myadmin&resultType=json&id=";
+	public static String URL_QUERY_SINGLE_ORDER_BOOK = WEB_ROOT + "index/bookshop!singlebuy.action?token=myadmin&type=book&id=";
+	public static String URL_QUERY_LIST_ORDER_PAPER = WEB_ROOT + "index/papershop!getworks.action?token=myadmin&resultType=json&id=";
+	public static String URL_QUERY_SINGLE_ORDER_PAPER = WEB_ROOT + "index/papershop!singlebuy.action?token=myadmin&type=paper&id=";
+	public static String URL_QUERY_LIST_ORDER_PRINT = WEB_ROOT + "index/journalshop!getworks.action?token=myadmin&resultType=json&id=";
+	public static String URL_QUERY_SINGLE_ORDER_PRINT = WEB_ROOT + "index/journalshop!singlebuy.action?token=myadmin&type=journal&id=";
+	public static String URL_QUERY_LIST_ORDER_ANIM = WEB_ROOT + "index/cartoonshop!getworks.action?token=myadmin&resultType=json&id=";
+	public static String URL_QUERY_SINGLE_ORDER_ANIM = WEB_ROOT + "index/cartoonshop!singlebuy.action?token=myadmin&type=cartoon&id=";
+	public static String URL_QUERY_LIST_ORDER_MOVIE = WEB_ROOT + "index/movieshop!getworks.action?token=myadmin&resultType=json&id=";
+	public static String URL_QUERY_SINGLE_ORDER_MOVIE = WEB_ROOT + "index/movieshop!singlebuy.action?token=myadmin&type=movie&id=";
+	public static String URL_QUERY_LIST_ORDER_TV = WEB_ROOT + "index/tvplayshop!getworks.action?token=myadmin&resultType=json&id=";
+	public static String URL_QUERY_SINGLE_ORDER_TV = WEB_ROOT + "index/tvplayshop!singlebuy.action?token=myadmin&type=tvplay&id=";
+	public static String URL_QUERY_LIST_ORDER_RECORD = WEB_ROOT + "index/tapeshop!getworks.action?token=myadmin&resultType=json&id=";
+	public static String URL_QUERY_SINGLE_ORDER_RECORD = WEB_ROOT + "index/tapeshop!singlebuy.action?token=myadmin&type=tape&id=";
+	public static String URL_QUERY_LIST_ORDER = WEB_ROOT + "index/order.action?token=myadmin&resultType=json";//订购列表  
 	public static String URL_QUERY_LIST_ORDER_NUM = WEB_ROOT + "index/order!pay.action?resultType=json";//支付获取订单号
-	public static String URL_QUERY_LIST_PAY_ID = WEB_ROOT + "index/pay.action?resultType=json&num=";//根据订单号得订单id   
-	public static String URL_QUERY_LIST_PAY = WEB_ROOT + "index/pay!pay.action?resultType=json&id=";//确认支付
+	public static String URL_QUERY_LIST_PAY_ID = WEB_ROOT + "index/pay.action?token=myadmin&resultType=json&num=";//根据订单号得订单id   
+	public static String URL_QUERY_LIST_PAY = WEB_ROOT + "index/pay!pay.action?token=myadmin&resultType=json&id=";//确认支付
 	
 	
 	public static String DOWNLOAD_ID = null;
@@ -230,7 +229,6 @@ public class HttpRequest {
 		new HttpRequestTask(what, URL_QUERY_STROE_ALL_SOFT,obj).execute(parameList);
 	}
 	
-	
 	/**
 	 * 查询书籍
 	 * @author Administrator
@@ -339,8 +337,6 @@ public class HttpRequest {
 	 */
 	public void queryOrderSoftList(String URL,String id,int what) {
 		List<NameValuePair> valuePairs = new ArrayList<NameValuePair>();
-//		valuePairs.add(new BasicNameValuePair("sid", id));
-//		valuePairs.add(new BasicNameValuePair("type", type));
 		new HttpRequestTask(what,URL+id).execute(valuePairs);
 	}
 	
@@ -471,8 +467,6 @@ public class HttpRequest {
 					post.setEntity(new UrlEncodedFormEntity(params[0],
 							HTTP.UTF_8));
 				}
-//				 HttpConnectionParams.setConnectionTimeout(httpParameters, 1000*60);   
-//		         HttpClient httpClient = new DefaultHttpClient(httpParameters); 
 				 HttpResponse response = getHttpClient().execute(post);
 				if ((responseCode = response.getStatusLine().getStatusCode()) != HttpStatus.SC_OK)
 					return null;
@@ -495,6 +489,8 @@ public class HttpRequest {
 		
 		@Override
 		protected void onPostExecute(String string) {
+			if(string != null&&string.length()>5){
+			}
 			if (httpResponseListener != null)
 				httpResponseListener.response(responseCode, what,string,mObject);
 		}
@@ -541,9 +537,6 @@ public class HttpRequest {
 		return httpClient;
 	}
 	
-	/*
-	 * 异步下载图片
-	 */
 	private class HttpRequestBitmapTask extends AsyncTask<List<NameValuePair>, String, Bitmap> {
 		private int responseCode = -1;
 		private int what = 0;
