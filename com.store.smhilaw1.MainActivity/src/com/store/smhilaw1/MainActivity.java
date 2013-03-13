@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -60,6 +62,7 @@ import com.store.adapter.DownLoadListAdapter;
 import com.store.adapter.OrderListAdapter;
 import com.store.adapter.PayOrderListAdapter;
 import com.store.adapter.TestMusicAdapter;
+import com.store.bean.Music;
 import com.store.bean.OrderBean;
 import com.store.bean.PayOrderBean;
 import com.store.bean.SoftwareBean;
@@ -100,7 +103,12 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	private static SharedPreferences.Editor editor;
 	public  static boolean   isFragment =true;
 	private boolean isfirst =true;
-	Dialog builder;
+	static ArrayList<Music> musicList;
+	static ArrayList<SoftwareBean> musicAppList;
+	static Dialog builder;
+	private static boolean isFristInit;
+	private static ArrayList<SoftwareBean> musicDetailList;
+	static LayoutInflater inflater;
 	private static Button classify, the_news, recommend, movie, teleplay, anime,
 	music, record,soft;
 	SharedPreferences  sp;
@@ -124,9 +132,10 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
         .penaltyDeath()       
         .build());  
         sp =getPreferences(MODE_PRIVATE);
-        initView();
-        editor = sp.edit(); 
         aQuery= new AQuery(MainActivity.this);
+        initView();
+        
+        editor = sp.edit(); 
 	}
 	
 	 
@@ -138,6 +147,10 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		myMusic.setOnClickListener(this);
 		store.setOnClickListener(this);
 		serch.setOnClickListener(this);
+		
+		 inflater= LayoutInflater.from(this);
+		 builder= new Dialog(MainActivity.this);
+		int h ;
 		myMusic.setText(getResources().getString(R.string.my_music));
 		myMusic.setSelected(true);
 		store.setText(getResources().getString(R.string.music_store));
@@ -196,6 +209,42 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			break;
 			default :
 				break;
+			case R.id.item_hor_01:
+				String id = musicList.get(0).getId();
+				String json =HttpRequest.URL_QUERY_SINGLE_MOVIE+id;
+				System.out.println("我已经执行了，hor_01");
+			
+				builder.show();
+				break;
+			case R.id.item_hor_02:
+				break;
+			case R.id.item_hor_03:
+				break;
+			case R.id.item_hor_04:
+				break;
+			case R.id.item_hor_05:
+				break;
+			case R.id.item_hor_06:
+				break;
+			case R.id.item_hor_07:
+				break;
+			case R.id.item_hor_08:
+				break;
+			case R.id.item_hor_09:
+				break;
+			case R.id.item_hor_10:
+				break;
+			case R.id.item_hor_11:
+				break;
+			case R.id.item_hor_12:
+				break;
+			case R.id.item_hor_13:
+				break;
+			case R.id.item_hor_14:
+				break;
+			case R.id.item_hor_15:
+				break;
+			
 		}
 	}
 
@@ -491,61 +540,183 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			String qq = "";
 			String duomi = "";
 			if(left_type == Constant.FLFG){
-				qq="QQ";
-				duomi = "多米音乐";
-			}else if(left_type == Constant.AL){
+				initDialog("one");
+				final ProgressDialog Dialog = ProgressDialog.show(getActivity(), "缓冲中。。", "正在加载请稍后。。");
+				String path =HttpRequest.URL_QUERY_STROE_ALL_SOFT;
+				aQuery.ajax(path, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
+	                @Override
+	                public void callback(String url, String json, AjaxStatus status) {
+	                        //得通过对一个url访问返回的数据存放在JSONObject json中 可以通过json.getContext()得到
+	                        if(json != null){
+	                        	System.out.println("下载的数据"+"===="+json);
+	                        	musicAppList =  new ArrayList<SoftwareBean>();
+	                        	musicAppList = JsonUtil.getProductList(json);
+	                        	setSoftInfo(musicAppList);
+	                        	Dialog.dismiss();
+	                         //successful ajax call, show status code and json content
+	                       Toast.makeText(aQuery.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();//在一个Toast中显示出得到的内容
+	                        }else{
+	                        	Dialog.dismiss();
+	                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode()+"  哇， 好像出错了，请大侠重新试过",Toast.LENGTH_LONG).show();
+	                          }
+	                    }
+	            });
+				  for (int i = 0; i < horItems.length; i++) {
+			        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+	                            System.out.println("item被点击了");
+								builder.show();
+								int id = v.getId();
+								setSoftDetail(id);
+							}
+						});
+				  }
+				
+			}
+				else if(left_type == Constant.AL){
 				qq="QQ+";
 				duomi = "多米音乐+";
+				for(int i = 0;i<15;i++){
+					hashMap = new HashMap<String, String>();
+					if(i%2==0){
+						hashMap.put("info", qq);
+					}else{
+						hashMap.put("info", duomi);
+					}
+					musicTestArrayList.add(hashMap);
+				}
+				setView();
 			}else if(left_type == Constant.FLWSYS){
 //				qq="QQ++";
 //				duomi = "多米音乐++";
 //				String musicUrl= HttpRequest.URL_QUERY_LIST_MUSIC;
+				initDialog("three");
+				final ProgressDialog Dialog = ProgressDialog.show(getActivity(), "缓冲中。。", "正在缓冲请稍后。。");
 				 String url = "http://192.168.1.32:8080/index/musicshop.action?token=myadmin&resultType=json";
-			        
 			        aQuery.ajax(url, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
 			                @Override
 			                public void callback(String url, String json, AjaxStatus status) {
 			                        //得通过对一个url访问返回的数据存放在JSONObject json中 可以通过json.getContext()得到
-			                        
 			                        if(json != null){
-			                        	System.out.println("你返回的数据是："+json);
+			                        	System.out.println("下载的数据"+"===="+json);
+			                        	musicList = new ArrayList<Music>();
+			                        	musicList = JsonUtil.getMusicList(json);
+//			                        	setMusicChapter( musicList);
+			                        	Dialog.dismiss();
 			                                //successful ajax call, show status code and json content
-			                        	ArrayList<JSONObject>  joList= new ArrayList<JSONObject>();
-			                        	try {
-			                        		JSONArray ja = new JSONArray(json);
-                     	             for (int i = 0; i < ja.length(); i++) {
-											JSONObject jsMusic= ja.getJSONObject(i);
-											joList.add(jsMusic);
-										}
-			                        	for (int i = 0; i < joList.size(); i++) {
-                             		String name = joList.get(i).getString("PNAME"); 
-			                        		System.out.println("name"+"=-=========="+name);
-										}
-			                        	} catch (Exception e) {
-											// TODO: handle exception
-										}
 			                       Toast.makeText(aQuery.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();//在一个Toast中显示出得到的内容
-			                        ArrayList<SoftwareBean> list = JsonUtil.getProductList(json);
-			                        System.out.println(list.size());
+			                      
 			                        }else{
+			                        	Dialog.dismiss();
 			                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
 			                          }
 			                    }
+							
 			            });
+			        for (int i = 0; i < horItems.length; i++) {
+			        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+	                            System.out.println("item被点击了");
+								builder.show();
+//								int id = v.getId();
+//								setMusicDetial(id);
+							}
+						});
+					}
 			}
-			for(int i = 0;i<15;i++){
-				hashMap = new HashMap<String, String>();
-				if(i%2==0){
-					hashMap.put("info", qq);
-				}else{
-					hashMap.put("info", duomi);
+		}
+		/**
+		 * setSoftDetial param
+		 */
+		
+		private void setSoftDetail(int id) {
+			// TODO Auto-generated method stub
+			int j =0;
+			for (int i = 0; i < horItems.length; i++) {
+				if(id==horItems[i]){
+					j=i;
 				}
-				musicTestArrayList.add(hashMap);
+		}
+			String appId =musicAppList.get(j).getId();
+			String appPath =HttpRequest.URL_QUERY_SINGLE_SOFT+appId;
+			final ProgressDialog Dialog = ProgressDialog.show(getActivity(), "缓冲中。。", "正在缓冲请稍后。。");
+			Dialog.show();
+			 aQuery.ajax(appPath, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
+	                @Override
+	                public void callback(String url, String json, AjaxStatus status) {
+	                        //得通过对一个url访问返回的数据存放在JSONObject json中 可以通过json.getContext()得到
+	                        if(json != null){
+	                        	System.out.println("下载的数据"+"===="+json);
+	                        JSONArray ja = new JSONArray(json);
+	                        
+//	                        	setMusicChapter( musicList);
+	                        	Dialog.dismiss();
+	                                //successful ajax call, show status code and json content
+	                       Toast.makeText(aQuery.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();//在一个Toast中显示出得到的内容
+	                      
+	                        }else{
+	                        	Dialog.dismiss();
+	                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+	                          }
+	                    }
+	            });
+			 
+			
+			
+		}
+		/**
+		 * setMusicDetial param
+		 */
+		
+		private void setMusicDetial(int id) {
+			int j =0;
+			for (int i = 0; i < horItems.length; i++) {
+				if(id==horItems[i]){
+					j=i;
+				}
+				String musicId = musicList.get(j).getId();
+				String imageUrl =HttpRequest.URL_QUERY_SINGLE_MUSIC+musicId;
+
 			}
-			setView();
+			
+			
+			
 			
 		}
 		
+		/**
+		 * setAllSoft
+		 * @param softList
+		 */
+		private void setSoftInfo(ArrayList<SoftwareBean> list) {
+			for (int i = 0; i < list.size(); i++) {
+				aQuery.find(horItems[i]).find(R.id.ItemTitle).text(list.get(i).getName());
+				String url = list.get(i).getImage_path();
+				 String WEB_ROOT = "http://192.168.1.32:8080/";
+				String  URL_QUERY_SINGLE_IMAGE = WEB_ROOT + "download.action?token=myadmin&inputPath=";
+				String uslPath =URL_QUERY_SINGLE_IMAGE+url;
+				aQuery.find(horItems[i]).find(R.id.ItemIcon).image(uslPath);
+			}
+			
+		}
+		/**
+		 * setAllMusic
+		 * @param list
+		 */
+		private void setMusicChapter(ArrayList<Music> list) {
+			for (int i = 0; i < list.size(); i++) {
+				aQuery.find(horItems[i]).find(R.id.ItemTitle).text(list.get(i).getName());
+				String url = list.get(i).getImage_path();
+				 String WEB_ROOT = "http://192.168.1.32:8080/";
+				String  URL_QUERY_SINGLE_IMAGE = WEB_ROOT + "download.action?token=myadmin&inputPath=";
+				String uslPath =URL_QUERY_SINGLE_IMAGE+url;
+				aQuery.find(horItems[i]).find(R.id.ItemIcon).image(uslPath);
+			}
+		}
 		@Override
 		public void response(int responseCode, int what, String value, Object object) {
 			// TODO Auto-generated method stub
@@ -1377,7 +1548,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 //		});
 //	}
 	   public static void setView(){
-		   //我就是用你的
+		   //
 		   for (int i = 0; i < musicTestArrayList.size(); i++) {
 			aQuery.find(horItems[i]).find(R.id.ItemTitle).text(musicTestArrayList.get(i).get("info"));
 		}	
@@ -1391,11 +1562,22 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 
 		}
 	   }
-	   private void initDialog() {
-		   builder= new Dialog(MainActivity.this);
-			builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			LayoutInflater inflater = LayoutInflater.from(this);
-			View view = inflater.inflate(R.layout.music_detail, null);
+	   public static void initDialog(String s) {
+		   
+		   View view = null;
+		   if("three".equals(s)){
+			view= inflater.inflate(R.layout.music_detail, null);
+		   }
+		   if("one".equals(s)){
+			   view= inflater.inflate(R.layout.soft_detail, null);
+		   }
+		   if("three".equals(s)){
+			   view= inflater.inflate(R.layout.music_detail, null);
+		   }
+		   if(isFristInit){
+			   builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		   }
+//		   isFristInit =false;
 			builder.setContentView(view);
 			Window dialogWindow = builder.getWindow();
 			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
@@ -1404,5 +1586,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			lp.height = 640; 
 			dialogWindow.setAttributes(lp);
 		}
+	   
 
 }

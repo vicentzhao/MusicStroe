@@ -2,61 +2,54 @@ package com.store.bean;
 
 public class Music {
 	
-	 private String id;  //music id
-	 private String pName;  // music title
-	 private String ALBUM;  //music  
-	 private String PIC;    //imagepath
-	 private String QNAME;  //quity
-	 private String pcname;  //request
-	 private String pnname;   //way
-	 private String setname;  //set
+	private String name;
+	private String pubName;
+	private String info;
+	private String version;
+	private String image_path;
+	private String download_path;
+	private String id;
+	public String getPubName() {
+		return pubName;
+	}
+	public void setPubName(String pubName) {
+		this.pubName = pubName;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getInfo() {
+		return info;
+	}
+	public void setInfo(String info) {
+		this.info = info;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
+	public String getImage_path() {
+		return image_path;
+	}
+	public void setImage_path(String image_path) {
+		this.image_path = image_path;
+	}
+	public String getDownload_path() {
+		return download_path;
+	}
+	public void setDownload_path(String download_path) {
+		this.download_path = download_path;
+	}
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
-	}
-	public String getpName() {
-		return pName;
-	}
-	public void setpName(String pName) {
-		this.pName = pName;
-	}
-	public String getALBUM() {
-		return ALBUM;
-	}
-	public void setALBUM(String aLBUM) {
-		ALBUM = aLBUM;
-	}
-	public String getPIC() {
-		return PIC;
-	}
-	public void setPIC(String pIC) {
-		PIC = pIC;
-	}
-	public String getQNAME() {
-		return QNAME;
-	}
-	public void setQNAME(String qNAME) {
-		QNAME = qNAME;
-	}
-	public String getPcname() {
-		return pcname;
-	}
-	public void setPcname(String pcname) {
-		this.pcname = pcname;
-	}
-	public String getPnname() {
-		return pnname;
-	}
-	public void setPnname(String pnname) {
-		this.pnname = pnname;
-	}
-	public String getSetname() {
-		return setname;
-	}
-	public void setSetname(String setname) {
-		this.setname = setname;
 	}
 	 
    

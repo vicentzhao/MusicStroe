@@ -8,12 +8,45 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.store.bean.Music;
 import com.store.bean.OrderBean;
 import com.store.bean.PayOrderBean;
 import com.store.bean.SoftwareBean;
 import com.store.suffix.CryptUtil;
 
 public class JsonUtil {
+	
+//	 private String id;  //music id
+//	 private String pName;  // music title
+//	 private String ALBUM;  //music  
+//	 private String PIC;    //imagepath
+//	 private String QNAME;  //quity
+//	 private String pcname;  //request
+//	 private String pnname;   //way
+//	 private String setname;  //set
+	public static ArrayList<Music> getMusicList(String str) {
+		ArrayList<Music> list  = new ArrayList<Music>();
+		if(str == null)return list;
+		Music music = null;
+		try {
+			JSONArray jsonA = new JSONArray(str);
+			for(int i =0;i<jsonA.length();i++){
+				JSONObject jsonO = jsonA.getJSONObject(i);
+				music = new Music();
+				music.setPubName(jsonO.getString("PUBNAME"));
+				music.setImage_path(jsonO.getString("PIC"));
+				music.setName(jsonO.getString("PNAME"));
+				music.setInfo(jsonO.getString("PHID"));
+				music.setVersion(jsonO.getString("QUA"));
+				music.setId(jsonO.getString("ID"));
+				list.add(music);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 return list; 
+	}
 	
 	public static ArrayList<SoftwareBean> getProductList(String str){
 		ArrayList<SoftwareBean> list = new ArrayList<SoftwareBean>();
