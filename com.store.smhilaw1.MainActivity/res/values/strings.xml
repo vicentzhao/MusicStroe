@@ -20,6 +20,9 @@
 	<string name="my_music">我的音乐</string>
 	<string name="music_store">音乐商店</string>
 	<string name="serch_hint">输入搜索内容</string>
+	 <string name="nosdcard">没有找到sd卡，请插入sd卡再进行下载完成更新。</string>
 	<string name="field_title">...</string>
+	
+	
 	
 </resources>
