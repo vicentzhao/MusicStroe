@@ -110,7 +110,7 @@ public class ImageDownloader {
 	 * @param url
 	 * @return
 	 */
-	private Bitmap downloadBitmap(String url) {
+	public Bitmap downloadBitmap(String url) {
 		
 		//try to get image from file cache
 		File file = fileCache.getFromFileCache(url);

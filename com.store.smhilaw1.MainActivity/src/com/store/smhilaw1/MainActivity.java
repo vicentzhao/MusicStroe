@@ -2,6 +2,8 @@ package com.store.smhilaw1;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +13,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DownloadManager.Request;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -74,9 +75,9 @@ import com.store.download.ThreadForRunnable;
 import com.store.download.VideoDownload;
 import com.store.http.ApkLoadTask;
 import com.store.http.HttpRequest;
-import com.store.http.ImageDownloader;
 import com.store.http.HttpRequest.OnBitmapHttpResponseListener;
 import com.store.http.HttpRequest.OnHttpResponseListener;
+import com.store.http.ImageDownloader;
 import com.store.suffix.CryptUtil;
 import com.store.util.AuthoSharePreference;
 import com.store.util.JsonUtil;
@@ -108,7 +109,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	static ArrayList<Music> musicList;
 	static ArrayList<SoftwareBean> musicAppList;
 	static Dialog builder;
-    private static View viewForButton;
+    private static View viewForsoftDetail;
+    private static View viewFormusicdetail;
 	private static boolean isFristInit;
 	public static String appDownPath;
 	private static ArrayList<SoftwareBean> musicDetailList;
@@ -121,6 +123,14 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			R.id.item_hor_04,R.id.item_hor_05,R.id.item_hor_06,
 			R.id.item_hor_07,R.id.item_hor_08,R.id.item_hor_09,
 			R.id.item_hor_10,R.id.item_hor_11,R.id.item_hor_12,R.id.item_hor_13,R.id.item_hor_14,R.id.item_hor_15};
+	private static  int[] musiclistItem = {R.id.music1,R.id.music2,R.id.music3,
+		R.id.music4,R.id.music5,R.id.music6,
+		R.id.music7,R.id.music8,R.id.music9,
+		R.id.music};
+	private static  int[] recommendItem = {R.id.music1,R.id.music2,R.id.music3,
+		R.id.music4,R.id.music5,R.id.music6,
+		R.id.music7,R.id.music8,R.id.music9,
+		R.id.music};
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -154,6 +164,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		serch.setOnClickListener(this);
 		 inflater= LayoutInflater.from(this);
 		 builder= new Dialog(MainActivity.this);
+		 builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		int h ;
 		View softDetail = inflater.inflate(R.layout.soft_detail, null);
 		softInstallButton =(Button)softDetail.findViewById(R.id.install);
@@ -500,10 +511,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					Thread thread = new Thread(threadR);  
 					thread.start();
 				}
-
 		@SuppressWarnings("unchecked")
 		private void updateRightFragmentBaseLeft(int left_type) {
-			
 			myMusic.setSelected(true);
 			store.setSelected(false);
 			musicTestArrayList = new ArrayList<HashMap<String,String>>();
@@ -511,12 +520,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			String qq = "";
 			String duomi = "";
 			if(left_type == Constant.FLFG){
-				viewForButton= inflater.inflate(R.layout.soft_detail, null);
-				   if(isFristInit){
-					   builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				   }
-//				   isFristInit =false;
-					builder.setContentView(viewForButton);
+				viewForsoftDetail= inflater.inflate(R.layout.soft_detail, null);
+					builder.setContentView(viewForsoftDetail);
 					Window dialogWindow = builder.getWindow();
 					WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 					dialogWindow.setGravity(Gravity.CENTER);
@@ -532,7 +537,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	                        	System.out.println("下载的数据"+"===="+json);
 	                        	musicAppList =  new ArrayList<SoftwareBean>();
 	                        	musicAppList = JsonUtil.getProductList(json);
-	                        	
 	                        	setSoftInfo(musicAppList);
 	                        	Dialog.dismiss();
 	                         //successful ajax call, show status code and json content
@@ -551,21 +555,9 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 								
 								setSoftDetail(v.getId(),musicAppList);
 								int id = v.getId();
-								
-//								aQuery.find(R.id.install).clicked(new OnClickListener() {
-//									@Override
-//									public void onClick(View v) {
-//										System.out.println("我已经执行了");
-//										downLoadVideo("http://bcscdn.baidu.com/netdisk/BaiduYun_3.7.0.apk");
-//										isSecondRFlag = true; 
-//										
-//									}
-//								});
-								//TODO
 							}
 						});
 				  }
-				
 			}
 				else if(left_type == Constant.AL){
 				qq="QQ+";
@@ -581,10 +573,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				}
 				setView();
 			}else if(left_type == Constant.FLWSYS){
-//				qq="QQ++";
-//				duomi = "多米音乐++";
-//				String musicUrl= HttpRequest.URL_QUERY_LIST_MUSIC;
 				initDialog("three");
+				viewFormusicdetail = inflater.inflate(R.layout.music_detail, null);
 				final ProgressDialog Dialog = ProgressDialog.show(getActivity(), "缓冲中。。", "正在缓冲请稍后。。");
 				 String url = "http://192.168.1.32:8080/index/musicshop.action?token=myadmin&resultType=json";
 			        aQuery.ajax(url, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
@@ -595,24 +585,19 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			                        	System.out.println("下载的数据"+"===="+json);
 			                        	musicList = new ArrayList<Music>();
 			                        	musicList = JsonUtil.getMusicList(json);
-//			                        	setMusicChapter( musicList);
+			                        	setMusicChapter( musicList);
 			                        	Dialog.dismiss();
-			                                //successful ajax call, show status code and json content
-			                       Toast.makeText(aQuery.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();//在一个Toast中显示出得到的内容
-			                      
 			                        }else{
 			                        	Dialog.dismiss();
 			                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
 			                          }
 			                    }
-							
 			            });
 			        for (int i = 0; i < horItems.length; i++) {
 			        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-	                            System.out.println("item被点击了");
-								builder.show();
+							   setMusicDetial(v.getId(), musicList);
 							}
 						});
 					}
@@ -625,6 +610,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		private void setSoftDetail(int id,final ArrayList<SoftwareBean> list) {
 			
 			 int j =0;
+			 
 			for (int i = 0; i < horItems.length; i++) {
 				if(id==horItems[i]){
 					j=i;
@@ -633,7 +619,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			final String appId =list.get(j).getId();
 			String appPath =HttpRequest.URL_QUERY_SINGLE_SOFT+appId;
 			final ProgressDialog Dialog = ProgressDialog.show(getActivity(), "缓冲中。。", "正在缓冲请稍后。。");
-			builder.setContentView(viewForButton);
+			builder.setContentView(viewForsoftDetail);
 			Window dialogWindow = builder.getWindow();
 			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 			dialogWindow.setGravity(Gravity.CENTER);
@@ -641,17 +627,12 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			lp.height = 640; 
 			dialogWindow.setAttributes(lp);
 			Dialog.show();
-//			uri = Uri.parse("http://192.168.1.32:8080/common/show.jsp?pathrp="+ CryptUtil.decryptURL("2F6D6E742F6469676974616C2F6D6F766965736F757263652F31332F30312F32352F3133353930393736363237383631303030312E6D7034"));
-//			http://192.168.1.32:8080/softshop!getworks.action?id=136263942761370001&resultType=json
 			String web_url="http://192.168.1.32:8080/softshop!getworks.action?token=myadmin&id="+appId;
 			 aQuery.ajax(web_url, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
 	                @Override
 	                public void callback(String url, String json, AjaxStatus status) {
 	                        //得通过对一个url访问返回的数据存放在JSONObject json中 可以通过json.getContext()得到
-	                	
 	                        if(json != null){
-	                        	System.out.println("下载的数据"+"===="+json);
-//	                        	setMusicChapter( musicList);
 	                        	Dialog.dismiss();
 	                        	try {
 									JSONArray ja = new JSONArray(json);
@@ -659,19 +640,36 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 										JSONObject jb = ja.getJSONObject(i);
 									appDownPath= jb.getString("filepath");
 				                        String version = jb.getString("title");
+				                        viewForsoftDetail.findViewById(R.id.install).setOnClickListener(new OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												// TODO Auto-generated method stub
+												System.out.println("我已经被监听了");
+												String web_url="http://192.168.1.32:8080/softshop!getworks.action?token=myadmin&id="+appId;
+												new AsyncTask<Void, Void, Void>(){
+													@Override
+													protected Void doInBackground(
+															Void... params) {
+														UpdateVersion updateVersion  = UpdateVersion.instance(getActivity(), handler);
+														String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+appDownPath+"&"+"多米";
+													updateVersion.setUpdateUrl(appDownPathtrue);
+	                                    				updateVersion.run();
+														return null;
+													}
+												}.execute();
+											}
+										});
 									}
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 	                                //successful ajax call, show status code and json content
-	                   	Handler hd = new Handler(); 
 	                        }else{
 	                        	Dialog.dismiss();
 	                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
 	                          }
 	                    }
-					
 	            });
 			 aQuery.ajax(appPath, String.class, new AjaxCallback<String>() {
 	                @Override
@@ -681,100 +679,135 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	                        	System.out.println("下载的数据"+"===="+json);
 	                         final String image_path_boot;
 							try {
-								 final ArrayList<String> pathList = new ArrayList<String>();
+								final ArrayList<String> pathList = new ArrayList<String>();
 	                        	ArrayList<String> nameList = new ArrayList<String>();
 								JSONObject  jb = new JSONObject(json);
 								 image_path_boot = jb.getString("PIC");
 								 String name =jb.getString("PNAME");
-								 System.out.println("应用的名字"+name);
-								 System.out.println("appdetail详细地址==="+image_path_boot);
 								 builder.show();
-								 ((TextView)viewForButton.findViewById(R.id.appname)).setText(name);							
+								 ((TextView)viewForsoftDetail.findViewById(R.id.appname)).setText(name);	
+								 setSoftrecommend(list, viewForsoftDetail);
 									String path =HttpRequest.URL_QUERY_SINGLE_IMAGE+image_path_boot;
-									ImageView  imageView =(ImageView)viewForButton.findViewById(R.id.appimage);
+									ImageView  imageView =(ImageView)viewForsoftDetail.findViewById(R.id.appimage);
 									ImageDownloader downloader = new ImageDownloader(getActivity());
 									downloader.download(path, imageView);
-									
-								 viewForButton.findViewById(R.id.install).setOnClickListener(new OnClickListener() {
-										@Override
-										public void onClick(View v) {
-											// TODO Auto-generated method stub
-											System.out.println("我已经被监听了");
-											final ProgressDialog Dialog = ProgressDialog.show(getActivity(), "加载中。。", "正在查询下载地址");
-											Dialog.show();
-//											uri = Uri.parse("http://192.168.1.32:8080/common/show.jsp?pathrp="+ CryptUtil.decryptURL("2F6D6E742F6469676974616C2F6D6F766965736F757263652F31332F30312F32352F3133353930393736363237383631303030312E6D7034"));
-//											http://192.168.1.32:8080/softshop!getworks.action?id=136263942761370001&resultType=json
-											String web_url="http://192.168.1.32:8080/softshop!getworks.action?token=myadmin&id="+appId;
-//											 aQuery.ajax(web_url, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
-//									                @Override
-//									                public void callback(String url, String json, AjaxStatus status) {
-//									                        //得通过对一个url访问返回的数据存放在JSONObject json中 可以通过json.getContext()得到
-//									                	
-//									                        if(json != null){
-//									                        	System.out.println("下载的数据"+"===="+json);
-////									                        	setMusicChapter( musicList);
-//									                        	Dialog.dismiss();
-//									                        	try {
-//																	JSONArray ja = new JSONArray(json);
-//																	for (int i = 0; i < ja.length(); i++) {
-//																		JSONObject jb = ja.getJSONObject(i);
-//												    pathList.add(jb.getString("filepath"));
-//																	}
-//																} catch (JSONException e) {
-//																	// TODO Auto-generated catch block
-//																	e.printStackTrace();
-//																}
-//									                                //successful ajax call, show status code and json content
-//									                   	Handler hd = new Handler(); 
-//														new AsyncTask<Void, Void, Void>(){
-//															@Override
-//															protected Void doInBackground(
-//																	Void... params) {
-//																UpdateVersion updateVersion  = UpdateVersion.instance(getActivity(), handler);
-//																String appDownPath  =HttpRequest.URL_QUERY_DOWNLOAD_URL+pathList.get(0)+"&"+"多米";
-//															updateVersion.setUpdateUrl(appDownPath);
-//			                                    				updateVersion.run();
-//																return null;
-//															}
-//														}.execute();
-//									                        }else{
-//									                        	Dialog.dismiss();
-//									                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
-//									                          }
-//									                    }
-//													
-//									            });
-										
-										}
-									});
-								 
 							} catch (JSONException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 	                        	Dialog.dismiss();
-	                                //successful ajax call, show status code and json content
-	                       Toast.makeText(aQuery.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();//在一个Toast中显示出得到的内容
 	                        }else{
 	                        	Dialog.dismiss();
 	                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
 	                          }
 	                    }
 	            });
-			 
 		}
 		/**
 		 * setMusicDetial param
 		 */
-		private void setMusicDetial(int id) {
+		private void setMusicDetial(int id,final ArrayList<Music> list) {
+			final ArrayList<String> musictitleList = new ArrayList<String>();
+			final ArrayList<String> musicnameList = new ArrayList<String>();
+			 final ArrayList<String> musicpathList = new ArrayList<String>();
 			int j =0;
 			for (int i = 0; i < horItems.length; i++) {
 				if(id==horItems[i]){
 					j=i;
 				}
-				String musicId = musicList.get(j).getId();
-				String imageUrl =HttpRequest.URL_QUERY_SINGLE_MUSIC+musicId;
 			}
+			builder.setContentView(viewFormusicdetail);
+			Window dialogWindow = builder.getWindow();
+			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+			dialogWindow.setGravity(Gravity.CENTER);
+			lp.width = 800; 
+			lp.height = 640; 
+			dialogWindow.setAttributes(lp);
+			
+			final ProgressDialog Dialog = ProgressDialog.show(getActivity(), "缓冲中。。", "正在缓冲请稍后。。");
+				final String musicId =list.get(j).getId();
+				
+				String web_url=HttpRequest.URL_QUERY_LIST_MUSIC+musicId;
+				 aQuery.ajax(web_url, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
+		                @Override
+		                public void callback(String url, String json, AjaxStatus status) {
+		                        if(json != null){
+		                        	System.out.println("下载的数据"+"===="+json);
+		                        	Dialog.dismiss();
+		                        	try {
+										JSONArray ja = new JSONArray(json);
+										for (int i = 0; i < ja.length(); i++) {
+											JSONObject jb = ja.getJSONObject(i);
+											String musicpath= jb.getString("filepath");
+											musicpathList.add(musicpath);
+					                        musictitleList.add(jb.getString("title"));
+		                        		}
+										 for (int i = 0; i < musictitleList.size(); i++) {
+											 ((TextView)viewFormusicdetail.findViewById(musiclistItem[i])).setText(musictitleList.get(i));
+									}
+					                        viewForsoftDetail.findViewById(R.id.playmusic).setOnClickListener(new OnClickListener() {
+												@Override
+												public void onClick(View v) {
+													System.out.println("我已经被监听了");
+													new AsyncTask<Void, Void, Void>(){
+														@Override
+														protected Void doInBackground(
+																Void... params) {
+															UpdateVersion updateVersion  = UpdateVersion.instance(getActivity(), handler);
+															String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+musicpathList.get(0)+"&"+"多米";
+//														   MediaPlayer mp = new MediaPlayer();
+//														   mp.prepare();
+//														   mp.setDataSource(appDownPath);
+//														   mp.
+															Toast.makeText(getActivity(), "我已经监控", 1).show();
+															return null;
+														}
+													}.execute();
+												}
+											});
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+		                                //successful ajax call, show status code and json content
+		                        }else{
+		                        	Dialog.dismiss();
+		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+		                          }
+		                    }
+		            });
+				 String musicssPath = HttpRequest.URL_QUERY_SINGLE_MUSIC+musicId;
+				 aQuery.ajax(musicssPath, String.class, new AjaxCallback<String>() {
+		                @Override
+		                public void callback(String url, String json, AjaxStatus status) {
+		                        //得通过对一个url访问返回的数据存放在JSONObject json中 可以通过json.getContext()得到
+		                        if(json != null){
+		                        	System.out.println("下载的数据"+"===="+json);
+		                         final String image_path_boot;
+								try {
+									 final ArrayList<String> pathList = new ArrayList<String>();
+		                        	ArrayList<String> nameList = new ArrayList<String>();
+									JSONObject  jb = new JSONObject(json);
+									 image_path_boot = jb.getString("PIC");
+									 String name =jb.getString("PNAME");
+									 String note =jb.getString("PNOTE");
+									builder.show();
+									 ((TextView)viewFormusicdetail.findViewById(R.id.albumname)).setText(name);							
+									 ((TextView)viewFormusicdetail.findViewById(R.id.albuminfo)).setText(note);		
+									 setMusicrecommend(list, viewFormusicdetail);
+										String path =HttpRequest.URL_QUERY_SINGLE_IMAGE+image_path_boot;
+										ImageView  imageView =(ImageView)viewFormusicdetail.findViewById(R.id.albumimage);
+										ImageDownloader downloader = new ImageDownloader(getActivity());
+										downloader.download(path, imageView);
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+		                        	Dialog.dismiss();
+		                        }else{
+		                        	Dialog.dismiss();
+		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+		                          }
+		                    }
+		            });
 		}
 		
 		/**
@@ -782,6 +815,9 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		 * @param softList
 		 */
 		private void setSoftInfo(ArrayList<SoftwareBean> list) {
+			for (int i = 0; i < horItems.length; i++) {
+				itemView.findViewById(horItems[14-i]).setVisibility(View.VISIBLE);
+			}
 			if(list.size()<15){
 				int j = 15-list.size();
 				for (int i = 0; i <j; i++) {
@@ -803,6 +839,9 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		 * @param list
 		 */
 		private void setMusicChapter(ArrayList<Music> list) {
+			for (int i = 0; i < horItems.length; i++) {
+				itemView.findViewById(horItems[14-i]).setVisibility(View.VISIBLE);
+			}
 			if(list.size()<15){
 				int j = 15-list.size();
 				for (int i = 0; i <j; i++) {
@@ -833,6 +872,53 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					break;
 			}
 		}
+
+		
+		 //Set softrecommend
+	    private void setSoftrecommend(ArrayList<SoftwareBean> list,View view){
+	    	ImageDownloader Downloader = new ImageDownloader(getActivity());
+	    	for (int i = 0; i <5; i++) {
+	    		view.findViewById(horItems[i]).setVisibility(View.VISIBLE);
+			}
+	    	int j  =0 ;
+	    	if(list.size()<5){
+	    		for (int s = 0; s < 5-list.size(); s++) {
+	    			view.findViewById(horItems[14-s]).setVisibility(View.GONE);
+				}
+   	}
+	    	for (int i = 0; i < list.size(); i++) {
+				 SoftwareBean sb = list.get(i);
+				 String image_path = sb.getImage_path();
+				 String title = sb.getName();
+				 String turePath = HttpRequest.URL_QUERY_SINGLE_IMAGE+image_path;
+					Downloader.download(turePath, ((ImageView)view.findViewById(horItems[i]).findViewById(R.id.ItemIcon)));
+				 ((TextView)view.findViewById(horItems[i]).findViewById(R.id.ItemTitle)).setText(title);
+			}
+	    }
+	    private void setMusicrecommend(ArrayList<Music> list,final View view){
+	    	final ArrayList<String>  myPathlist = new ArrayList<String>();
+	    	ImageDownloader Downloader = new ImageDownloader(getActivity());
+	    	for (int i = 0; i <5; i++) {
+	    		view.findViewById(horItems[i]).setVisibility(View.VISIBLE);
+	    	}
+	    	int j  =0 ;
+	    	if(list.size()<5){
+	    		for (int s = list.size(); s < 5-list.size(); s++) {
+	    			view.findViewById(horItems[s]).setVisibility(View.INVISIBLE);
+	    		}
+	    	}
+	    	for (int i = 0; i < list.size(); i++) {
+	    		Music sb = list.get(i);
+	    		String image_path = sb.getImage_path();
+	    		String title = sb.getName();
+	    		String turePath = HttpRequest.URL_QUERY_SINGLE_IMAGE+image_path;
+	    		Downloader.download(turePath, ((ImageView)view.findViewById(horItems[i]).findViewById(R.id.ItemIcon)));
+	    		((TextView)view.findViewById(horItems[i]).findViewById(R.id.ItemTitle)).setText(title);
+	    		 myPathlist.add(image_path);
+	    	}
+	
+	    }
+
 	}
 
 
@@ -1653,10 +1739,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		   if("three".equals(s)){
 			   view= inflater.inflate(R.layout.music_detail, null);
 		   }
-		   if(isFristInit){
-			   builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		   }
-//		   isFristInit =false;
 			builder.setContentView(view);
 			Window dialogWindow = builder.getWindow();
 			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
@@ -1665,6 +1747,29 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			lp.height = 640; 
 			dialogWindow.setAttributes(lp);
 		}
-	   
+	   /**
+		 * @param url
+		 * @return
+		 */
+		public static Bitmap downloadBitmap(String url) {
+			
+			//try to get image from file cache
+			Bitmap bitmap = null;
+			try {
+				  URL url_ = new URL(url);
+				  HttpURLConnection conn = (HttpURLConnection) url_.openConnection();
+				  conn.setRequestMethod("GET");
+				  conn.setConnectTimeout(6 * 1000);
+				  if(conn.getResponseCode()==200){
+				   InputStream inputStream=conn.getInputStream();
+				   bitmap=BitmapFactory.decodeStream(inputStream);
+				   return bitmap;
+				  }
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			return null;
+		}
 
 }

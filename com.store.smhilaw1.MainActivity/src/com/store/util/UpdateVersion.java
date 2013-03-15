@@ -124,7 +124,6 @@ public class UpdateVersion implements Runnable {
 					fileOutputStream.write(buf, 0, ch);
 					count += ch;
 					loadSize = count ;
-					System.out.println("load apk size:"+loadSize+"KB");
 					mHandler.post(new Runnable() {
 						
 						@Override

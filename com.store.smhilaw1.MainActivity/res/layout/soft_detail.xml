@@ -111,19 +111,15 @@
         android:layout_height="wrap_content" >
         <Button
             android:id="@+id/uninstall"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginRight="228dp"
-            android:layout_centerHorizontal="true"
+            android:layout_width="100dip"
+            android:layout_height="40dp"
             android:layout_below="@+id/music10"
-            android:visibility="gone"
+            android:visibility="visible"
             android:text="已安装" />
           <Button
             android:id="@+id/install"
-            android:layout_width="wrap_content"
-               android:layout_marginLeft="228dp"
-            android:layout_height="30dp"
-            android:layout_centerHorizontal="true"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
             android:layout_toRightOf="@id/uninstall"
             android:layout_below="@+id/music10"
             android:text="下载" />
@@ -144,57 +140,58 @@
         android:layout_marginRight="20dp"
     
         />
-      
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp" >
-
-        <ImageView
-            android:id="@+id/apprecommend1"
+ <LinearLayout
+            android:id="@+id/items01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_launcher" />
+            android:layout_weight="1" >
+            <include
+                android:id="@+id/item_hor_01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/music_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_02" />
 
-        <ImageView
-            android:id="@+id/apprecommend2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/apprecommend1"
-            android:layout_marginRight="40dp"
-            android:layout_toLeftOf="@+id/apprecommend1"
-            android:src="@drawable/ic_launcher" />
+            <include
+                android:id="@+id/item_hor_02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/music_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_03" />
 
-        <ImageView
-            android:id="@+id/apprecommend3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/apprecommend2"
-            android:layout_marginRight="40dp"
-            android:layout_toLeftOf="@+id/apprecommend2"
-            android:src="@drawable/ic_launcher" />
+            <include
+                android:id="@+id/item_hor_03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/music_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_04" />
 
-        <ImageView
-            android:id="@+id/apprecommend4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/apprecommend1"
-            android:layout_marginLeft="40dp"
-            android:layout_toRightOf="@+id/apprecommend1"
-            android:src="@drawable/ic_launcher" />
-
-        <ImageView
-            android:id="@+id/apprecommend5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/apprecommend3"
-            android:layout_marginLeft="40dp"
-            android:layout_toRightOf="@+id/apprecommend3"
-            android:src="@drawable/ic_launcher" />
+            <include
+                android:id="@+id/item_hor_04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/music_sketch_hor_item"
+                />
+             <include
+                android:id="@+id/item_hor_05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/music_sketch_hor_item"
+                 android:nextFocusRight="@+id/item_hor_06"
+                 android:nextFocusDown="@+id/itme_hor_10"
+                />
+        </LinearLayout>
         
     </RelativeLayout>
 

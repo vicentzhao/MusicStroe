@@ -80,6 +80,7 @@
             android:layout_marginRight="15dp"
             android:singleLine="false"
             android:lines="4"
+            android:visibility="gone"
             android:text="    2009年万众期待华人天后蔡依林全新国语专辑【花蝴蝶】即将登场！蔡依林千变万化，不断创新的尝试，来到华纳发行的第一张专辑，Jolin和唱片公司老板工作员工都更上一层楼，以倍数的创意、预算、成本、力量务求带给歌迷前所未有的视听感受，从造型/舞蹈/包装/照片/MV,每个层面都涵盖......：" />
         
         
@@ -115,6 +116,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_weight="1"
+        android:visibility="gone"
         android:layout_height="wrap_content" >
 
         <TextView
@@ -200,10 +202,10 @@
             android:layout_alignLeft="@+id/music9"
             android:text="10.愈慢愈美丽" />
 
-        <Button
+        <TextView
             android:id="@+id/playmusic"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
             android:layout_below="@+id/music10"
             android:layout_centerHorizontal="true"
             android:text="播放" />
@@ -234,49 +236,53 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp" >
 
-        <ImageView
-            android:id="@+id/recommend1"
+         <LinearLayout
+            android:id="@+id/items01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_launcher" />
+            android:layout_weight="1" >
 
-        <ImageView
-            android:id="@+id/recommend2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/recommend1"
-            android:layout_marginRight="40dp"
-            android:layout_toLeftOf="@+id/recommend1"
-            android:src="@drawable/ic_launcher" />
+            <include
+                android:id="@+id/item_hor_01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/music_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_02" />
 
-        <ImageView
-            android:id="@+id/recommend3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/recommend2"
-            android:layout_marginRight="40dp"
-            android:layout_toLeftOf="@+id/recommend2"
-            android:src="@drawable/ic_launcher" />
+            <include
+                android:id="@+id/item_hor_02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/music_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_03" />
 
-        <ImageView
-            android:id="@+id/recommend4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/recommend1"
-            android:layout_marginLeft="40dp"
-            android:layout_toRightOf="@+id/recommend1"
-            android:src="@drawable/ic_launcher" />
+            <include
+                android:id="@+id/item_hor_03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/music_sketch_hor_item"
+                android:nextFocusRight="@+id/item_hor_04" />
 
-        <ImageView
-            android:id="@+id/recommend5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/recommend4"
-            android:layout_marginLeft="40dp"
-            android:layout_toRightOf="@+id/recommend4"
-            android:src="@drawable/ic_launcher" />
+            <include
+                android:id="@+id/item_hor_04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/music_sketch_hor_item"
+                />
+             <include
+                android:id="@+id/item_hor_05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/music_sketch_hor_item"
+                 android:nextFocusRight="@+id/item_hor_06"
+                 android:nextFocusDown="@+id/itme_hor_10"
+                />
+        </LinearLayout>
         
     </RelativeLayout>
 

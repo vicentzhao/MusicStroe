@@ -21,6 +21,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class HttpUtil {
@@ -79,6 +80,7 @@ public class HttpUtil {
 				HttpEntity entity = mHttpResponse.getEntity() ;
 				apkSize = entity.getContentLength() ;
 				inputStream = entity.getContent() ;
+				System.out.println("apkSize大小应该为==================="+apkSize);
 			}
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
