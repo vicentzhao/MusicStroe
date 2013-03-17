@@ -3,12 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
     <RelativeLayout 
         android:layout_width="fill_parent"
         android:layout_height="30dp"
         >
-
         <TextView
             android:id="@+id/title_text"
             android:layout_width="fill_parent"
@@ -20,7 +18,6 @@
             android:textColor="@android:color/white"
             android:gravity="center"
             android:background="#00C5CD" />
-
         <ImageView
             android:id="@+id/title_image"
             android:layout_width="wrap_content"
@@ -28,14 +25,11 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:src="@drawable/ic_launcher" />
-
     </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="wrap_content" >
-
         <ImageView
             android:id="@+id/albumimage"
             android:layout_width="80dp"
@@ -45,7 +39,6 @@
             android:layout_marginLeft="35dp"
             android:layout_marginTop="24dp"
             android:src="@drawable/ic_launcher" />
-
         <TextView
             android:id="@+id/albumname"
             android:layout_width="wrap_content"
@@ -80,7 +73,6 @@
             android:layout_marginRight="15dp"
             android:singleLine="false"
             android:lines="4"
-            android:visibility="gone"
             android:text="    2009年万众期待华人天后蔡依林全新国语专辑【花蝴蝶】即将登场！蔡依林千变万化，不断创新的尝试，来到华纳发行的第一张专辑，Jolin和唱片公司老板工作员工都更上一层楼，以倍数的创意、预算、成本、力量务求带给歌迷前所未有的视听感受，从造型/舞蹈/包装/照片/MV,每个层面都涵盖......：" />
         
         
@@ -112,106 +104,112 @@
         android:layout_marginRight="20dp"
         android:text="曲目列表"
         android:layout_marginLeft="20dp" />
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_weight="1"
-        android:visibility="gone"
+        android:orientation="vertical"
         android:layout_height="wrap_content" >
-
-        <TextView
+        <!-- 
+      
+ -->
+       <LinearLayout 
+           
+              android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           >
+            <Button
             android:id="@+id/music1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="22dp"
+            android:textSize="12sp"
             android:text="1、爱引力" />
-
-        <TextView
+        <Button
             android:id="@+id/music2"
+             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/music1"
-            android:layout_below="@+id/music1"
             android:text="2、影舞者" />
-
-        <TextView
+        <Button
             android:id="@+id/music3"
+             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/music2"
-            android:layout_below="@+id/music2"
             android:text="3、妥协" />
 
-        <TextView
+        <Button
             android:id="@+id/music4"
+             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/music3"
-            android:layout_below="@+id/music3"
             android:text="4、降落" />
 
-        <TextView
+        <Button
             android:id="@+id/music5"
+             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/music4"
-            android:layout_below="@+id/music4"
             android:text="5、我的依赖" />
-
-        <TextView
+       </LinearLayout>
+       <LinearLayout 
+              android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+           >
+           
+             <Button
+                   android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="22dp"
             android:id="@+id/music6"
+             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/music2"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="180dp"
             android:text="6、你快乐我内伤" />
 
-        <TextView
+        <Button
             android:id="@+id/music7"
+             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/music6"
-            android:layout_below="@+id/music6"
             android:text="7、热冬天 " />
 
-        <TextView
+        <Button
             android:id="@+id/music8"
+             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/music4"
-            android:layout_alignLeft="@+id/music7"
             android:text="8、花蝴蝶 " />
 
-        <TextView
+        <Button
             android:id="@+id/music9"
             android:layout_width="wrap_content"
+             android:textSize="12sp"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/music5"
-            android:layout_alignLeft="@+id/music8"
             android:text="9、大丈夫" />
 
-        <TextView
+        <Button
             android:id="@+id/music10"
+             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/music5"
             android:layout_alignBottom="@+id/music5"
-            android:layout_alignLeft="@+id/music9"
             android:text="10.愈慢愈美丽" />
+           
+           
+       </LinearLayout>
 
-        <TextView
-            android:id="@+id/playmusic"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/music10"
-            android:layout_centerHorizontal="true"
-            android:text="播放" />
-
-    </RelativeLayout>
-
+      
+   
+    </LinearLayout>
     <TextView
         android:id="@+id/textView6"
         android:layout_width="fill_parent"
