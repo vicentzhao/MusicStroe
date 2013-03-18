@@ -1,10 +1,7 @@
 package com.store.smhilaw1;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,6 +12,8 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -31,6 +30,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -45,6 +45,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MediaController;
@@ -87,6 +88,7 @@ import com.store.util.UpdateVersion;
 public class MainActivity extends FragmentActivity implements LeftSelectedListener, RightSelectedListener,OnClickListener{
 	private static int left_type = Constant.FLFG;
 	// private static RightSecond rSecond;
+	private static String TAG ="MusicStore";
 	private static boolean isSecondRFlag = false;// 右边第二级是否被选中
 	public static String DETAIL_ID = null;
 	private static DetailFragment detailF;
@@ -107,12 +109,14 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	private static SharedPreferences.Editor editor;
 	public  static boolean   isFragment =true;
 	private boolean isfirst =true;
+	private static MediaPlayer mp;
 	static ArrayList<Music> musicList;
 	static ArrayList<SoftwareBean> musicAppList;
 	static Dialog builder;
     private static View viewForsoftDetail;
     private static View viewFormusicdetail;
 	private static boolean isFristInit;
+	private static boolean isplay=false;
 	public static String appDownPath;
 	private static ArrayList<SoftwareBean> musicDetailList;
 	static LayoutInflater inflater;
@@ -509,7 +513,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					thread.start();
 				}
 		@SuppressWarnings("unchecked")
-		private void updateRightFragmentBaseLeft(int left_type) {
+		public void updateRightFragmentBaseLeft(int left_type) {
 			myMusic.setSelected(true);
 			store.setSelected(false);
 			musicTestArrayList = new ArrayList<HashMap<String,String>>();
@@ -537,7 +541,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	                        	setSoftInfo(musicAppList);
 	                        	Dialog.dismiss();
 	                         //successful ajax call, show status code and json content
-	                       Toast.makeText(aQuery.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();//在一个Toast中显示出得到的内容
 	                        }else{
 	                        	Dialog.dismiss();
 	                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode()+"  哇， 好像出错了，请大侠重新试过",Toast.LENGTH_LONG).show();
@@ -605,7 +608,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		 * setSoftDetial param
 		 */
 		
-		private void setSoftDetail(int id,final ArrayList<SoftwareBean> list) {
+		public void setSoftDetail(int id,final ArrayList<SoftwareBean> list) {
 			
 			 int j =0;
 			 
@@ -703,7 +706,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		/**
 		 * setMusicDetial param
 		 */
-		private void setMusicDetial(int id,final ArrayList<Music> list) {
+		public void setMusicDetial(int id,final ArrayList<Music> list) {
 			final ArrayList<String> musictitleList = new ArrayList<String>();
 			final ArrayList<String> musicnameList = new ArrayList<String>();
 			 final ArrayList<String> musicpathList = new ArrayList<String>();
@@ -720,10 +723,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			lp.width = 800; 
 			lp.height = 640; 
 			dialogWindow.setAttributes(lp);
-			
 			final ProgressDialog Dialog = ProgressDialog.show(getActivity(), "缓冲中。。", "正在缓冲请稍后。。");
 				final String musicId =list.get(j).getId();
-				
 				String web_url=HttpRequest.URL_QUERY_LIST_MUSIC+musicId;
 				 aQuery.ajax(web_url, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
 		                @Override
@@ -743,29 +744,14 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 											 final String web_path =musicpathList.get(i);
 											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setText(musictitleList.get(i));
 											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setOnClickListener(new OnClickListener() {
-												
 												@Override
 												public void onClick(View v) {
 													String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+web_path+"&"+"多米";
 													Toast.makeText(getActivity(), "开始播放", 1).show();
-													MediaPlayer mp = new MediaPlayer();
-													try {
-														mp.prepare();
-														mp.setDataSource(appDownPathtrue);
-														mp.start();
-													} catch (IllegalStateException e) {
-														// TODO Auto-generated catch block
-														e.printStackTrace();
-													} catch (IOException e) {
-														// TODO Auto-generated catch block
-														e.printStackTrace();
-													}
-													
+													setMusicPlay(appDownPathtrue);
 												}
 											});
-											 
 									}
-
 									} catch (JSONException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -816,7 +802,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		 * setAllSoft
 		 * @param softList
 		 */
-		private void setSoftInfo(ArrayList<SoftwareBean> list) {
+		public void setSoftInfo(ArrayList<SoftwareBean> list) {
 			for (int i = 0; i < horItems.length; i++) {
 				itemView.findViewById(horItems[14-i]).setVisibility(View.VISIBLE);
 			}
@@ -835,11 +821,94 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			}
 			
 		}
+		
+		/**
+		 * set music play
+		 * @param path
+		 */
+		public void setMusicPlay(final String path){
+			Log.e(TAG, "下载的路径是"+path);
+			final View view = inflater.inflate(R.layout.musicplay, null);
+		  final ImageButton iv =	(ImageButton) view.findViewById(R.id.btn_play);
+			mp = new MediaPlayer();
+			final Dialog dl = new Dialog(getActivity());
+			dl.setContentView(view);
+			Window dialogWindow = dl.getWindow();
+			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+			dialogWindow.setGravity(Gravity.CENTER);
+			lp.width = 400; 
+			lp.height =200; 
+			dialogWindow.setAttributes(lp);
+			dl.show();
+			view.findViewById(R.id.btn_stop).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+				  mp.stop();
+				  dl.dismiss();
+				}
+			});
+			 view.findViewById(R.id.btn_play).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(isplay){
+						 mp.pause();
+						 Toast.makeText(getActivity(), "暂停", 1).show();
+						 iv.setImageResource(R.drawable.desktop_playbt_b);
+						 isplay=false;
+					}
+					else if(!isplay){
+						mp.start();
+						 Toast.makeText(getActivity(), "开始", 1).show();
+						 iv.setImageResource(R.drawable.desktop_pausebt_b);
+						isplay =true;
+					}
+				}
+			});
+			 builder.setOnKeyListener(new OnKeyListener() {
+				
+				@Override
+				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+					// TODO Auto-generated method stub
+					if(keyCode==KeyEvent.KEYCODE_BACK){
+						System.out.println("监听到返回键");
+						if(isplay){
+							if(mp!=null){
+								mp.stop();
+							}
+						}
+						  return false;
+					}
+					return false;
+				}
+			});
+			new AsyncTask<Void, Void, Void>(){
+				@Override
+				protected Void doInBackground(Void... params) {
+					try {
+						mp.setDataSource(getActivity(), Uri.parse(path));
+						mp.prepare();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					mp.start();
+					isplay =true;
+					view.post(new Runnable() {
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							iv.setImageResource(R.drawable.desktop_pausebt_b);
+						}
+					});
+					return null;
+				}
+			}.execute();
+		}
 		/**
 		 * setAllMusic
 		 * @param list
 		 */
-		private void setMusicChapter(ArrayList<Music> list) {
+		public void setMusicChapter(ArrayList<Music> list) {
 			for (int i = 0; i < horItems.length; i++) {
 				itemView.findViewById(horItems[14-i]).setVisibility(View.VISIBLE);
 			}
@@ -1533,6 +1602,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	}
 	 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		
 		if(isfirst){
 		if(keyCode ==KeyEvent.KEYCODE_DPAD_LEFT){
 			myMusic.setFocusable(true);
@@ -1765,29 +1835,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			lp.height = 640; 
 			dialogWindow.setAttributes(lp);
 		}
-	   /**
-		 * @param url
-		 * @return
-		 */
-		public static Bitmap downloadBitmap(String url) {
-			
-			//try to get image from file cache
-			Bitmap bitmap = null;
-			try {
-				  URL url_ = new URL(url);
-				  HttpURLConnection conn = (HttpURLConnection) url_.openConnection();
-				  conn.setRequestMethod("GET");
-				  conn.setConnectTimeout(6 * 1000);
-				  if(conn.getResponseCode()==200){
-				   InputStream inputStream=conn.getInputStream();
-				   bitmap=BitmapFactory.decodeStream(inputStream);
-				   return bitmap;
-				  }
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-			
-			return null;
-		}
+	   
+	   
 
 }

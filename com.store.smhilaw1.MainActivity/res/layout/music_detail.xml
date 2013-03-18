@@ -120,6 +120,7 @@
            >
             <Button
             android:id="@+id/music1"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -129,6 +130,7 @@
             android:text="1、爱引力" />
         <Button
             android:id="@+id/music2"
+            android:layout_weight="1"
              android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -136,6 +138,7 @@
             android:text="2、影舞者" />
         <Button
             android:id="@+id/music3"
+            android:layout_weight="1"
              android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -144,6 +147,7 @@
 
         <Button
             android:id="@+id/music4"
+            android:layout_weight="1"
              android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -152,6 +156,7 @@
 
         <Button
             android:id="@+id/music5"
+            android:layout_weight="1"
              android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -168,6 +173,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="22dp"
             android:id="@+id/music6"
+            android:layout_weight="1"
              android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -177,6 +183,7 @@
         <Button
             android:id="@+id/music7"
              android:textSize="12sp"
+             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="7、热冬天 " />
@@ -184,12 +191,14 @@
         <Button
             android:id="@+id/music8"
              android:textSize="12sp"
+             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="8、花蝴蝶 " />
 
         <Button
             android:id="@+id/music9"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
              android:textSize="12sp"
             android:layout_height="wrap_content"
@@ -198,6 +207,7 @@
         <Button
             android:id="@+id/music10"
              android:textSize="12sp"
+             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/music5"
