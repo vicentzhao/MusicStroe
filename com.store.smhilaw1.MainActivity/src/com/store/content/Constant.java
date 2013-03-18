@@ -45,4 +45,12 @@ public class Constant {
 		public static final int DOWN_SOFT_LIST=100001;//下载列表
 		
 		public static final int USERLOGIN=100010;//支付
+		
+		//一些常量
+		public static final int MYMUSIC = 100011;
+		public static final int MUSICSTORE = 100012;
+		public static final int MUSICAPP = 100013;
+		public static final int MUSICCHAPTER = 100014;
+		public static final int MUSICMV = 100015;
+		
 }

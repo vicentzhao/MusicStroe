@@ -21,13 +21,13 @@ import com.store.smhilaw1.R;
 public class UpdateVersion implements Runnable {
 	
 	public static final String TAG = "version" ;
-	private static Activity mContext ;
+	private static Context mContext ;
 	private static UpdateVersion version ;
 	private static Handler mHandler ;
 	private String mUrl ;
 	private String mName ;
 	
-	public static UpdateVersion instance(Activity context, Handler handler) {
+	public static UpdateVersion instance(Context context, Handler handler) {
 		mContext = context ;
 		mHandler = handler ;
 		if(version==null) {
