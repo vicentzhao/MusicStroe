@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -119,8 +120,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	private static boolean isplay=false;
 	public static String appDownPath;
 	private static ArrayList<SoftwareBean> musicDetailList;
-	private static int isWhatLeft;
-	private static int isWhatRight;
+	private static int isWhatLeft=100013;
+	private static int isWhatRight=100011;
 	static LayoutInflater inflater;
 	private static Button classify, the_news, recommend, movie, teleplay, anime,softInstallButton,
 	music, record,soft;
@@ -182,46 +183,32 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		myMusic.setSelected(true);
 		store.setText(getResources().getString(R.string.music_store));
 	}
-	
 	@Override
 	public void onClick(View v) {
-		HashMap<String, String> hashMap ;
-		String qq = "";
-		String duomi = "";
-		if(left_type == Constant.FLFG){
-			qq="QQ";
-			duomi = "多米音乐";
-		}else if(left_type == Constant.AL){
-			qq="QQ+";
-			duomi = "多米音乐+";
-		}else if(left_type == Constant.FLWSYS){
-			qq="QQ++";
-			duomi = "多米音乐++";
-		}
 		switch(v.getId()){
 		case R.id.myMusic:
 			myMusic.setSelected(true);
 			store.setSelected(false);
+			isWhatRight =Constant.MYMUSIC;
 			if(isWhatLeft ==Constant.MUSICAPP){
-				setSoftInfo(musicAppList);
+				setAppStoreList(Constant.MYMUSIC_APP);
 			}else if(isWhatLeft==Constant.MUSICCHAPTER){
-//			    setMusicChapter();
+			    setMusicChapterList(Constant.MYMUSIC_CHAPTER);
 			}else if(isWhatLeft==Constant.MUSICMV){
-				
+				setMusicMvList(Constant.MYMUSIC_MV);
 			}
-			setDefalutView();
 			break;
 		case R.id.store:
+			isWhatRight =Constant.MUSICSTORE;
 			if(isWhatLeft ==Constant.MUSICAPP){
-				setSoftInfo(musicAppList);
+				setAppStoreList(Constant.MYMUSIC_APP);
 			}else if(isWhatLeft==Constant.MUSICCHAPTER){
-//			    setMusicChapter();
+				 setMusicChapterList(Constant.MUSICSTORE_CHAPTER);
 			}else if(isWhatLeft==Constant.MUSICMV){
-				
+				setMusicMvList(Constant.MUSICSTORE_MV);
 			}
 			myMusic.setSelected(false);
 			store.setSelected(true);
-		    setAppStore();
 			break;
 		case R.id.serch_button:
 			Toast.makeText(this, "暂无功能", Toast.LENGTH_SHORT).show();
@@ -247,13 +234,10 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setHasOptionsMenu(true);
-
 		}
-
 		public interface OnLeftSelectedListener {
 			public void onLeftSelected(int left_type);
 		}
-		
 		@Override
 		public void onAttach(Activity activity) {
 			super.onAttach(activity);
@@ -377,7 +361,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		ArrayList<String> a = new ArrayList<String>();
 		OnRightSelectedListener oRightSelectedListener;
 		private MediaPlayer mMediaPlayer;
-		
 		private Handler handler = new Handler() {
 			public void handleMessage(Message msg) {
 				if (!Thread.currentThread().isInterrupted()) {
@@ -391,7 +374,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 						String error = msg.getData().getString("error");
 						Toast.makeText(getActivity(), error+"", 1).show();
 						break;
-						
 					case 2:
 						if(getActivity() == null || getActivity().equals(""))return;
 						Toast.makeText(getActivity(), R.string.success,
@@ -418,32 +400,14 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 //			commUtil = new CommUtil();
 //			a = commUtil.GetRightTitle(left_type);
 //		}
-
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			http = new HttpRequest();
 			http.setHttpResponseListener(this);
 			RelativeLayout layout = new RelativeLayout(getActivity());
-//			View view = (View) inflater.inflate(R.layout.grid_view, container,
-//					false);
 			itemView= inflater.inflate(R.layout.design_sketch_hor, container,false);
 			initHorizontalView();
-//			gridDiew = (GridView) view.findViewById(R.id.gridview);
-			musicTestArrayList = new ArrayList<HashMap<String,String>>();
-			HashMap<String, String> hashMap ;
-			for(int i = 0;i<15;i++){
-				hashMap = new HashMap<String, String>();
-				if(i%2==0){
-					hashMap.put("info", "QQ");
-				}else{
-					hashMap.put("info", "多米音乐");
-				}
-				musicTestArrayList.add(hashMap);
-			}
-//			musicAdapter = new TestMusicAdapter(getActivity(), musicTestArrayList);
-//			gridDiew.setAdapter(musicAdapter);
-//			gridDiew.setOnItemClickListener(this);
 			layout.addView(itemView);
 			 setDefalutView();
 			return layout;
@@ -497,93 +461,30 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			String qq = "";
 			String duomi = "";
 			if(left_type == Constant.FLFG){
-				if(isWhatRight==Constant.MYMUSIC){}
-				else if(isWhatRight==Constant.MUSICSTORE){}
-				viewForsoftDetail= inflater.inflate(R.layout.soft_detail, null);
-					builder.setContentView(viewForsoftDetail);
-					Window dialogWindow = builder.getWindow();
-					WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-					dialogWindow.setGravity(Gravity.CENTER);
-					lp.width = 800; 
-					lp.height = 640; 
-					dialogWindow.setAttributes(lp);
-				final ProgressDialog Dialog = ProgressDialog.show(getActivity(), "缓冲中。。", "正在加载请稍后。。");
-				String path =HttpRequest.URL_QUERY_STROE_ALL_SOFT;
-				aQuery.ajax(path, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
-	                @Override
-	                public void callback(String url, String json, AjaxStatus status) {
-	                        if(json != null){
-	                        	System.out.println("下载的数据"+"===="+json);
-	                        	musicAppList =  new ArrayList<SoftwareBean>();
-	                        	musicAppList = JsonUtil.getProductList(json);
-	                        	setSoftInfo(musicAppList);
-	                        	Dialog.dismiss();
-	                         //successful ajax call, show status code and json content
-	                        }else{
-	                        	Dialog.dismiss();
-	                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode()+"  哇， 好像出错了，请大侠重新试过",Toast.LENGTH_LONG).show();
-	                          }
-	                    }
-	            });
-				  for (int i = 0; i < horItems.length; i++) {
-			        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-	                            System.out.println("item被点击了");
-								
-								setSoftDetail(v.getId(),musicAppList);
-								int id = v.getId();
-							}
-						});
-				  }
+				isWhatLeft =Constant.MUSICAPP;
+				if(isWhatRight==Constant.MYMUSIC){
+					setAppStoreList(Constant.MYMUSIC_APP);
+				}
+				else if(isWhatRight==Constant.MUSICSTORE){
+					setAppStoreList(Constant.MUSICSTORE_APP);
+				}
 			}
 				else if(left_type == Constant.AL){
-				qq="QQ+";
-				duomi = "多米音乐+";
-				for(int i = 0;i<15;i++){
-					hashMap = new HashMap<String, String>();
-					if(i%2==0){
-						hashMap.put("info", qq);
-					}else{
-						hashMap.put("info", duomi);
+					isWhatLeft =Constant.MUSICCHAPTER;
+					if(isWhatRight==Constant.MYMUSIC){
 					}
-					musicTestArrayList.add(hashMap);
-				}
-				setView();
+					else if(isWhatRight==Constant.MUSICSTORE){
+					}
 			}else if(left_type == Constant.FLWSYS){
-				initDialog("three");
-				viewFormusicdetail = inflater.inflate(R.layout.music_detail, null);
-				final ProgressDialog Dialog = ProgressDialog.show(getActivity(), "缓冲中。。", "正在缓冲请稍后。。");
-				 String url = HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
-			        aQuery.ajax(url, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
-			                @Override
-			                public void callback(String url, String json, AjaxStatus status) {
-			                        //得通过对一个url访问返回的数据存放在JSONObject json中 可以通过json.getContext()得到
-			                        if(json != null){
-			                        	System.out.println("下载的数据"+"===="+json);
-			                        	musicList = new ArrayList<Music>();
-			                        	musicList = JsonUtil.getMusicList(json);
-			                        	setMusicChapter( musicList);
-			                        	Dialog.dismiss();
-			                        }else{
-			                        	Dialog.dismiss();
-			                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
-			                          }
-			                    }
-			            });
-			        for (int i = 0; i < horItems.length; i++) {
-			        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-							   setMusicDetial(v.getId(), musicList);
-							}
-						});
-					}
+				isWhatLeft =Constant.MUSICMV;
+               if(isWhatRight==Constant.MYMUSIC){
+					setMusicMvList(Constant.MYMUSIC_MV);
+				}
+				else if(isWhatRight==Constant.MUSICSTORE){
+					setMusicMvList(Constant.MUSICSTORE_MV);
+				}
 			}
 		}
-	
-		
-		
 		@Override
 		public void response(int responseCode, int what, String value, Object object) {
 			switch(what){
@@ -1424,7 +1325,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		 * setAllMusic 音乐
 		 * @param list
 		 */
-		public static void setMusicChapter(ArrayList<Music> list) {
+		public static void setMusicChapterInfo(ArrayList<Music> list) {
 			for (int i = 0; i < horItems.length; i++) {
 				itemView.findViewById(horItems[14-i]).setVisibility(View.VISIBLE);
 			}
@@ -1493,7 +1394,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	    		}
 	    	}
 	    	for (int i = 0; i < list.size(); i++) {
-	    		Music sb = list.get(i);
+	    		final Music sb = list.get(i);
 	    		String image_path = sb.getImage_path();
 	    		final String title = sb.getName();
 	    		final String turePath = HttpRequest.URL_QUERY_SINGLE_IMAGE+image_path;
@@ -1503,22 +1404,23 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	    		 view.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
+							  
 							 ((TextView)view.findViewById(R.id.albumname)).setText(title);
-							String path =HttpRequest.URL_QUERY_SINGLE_IMAGE+turePath;
 							ImageView  imageView =(ImageView)view.findViewById(R.id.albumimage);
 							ImageDownloader downloader = new ImageDownloader(aQuery.getContext());
-							downloader.download(path, imageView);
+							downloader.download(turePath, imageView);
+							setRecommedMusicInfo(sb.getId(),view);
 						}
 					});
 	    	}
 	    }
 
 	    /**
+	     * 试播,订购，下载
 		 * set music play
-		 * 试播,订购，下载
 		 * @param path
 		 */
-		public static void setMusicPlay(final String path){
+		public static void setMusicCross(final String path,final String sid){
 			Log.e(TAG, "下载的路径是"+path);
 			final View musiccrossView = inflater.inflate(R.layout.musiccross, null);
 			final Dialog dl = new Dialog(aQuery.getContext());
@@ -1531,12 +1433,28 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			lp.height =200; 
 			dialogWindow.setAttributes(lp);
 			dl.show();
+			//试播
 			((Button)musiccrossView.findViewById(R.id.btn_shibo)).setOnClickListener(new OnClickListener() {
-				
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					setMusicPilot(path);
+				}
+			});
+			//下载
+			((Button)musiccrossView.findViewById(R.id.btn_musicdown)).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					setMusicDown(sid);
+				}
+			});
+			//订阅单曲
+			((Button)musiccrossView.findViewById(R.id.btn_musciorder)).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					//setMusicPilot(path);
 				}
 			});
 		 
@@ -1589,7 +1507,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 													@Override
 													protected Void doInBackground(
 															Void... params) {
-														UpdateVersion updateVersion  = UpdateVersion.instance(aQuery.getContext(), hdHandler);
+														UpdateVersion updateVersion  = UpdateVersion.instance(aQuery.getContext(), hdHandler,true);
 													updateVersion.setUpdateUrl(appDownPath);
 	                                    				updateVersion.run();
 														return null;
@@ -1648,12 +1566,45 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			final ArrayList<String> musictitleList = new ArrayList<String>();
 			final ArrayList<String> musicnameList = new ArrayList<String>();
 			 final ArrayList<String> musicpathList = new ArrayList<String>();
+			 final ArrayList<String> musicsidList = new ArrayList<String>();
 			int j =0;
 			for (int i = 0; i < horItems.length; i++) {
 				if(id==horItems[i]){
 					j=i;
 				}
 			}
+			for (int i = 0; i < musiclistItem.length; i++) {
+				viewFormusicdetail.findViewById(musiclistItem[i]).setVisibility(View.INVISIBLE);
+			}
+			Button btn_orderall=(Button)(viewFormusicdetail.findViewById(R.id.btn_order_allmusic));
+			btn_orderall.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					 AlertDialog.Builder alert = new AlertDialog.Builder(
+						       aQuery.getContext());
+						      alert.setTitle("订购确认")
+						        .setMessage("是否全部订阅")
+						        .setPositiveButton("订阅",
+						          new DialogInterface.OnClickListener() {
+						           public void onClick(
+						             DialogInterface dialog,
+						             int which) {
+						           }
+						          })
+						        .setNegativeButton("取消",
+						          new DialogInterface.OnClickListener() {
+						           public void onClick(
+						             DialogInterface dialog,
+						             int which) {
+						            dialog.dismiss();
+						           }
+						          });
+						      //m_Dialog.dismiss();
+						      alert.create().show();
+					
+				}
+			});
 			builder.setContentView(viewFormusicdetail);
 			Window dialogWindow = builder.getWindow();
 			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
@@ -1674,19 +1625,23 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 										JSONArray ja = new JSONArray(json);
 										for (int i = 0; i < ja.length(); i++) {
 											JSONObject jb = ja.getJSONObject(i);
+											String sid  =jb.getString("sid");
 											String musicpath= jb.getString("filepath");
 											musicpathList.add(musicpath);
 					                        musictitleList.add(jb.getString("title"));
+					                        musicsidList.add(sid);
 		                        		}
 										 for (int i = 0; i < musictitleList.size(); i++) {
 											 final String web_path =musicpathList.get(i);
+											 final String sid = musicsidList.get(i);
+											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setVisibility(View.VISIBLE);
 											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setText(musictitleList.get(i));
 											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setOnClickListener(new OnClickListener() {
 												@Override
 												public void onClick(View v) {
 													String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+web_path+"&"+"多米";
 													Toast.makeText(aQuery.getContext(), "开始播放", 1).show();
-													setMusicPlay(appDownPathtrue);
+													setMusicCross(appDownPathtrue,sid);
 												}
 											});
 									}
@@ -1737,9 +1692,9 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		}
 		
 		/**
-		 * setAllSoft
+		 * setAllSoftinfo
 		 * @param softList
-		 * 软件列表
+		 * 设定软件列表信息
 		 */
 		public static void setSoftInfo(ArrayList<SoftwareBean> list) {
 			for (int i = 0; i < horItems.length; i++) {
@@ -1760,9 +1715,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			}
 			
 		}
-		//我的音乐商店
-		public static void  setAppStore(){
-
+		//音乐app
+		public static void  setAppStoreList(String path){
 			viewForsoftDetail= inflater.inflate(R.layout.soft_detail, null);
 				builder.setContentView(viewForsoftDetail);
 				Window dialogWindow = builder.getWindow();
@@ -1772,7 +1726,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				lp.height = 640; 
 				dialogWindow.setAttributes(lp);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "缓冲中。。", "正在加载请稍后。。");
-			String path =HttpRequest.URL_QUERY_STROE_ALL_SOFT;
 			aQuery.ajax(path, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
                 @Override
                 public void callback(String url, String json, AjaxStatus status) {
@@ -1816,7 +1769,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		                        	System.out.println("下载的数据"+"===="+json);
 		                        	musicList = new ArrayList<Music>();
 		                        	musicList = JsonUtil.getMusicList(json);
-		                        	setMusicChapter( musicList);
+		                        	setMusicChapterInfo( musicList);
 		                        	Dialog.dismiss();
 		                        }else{
 		                        	Dialog.dismiss();
@@ -1832,20 +1785,18 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 						}
 					});
 				}
-		
 		}
-
 		//设置试播界面
 		public static void  setMusicPilot(final String path){
 			final Dialog dl = new Dialog(aQuery.getContext());
 			final View view = inflater.inflate(R.layout.musicplay, null);
 			dl.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			dl.setContentView(R.layout.musicplay);
+			dl.setContentView(view);
 			Window dialogWindow = dl.getWindow();
 			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 			dialogWindow.setGravity(Gravity.CENTER);
 			lp.width = 400; 
-			lp.height =200; 
+			lp.height =300; 
 			dialogWindow.setAttributes(lp);
 			dl.show();
 			 final ImageButton iv =	(ImageButton) view.findViewById(R.id.btn_play);
@@ -1875,8 +1826,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 						}
 					}
 				});
-				 builder.setOnKeyListener(new OnKeyListener() {
-					
+				 dl.setOnKeyListener(new OnKeyListener() {
 					@Override
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 						// TODO Auto-generated method stub
@@ -1903,16 +1853,194 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 						}
 						mp.start();
 						isplay =true;
-						view.post(new Runnable() {
-							@Override
-							public void run() {
-								// TODO Auto-generated method stub
-								iv.setImageResource(R.drawable.desktop_pausebt_b);
-							}
-						});
 						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void result) {
+						if(iv==null){
+							Toast.makeText(aQuery.getContext(), "iv为空，请检查", 1).show();
+						}
+						iv.setImageResource(R.drawable.desktop_pausebt_b);
+						super.onPostExecute(result);
 					}
 				}.execute();
 		}
+		//设置下载（音乐，mv）
+		public static void setMusicDown(String sid){
+			//先进行下载验证
+			String path =HttpRequest.URL_QUERY_DOWNLOAD_CHECK+"sid="+sid+"&type=music";
+			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "正在验证。。", "正在验证，请稍后。。");
+			final Handler handler = new Handler();
+			Dialog.show();
+			aQuery.ajax(path, String.class, new AjaxCallback<String>(){
 
+				@Override
+				public void callback(String url, String json,
+						AjaxStatus status) {
+					if(json!=null){
+					System.out.println(json);
+					Dialog.dismiss();
+					try {
+						
+					 					JSONObject jb  = new JSONObject(json);
+					if("true".equals(jb.get("success"))){
+						String filepath = jb.getString("filepath");
+						String filename =jb.getString("filename");
+						final String path =HttpRequest.URL_QUERY_DOWNLOAD_URL+filepath+"&"+"多米";
+						new AsyncTask<Void, Void, Void>(){
+							@Override
+							protected Void doInBackground(
+									Void... params) {
+								UpdateVersion updateVersion  = UpdateVersion.instance(aQuery.getContext(), handler,false);
+								updateVersion.setUpdateUrl(path);
+								updateVersion.run();
+								return null;
+							}
+						}.execute();
+						
+					}
+					else{
+						String errmessage  =jb.getString("errmessage");
+						if(errmessage!=null){
+							Toast.makeText(aQuery.getContext(), errmessage, 1).show();
+							
+						}else{
+							Toast.makeText(aQuery.getContext(), "出现未知错误，请重试", 1).show();
+						}
+					}
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				}
+				
+				else{
+                	Dialog.dismiss();
+                	if(status.getCode()==-101){
+                   Toast.makeText(aQuery.getContext(), "请检查网络" ,Toast.LENGTH_LONG).show();
+                	}else{
+                		 Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+                	}
+                  }
+				}
+			});
+		}
+		
+		
+		//设置曲目列表
+		public static void  setMusicChapterList(String path){
+			initDialog("three");
+			viewFormusicdetail = inflater.inflate(R.layout.music_detail, null);
+			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "缓冲中。。", "正在缓冲请稍后。。");
+			
+		        aQuery.ajax(path, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
+		                @Override
+		                public void callback(String url, String json, AjaxStatus status) {
+		                        //得通过对一个url访问返回的数据存放在JSONObject json中 可以通过json.getContext()得到
+		                        if(json != null){
+		                        	System.out.println("下载的数据"+"===="+json);
+		                        	musicList = new ArrayList<Music>();
+		                        	musicList = JsonUtil.getMusicList(json);
+		                        	setMusicChapterInfo( musicList);
+		                        	Dialog.dismiss();
+		                        }else{
+		                        	Dialog.dismiss();
+		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+		                          }
+		                    }
+		            });
+		        for (int i = 0; i < horItems.length; i++) {
+		        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+						   setMusicDetial(v.getId(), musicList);
+						}
+					});
+				}
+		}
+		
+		//设置mv列表
+		public static void setMusicMvList(String path){
+			initDialog("three");
+			viewFormusicdetail = inflater.inflate(R.layout.music_detail, null);
+			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "缓冲中。。", "正在缓冲请稍后。。");
+			
+		        aQuery.ajax(path, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
+		                @Override
+		                public void callback(String url, String json, AjaxStatus status) {
+		                        //得通过对一个url访问返回的数据存放在JSONObject json中 可以通过json.getContext()得到
+		                        if(json != null){
+		                        	System.out.println("下载的数据"+"===="+json);
+		                        	musicList = new ArrayList<Music>();
+		                        	musicList = JsonUtil.getMusicList(json);
+		                        	setMusicChapterInfo( musicList);
+		                        	Dialog.dismiss();
+		                        }else{
+		                        	Dialog.dismiss();
+		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+		                          }
+		                    }
+		            });
+		        for (int i = 0; i < horItems.length; i++) {
+		        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+						   setMusicDetial(v.getId(), musicList);
+						}
+					});
+				}
+		}
+
+       //推荐音乐重新加载对话框
+		public static void setRecommedMusicInfo(String musicId,final View view){
+			final ArrayList<String> musictitleList = new ArrayList<String>();
+			final ArrayList<String> musicnameList = new ArrayList<String>();
+			 final ArrayList<String> musicpathList = new ArrayList<String>();
+			 final ArrayList<String> musicsidList = new ArrayList<String>();
+			 final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "正在加载。。", "正在加载请稍后。。");
+			 Dialog.show();
+			String web_url=HttpRequest.URL_QUERY_LIST_MUSIC+musicId;
+			 aQuery.ajax(web_url, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
+	                @Override
+	                public void callback(String url, String json, AjaxStatus status) {
+	                        if(json != null){
+	                        	System.out.println("下载的数据"+"===="+json);
+	                        	try {
+									JSONArray ja = new JSONArray(json);
+									for (int i = 0; i < ja.length(); i++) {
+										JSONObject jb = ja.getJSONObject(i);
+										String sid  =jb.getString("sid");
+										String musicpath= jb.getString("filepath");
+										musicpathList.add(musicpath);
+				                        musictitleList.add(jb.getString("title"));
+				                        musicsidList.add(sid);
+	                        		}
+									 for (int i = 0; i < musictitleList.size(); i++) {
+										 final String web_path =musicpathList.get(i);
+										 final String sid = musicsidList.get(i);
+										 ((Button)view.findViewById(musiclistItem[i])).setVisibility(View.VISIBLE);
+										 ((Button)view.findViewById(musiclistItem[i])).setText(musictitleList.get(i));
+										 ((Button)view.findViewById(musiclistItem[i])).setOnClickListener(new OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+web_path+"&"+"多米";
+												Toast.makeText(aQuery.getContext(), "开始播放", 1).show();
+												setMusicCross(appDownPathtrue,sid);
+											}
+										});
+								}
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+	                        	Dialog.dismiss();
+	                                //successful ajax call, show status code and json content
+	                        }else{
+	                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+	                          }
+	                    }
+	            });
+		}
 }

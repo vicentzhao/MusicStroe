@@ -83,7 +83,7 @@ public class HttpRequest {
 	public static String URL_QUERY_LIST_SOFT = WEB_ROOT + "index/softshop!getworks.action?token=myadmin&id=";
 	
 	public static String URL_QUERY_LIST_ORDER_SOFT = WEB_ROOT + "index/softshop!getworks.action?token=myadmin&resultType=json&id=";//软件订购列表
-	public static String URL_QUERY_SINGLE_ORDER_SOFT = WEB_ROOT + "index/softshop!singlebuy.action?token=myadmin&type=soft&id=";//订购单个音乐商品
+	public static String URL_QUERY_SINGLE_ORDER_SOFT = WEB_ROOT + "index/softshop!singlebuy.action?token=myadmin&type=soft&id=";//订购单个软件商品
 	public static String URL_QUERY_LIST_ORDER_MUSIC = WEB_ROOT + "index/musicshop!getworks.action?token=myadmin&resultType=json&id=";//音乐订购列表
 	public static String URL_QUERY_SINGLE_ORDER_MUSIC = WEB_ROOT + "index/musicshop!singlebuy.action?token=myadmin&type=music&id=";//订购单个音乐商品
 	public static String URL_QUERY_LIST_ORDER_BOOK = WEB_ROOT + "index/bookshop!getworks.action?token=myadmin&resultType=json&id=";
@@ -104,7 +104,10 @@ public class HttpRequest {
 	public static String URL_QUERY_LIST_ORDER_NUM = WEB_ROOT + "index/order!pay.action?resultType=json";//支付获取订单号
 	public static String URL_QUERY_LIST_PAY_ID = WEB_ROOT + "index/pay.action?token=myadmin&resultType=json&num=";//根据订单号得订单id   
 	public static String URL_QUERY_LIST_PAY = WEB_ROOT + "index/pay!pay.action?token=myadmin&resultType=json&id=";//确认支付
-	
+	public static String URL_QUERY_LIST_PAY_ALL=WEB_ROOT+"musicshop!buy.action?ran='"+Math.random()+"'&id=";
+	public static String URL_ADD="&type=0&ordertype='+type";
+			
+
 	
 	public static String DOWNLOAD_ID = null;
 	public static String SID = null;//验证ID

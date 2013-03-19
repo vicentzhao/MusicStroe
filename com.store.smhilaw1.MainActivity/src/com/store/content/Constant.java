@@ -1,6 +1,8 @@
 package com.store.content;
 
 import java.io.File;
+
+import com.store.http.HttpRequest;
 /*
  * 一些的常量
  */
@@ -43,7 +45,6 @@ public class Constant {
 		public static final int ORDER_LIST_ID=100095;//订单ID
 		public static final int ORDER_LIST_PAY=100000;//支付
 		public static final int DOWN_SOFT_LIST=100001;//下载列表
-		
 		public static final int USERLOGIN=100010;//支付
 		
 		//一些常量
@@ -52,5 +53,17 @@ public class Constant {
 		public static final int MUSICAPP = 100013;
 		public static final int MUSICCHAPTER = 100014;
 		public static final int MUSICMV = 100015;
+		
+		public static final String MYMUSIC_APP=HttpRequest.URL_QUERY_STROE_ALL_SOFT;
+		public static final String MYMUSIC_CHAPTER=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
+		public static final String MYMUSIC_MV=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
+		public static final String MUSICSTORE_APP=HttpRequest.URL_QUERY_STROE_ALL_SOFT;
+		public static final String MUSICSTORE_CHAPTER=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
+		public static final String MUSICSTORE_MV=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
+		public static final String MUSIC_DEFALUT=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
+		
+		//临时的
+	 
+		
 		
 }

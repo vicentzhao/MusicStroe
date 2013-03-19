@@ -25,11 +25,13 @@ public class UpdateVersion implements Runnable {
 	private static UpdateVersion version ;
 	private static Handler mHandler ;
 	private String mUrl ;
+	private static boolean isApk =true;
 	private String mName ;
 	
-	public static UpdateVersion instance(Context context, Handler handler) {
+	public static UpdateVersion instance(Context context, Handler handler,boolean boo) {
 		mContext = context ;
 		mHandler = handler ;
+		isApk =boo;
 		if(version==null) {
 			version = new UpdateVersion() ;
 		}
@@ -187,7 +189,10 @@ public class UpdateVersion implements Runnable {
 			public void run() {
 				// TODO Auto-generated method stub
 				disMissProgressBar() ;
+				showToast("œ¬‘ÿÕÍ≥…") ;
+				if(isApk){
 				install() ;
+				}
 			}
 		}) ;
 	}
