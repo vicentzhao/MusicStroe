@@ -106,6 +106,8 @@ public class HttpRequest {
 	public static String URL_QUERY_LIST_PAY = WEB_ROOT + "index/pay!pay.action?token=myadmin&resultType=json&id=";//确认支付
 	public static String URL_QUERY_LIST_PAY_ALL=WEB_ROOT+"musicshop!buy.action?ran='"+Math.random()+"'&id=";
 	public static String URL_ADD="&type=0&ordertype='+type";
+	public static String URL_QUERY_LIST__MUSICORDERED=WEB_ROOT+"index/musicshop!order.action?token=myadmin&resultType=json";//已经订阅的音乐
+	public static String URL_QUERY_LIST__SOFTORDERED=WEB_ROOT+"index/softshop!order.action?token=myadmin&resultType=json";//已经订阅的软件
 			
 
 	

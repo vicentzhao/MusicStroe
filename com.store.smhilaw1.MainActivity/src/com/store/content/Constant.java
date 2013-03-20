@@ -54,9 +54,9 @@ public class Constant {
 		public static final int MUSICCHAPTER = 100014;
 		public static final int MUSICMV = 100015;
 		
-		public static final String MYMUSIC_APP=HttpRequest.URL_QUERY_STROE_ALL_SOFT;
-		public static final String MYMUSIC_CHAPTER=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
-		public static final String MYMUSIC_MV=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
+		public static final String MYMUSIC_APP=HttpRequest.URL_QUERY_LIST__SOFTORDERED;
+		public static final String MYMUSIC_CHAPTER=HttpRequest.URL_QUERY_LIST__MUSICORDERED;
+		public static final String MYMUSIC_MV=HttpRequest.URL_QUERY_LIST__MUSICORDERED;
 		public static final String MUSICSTORE_APP=HttpRequest.URL_QUERY_STROE_ALL_SOFT;
 		public static final String MUSICSTORE_CHAPTER=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
 		public static final String MUSICSTORE_MV=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;

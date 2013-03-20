@@ -1,5 +1,12 @@
 package com.store.smhilaw1;
 
+
+
+//import io.vov.vitamio.MediaPlayer.OnInfoListener;
+//
+//import io.vov.vitamio.widget.MediaController;
+//import io.vov.vitamio.widget.VideoView;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -49,7 +56,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.MediaController;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -58,7 +64,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
@@ -118,6 +123,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
     private static View viewFormusicdetail;
 	private static boolean isFristInit;
 	private static boolean isplay=false;
+	private static boolean needResume;
 	public static String appDownPath;
 	private static ArrayList<SoftwareBean> musicDetailList;
 	private static int isWhatLeft=100013;
@@ -201,7 +207,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		case R.id.store:
 			isWhatRight =Constant.MUSICSTORE;
 			if(isWhatLeft ==Constant.MUSICAPP){
-				setAppStoreList(Constant.MYMUSIC_APP);
+				setAppStoreList(Constant.MUSICSTORE_APP);
 			}else if(isWhatLeft==Constant.MUSICCHAPTER){
 				 setMusicChapterList(Constant.MUSICSTORE_CHAPTER);
 			}else if(isWhatLeft==Constant.MUSICMV){
@@ -214,12 +220,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			Toast.makeText(this, "暂无功能", Toast.LENGTH_SHORT).show();
 			break;
 			default :
-				break;
-			case R.id.item_hor_01:
-				String id = musicList.get(0).getId();
-				String json =HttpRequest.URL_QUERY_SINGLE_MOVIE+id;
-				System.out.println("我已经执行了，hor_01");
-				builder.show();
 				break;
 		}
 	}
@@ -513,7 +513,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		private RadioButton price1,price2,price3;
 		private TextView sfotName,softInfo,softVersion;
 		private ImageView logo;
-		private VideoView videoView;
 		private ProgressBar myProgressBar;//显示进度条的ProgressBar
 		TextView resultView;
 		private MediaPlayer mMediaPlayer;
@@ -614,7 +613,6 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			price2 = (RadioButton)view.findViewById(R.id.price2);
 			price3 = (RadioButton)view.findViewById(R.id.price3);
 			radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListenerImpl());
-			videoView = (VideoView)view.findViewById(R.id.videoView); 
 			
 			sfotName = (TextView) view.findViewById(R.id.soft_name); 
 			softInfo = (TextView) view.findViewById(R.id.soft_info); 
@@ -839,12 +837,12 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					}else{
 						uri = Uri.parse("http://192.168.1.32:8080/common/show.jsp?pathrp="+ CryptUtil.decryptURL("2F6D6E742F6469676974616C2F6D75736963736F757263652F31332F30312F32352F3133353930393535343233333735303030312E6D7033"));
 					}
-					videoView.setVisibility(View.VISIBLE);           
-					logo.setVisibility(View.GONE); 
-			        videoView.setVideoURI(uri); 
-			        videoView.setMediaController(new MediaController(getActivity())); 
-			        videoView.requestFocus(); 
-			        videoView.start(); 
+//					videoView.setVisibility(View.VISIBLE);           
+//					logo.setVisibility(View.GONE); 
+//			        videoView.setVideoURI(uri); 
+//			        videoView.setMediaController(new MediaController(getActivity())); 
+//			        videoView.requestFocus(); 
+//			        videoView.start(); 
 				}
 				break;
 				default:
@@ -1365,7 +1363,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				 String image_path = sb.getImage_path();
 				 final String title = sb.getName();
 				 String turePath = HttpRequest.URL_QUERY_SINGLE_IMAGE+image_path;
-					Downloader.download(turePath, ((ImageView)view.findViewById(horItems[i]).findViewById(R.id.ItemIcon)));
+				 Downloader.download(turePath, ((ImageView)view.findViewById(horItems[i]).findViewById(R.id.ItemIcon)));
 				 ((TextView)view.findViewById(horItems[i]).findViewById(R.id.ItemTitle)).setText(title);
 				 view.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
 					@Override
@@ -1422,6 +1420,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		 */
 		public static void setMusicCross(final String path,final String sid){
 			Log.e(TAG, "下载的路径是"+path);
+			String decryptURL = CryptUtil.decryptURL(path);
+			final String subpath = decryptURL.substring(decryptURL.lastIndexOf(".")+1, decryptURL.length()-1);
 			final View musiccrossView = inflater.inflate(R.layout.musiccross, null);
 			final Dialog dl = new Dialog(aQuery.getContext());
 			dl.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1438,6 +1438,11 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+//					if("mp3".equals(subpath)){
+//						setMusicPilot(path);
+//					}else if("mp4".equals(subpath)){
+//						setMVPilot(path);
+//					}
 					setMusicPilot(path);
 				}
 			});
@@ -1758,9 +1763,10 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		//默认刚进来的画面
 		public static void  setDefalutView(){
 			initDialog("three");
+			isWhatRight=Constant.MYMUSIC;
 			viewFormusicdetail = inflater.inflate(R.layout.music_detail, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "缓冲中。。", "正在缓冲请稍后。。");
-			 String url = HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
+			 String url = Constant.MYMUSIC_APP;
 		        aQuery.ajax(url, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
 		                @Override
 		                public void callback(String url, String json, AjaxStatus status) {
@@ -1866,6 +1872,71 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					}
 				}.execute();
 		}
+		
+		//设置播放mv
+//		public static void  setMVPilot(final String path){
+//			final VideoView mVideoView;
+//			final Dialog dl = new Dialog(aQuery.getContext());
+//			final View view = inflater.inflate(R.layout.videoview, null);
+//			dl.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//			dl.setContentView(view);
+//			Window dialogWindow = dl.getWindow();
+//			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//			dialogWindow.setGravity(Gravity.CENTER);
+//			lp.width = 400; 
+//			lp.height =300; 
+//			dialogWindow.setAttributes(lp);
+//			dl.show();
+//			mVideoView = (VideoView)view.findViewById(R.id.surface_view);
+//			mVideoView.setVideoPath(path);
+//			mVideoView.setVideoQuality(io.vov.vitamio.MediaPlayer.VIDEOQUALITY_HIGH);
+//			mVideoView.setMediaController(new MediaController(aQuery.getContext()));
+//			mVideoView.setBufferSize(1024);
+//				 dl.setOnKeyListener(new OnKeyListener() {
+//					@Override
+//					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+//						// TODO Auto-generated method stub
+//						if(keyCode==KeyEvent.KEYCODE_BACK){
+//							System.out.println("监听到返回键");
+//							if(isplay){
+//								if(mVideoView!=null){
+//									mVideoView.stopPlayback();
+//								}
+//							}
+//							  return false;
+//						}
+//						return false;
+//					}
+//				});
+//				 mVideoView.setOnInfoListener(new OnInfoListener() {
+//					
+//					@Override
+//					public boolean onInfo(io.vov.vitamio.MediaPlayer arg0, int arg1, int arg2) {
+//						final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "正在加载。。", "正在加载请稍后。。");
+//						switch (arg1) {
+//				        case io.vov.vitamio.MediaPlayer.MEDIA_INFO_BUFFERING_START:
+//				            //开始缓存，暂停播放
+//				            if (mVideoView.isPlaying()) {
+//				            	mVideoView.pause();
+//				                needResume = true;
+//				            }
+//				           Dialog.show();
+//				            break;
+//				        case io.vov.vitamio.MediaPlayer.MEDIA_INFO_BUFFERING_END:
+//				            //缓存完成，继续播放
+//				            if (needResume)
+//				            	mVideoView.start();
+//				            Dialog.dismiss();
+//				            break;
+//				        case io.vov.vitamio.MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
+//				            //显示 下载速度
+//				            System.out.println("下载的速度===="+arg2);
+//				            break;
+//				        }
+//				        return true;
+//					}
+//				});
+//		}
 		//设置下载（音乐，mv）
 		public static void setMusicDown(String sid){
 			//先进行下载验证
