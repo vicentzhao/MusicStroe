@@ -2,7 +2,7 @@ package com.store.smhilaw1;
 
 import com.store.smhilaw1.MainActivity.RightFragment.OnRightSelectedListener;
 
-//纯粹的为了实现接口用
+//涔熸槸绾补鐨勪负浜嗗疄鐜版帴鍙ｇ敤
 public interface RightSelectedListener extends OnRightSelectedListener {
 
 }

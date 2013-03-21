@@ -17,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -75,6 +74,7 @@ import com.store.adapter.TestMusicAdapter;
 import com.store.bean.Music;
 import com.store.bean.OrderBean;
 import com.store.bean.PayOrderBean;
+import com.store.bean.PostMent;
 import com.store.bean.SoftwareBean;
 import com.store.content.CommUtil;
 import com.store.content.Constant;
@@ -136,6 +136,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			R.id.item_hor_04,R.id.item_hor_05,R.id.item_hor_06,
 			R.id.item_hor_07,R.id.item_hor_08,R.id.item_hor_09,
 			R.id.item_hor_10,R.id.item_hor_11,R.id.item_hor_12,R.id.item_hor_13,R.id.item_hor_14,R.id.item_hor_15};
+	
 	private static  int[] musiclistItem = {R.id.music1,R.id.music2,R.id.music3,
 		R.id.music4,R.id.music5,R.id.music6,
 		R.id.music7,R.id.music8,R.id.music9,
@@ -144,6 +145,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		R.id.music4,R.id.music5,R.id.music6,
 		R.id.music7,R.id.music8,R.id.music9,
 		R.id.music10};
+	private static int[] orderRadioItem={R.id.rad1,R.id.rad2,R.id.rad3,R.id.rad4};
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -1438,12 +1440,12 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-//					if("mp3".equals(subpath)){
-//						setMusicPilot(path);
-//					}else if("mp4".equals(subpath)){
-//						setMVPilot(path);
-//					}
-					setMusicPilot(path);
+					if("mp3".equals(subpath)){
+						setMusicPilot(path);
+					}else if("mp4".equals(subpath)){
+						setMVPilot(path);
+					}
+//					setMusicPilot(path);
 				}
 			});
 			//下载
@@ -1581,35 +1583,8 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 			for (int i = 0; i < musiclistItem.length; i++) {
 				viewFormusicdetail.findViewById(musiclistItem[i]).setVisibility(View.INVISIBLE);
 			}
-			Button btn_orderall=(Button)(viewFormusicdetail.findViewById(R.id.btn_order_allmusic));
-			btn_orderall.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					 AlertDialog.Builder alert = new AlertDialog.Builder(
-						       aQuery.getContext());
-						      alert.setTitle("订购确认")
-						        .setMessage("是否全部订阅")
-						        .setPositiveButton("订阅",
-						          new DialogInterface.OnClickListener() {
-						           public void onClick(
-						             DialogInterface dialog,
-						             int which) {
-						           }
-						          })
-						        .setNegativeButton("取消",
-						          new DialogInterface.OnClickListener() {
-						           public void onClick(
-						             DialogInterface dialog,
-						             int which) {
-						            dialog.dismiss();
-						           }
-						          });
-						      //m_Dialog.dismiss();
-						      alert.create().show();
-					
-				}
-			});
+			final Button btn_orderall=(Button)(viewFormusicdetail.findViewById(R.id.btn_order_allmusic));
+		
 			builder.setContentView(viewFormusicdetail);
 			Window dialogWindow = builder.getWindow();
 			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
@@ -1672,10 +1647,49 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 								try {
 									 final ArrayList<String> pathList = new ArrayList<String>();
 		                        	ArrayList<String> nameList = new ArrayList<String>();
+		                        	final ArrayList<PostMent> postMentList = new ArrayList<PostMent>();
 									JSONObject  jb = new JSONObject(json);
 									 image_path_boot = jb.getString("PIC");
 									 String name =jb.getString("PNAME");
 									 String note =jb.getString("PNOTE");
+									 JSONArray postOb = jb.getJSONArray("potype");
+									 for (int i = 0; i < postOb.length(); i++) {
+										 
+										 PostMent pm = new PostMent();
+										 pm.setType(postOb.getJSONObject(i).getString("TYPE"));
+										 pm.setId(postOb.getJSONObject(i).getString("PUBID"));
+										 pm.setPrice(postOb.getJSONObject(i).getString("PRICE"));
+										 postMentList.add(pm);
+									}
+										btn_orderall.setOnClickListener(new OnClickListener() {
+											
+											@Override
+											public void onClick(View v) {
+//												 AlertDialog.Builder alert = new AlertDialog.Builder(
+//													       aQuery.getContext());
+//													      alert.setTitle("订购确认")
+//													        .setMessage("是否全部订阅")
+//													        .setPositiveButton("订阅",
+//													          new DialogInterface.OnClickListener() {
+//													           public void onClick(
+//													             DialogInterface dialog,
+//													             int which) {
+//													           }
+//													          })
+//													        .setNegativeButton("取消",
+//													          new DialogInterface.OnClickListener() {
+//													           public void onClick(
+//													             DialogInterface dialog,
+//													             int which) {
+//													            dialog.dismiss();
+//													           }
+//													          });
+//													      //m_Dialog.dismiss();
+//													      alert.create().show();
+												setOrder(postMentList);
+												
+											}
+										});
 									builder.show();
 									 ((TextView)viewFormusicdetail.findViewById(R.id.albumname)).setText(name);							
 									 ((TextView)viewFormusicdetail.findViewById(R.id.albuminfo)).setText(note);		
@@ -1874,69 +1888,14 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 		}
 		
 		//设置播放mv
-//		public static void  setMVPilot(final String path){
-//			final VideoView mVideoView;
-//			final Dialog dl = new Dialog(aQuery.getContext());
-//			final View view = inflater.inflate(R.layout.videoview, null);
-//			dl.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//			dl.setContentView(view);
-//			Window dialogWindow = dl.getWindow();
-//			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-//			dialogWindow.setGravity(Gravity.CENTER);
-//			lp.width = 400; 
-//			lp.height =300; 
-//			dialogWindow.setAttributes(lp);
-//			dl.show();
-//			mVideoView = (VideoView)view.findViewById(R.id.surface_view);
-//			mVideoView.setVideoPath(path);
-//			mVideoView.setVideoQuality(io.vov.vitamio.MediaPlayer.VIDEOQUALITY_HIGH);
-//			mVideoView.setMediaController(new MediaController(aQuery.getContext()));
-//			mVideoView.setBufferSize(1024);
-//				 dl.setOnKeyListener(new OnKeyListener() {
-//					@Override
-//					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-//						// TODO Auto-generated method stub
-//						if(keyCode==KeyEvent.KEYCODE_BACK){
-//							System.out.println("监听到返回键");
-//							if(isplay){
-//								if(mVideoView!=null){
-//									mVideoView.stopPlayback();
-//								}
-//							}
-//							  return false;
-//						}
-//						return false;
-//					}
-//				});
-//				 mVideoView.setOnInfoListener(new OnInfoListener() {
-//					
-//					@Override
-//					public boolean onInfo(io.vov.vitamio.MediaPlayer arg0, int arg1, int arg2) {
-//						final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "正在加载。。", "正在加载请稍后。。");
-//						switch (arg1) {
-//				        case io.vov.vitamio.MediaPlayer.MEDIA_INFO_BUFFERING_START:
-//				            //开始缓存，暂停播放
-//				            if (mVideoView.isPlaying()) {
-//				            	mVideoView.pause();
-//				                needResume = true;
-//				            }
-//				           Dialog.show();
-//				            break;
-//				        case io.vov.vitamio.MediaPlayer.MEDIA_INFO_BUFFERING_END:
-//				            //缓存完成，继续播放
-//				            if (needResume)
-//				            	mVideoView.start();
-//				            Dialog.dismiss();
-//				            break;
-//				        case io.vov.vitamio.MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
-//				            //显示 下载速度
-//				            System.out.println("下载的速度===="+arg2);
-//				            break;
-//				        }
-//				        return true;
-//					}
-//				});
-//		}
+		public static void  setMVPilot(final String path){
+			
+			Intent i  = new Intent();
+			i.putExtra("path", path);
+			i.setClass(aQuery.getContext(), PlayActivity.class);
+			aQuery.getContext().startActivity(i);
+		
+		}
 		//设置下载（音乐，mv）
 		public static void setMusicDown(String sid){
 			//先进行下载验证
@@ -2114,4 +2073,48 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	                    }
 	            });
 		}
+		
+		//订阅  
+		 static void setOrder(ArrayList<PostMent> postMentList ){
+			 final View view = inflater.inflate(R.layout.orderstype, null);
+			 for (int i = 0; i <orderRadioItem.length; i++) {
+				
+				 view.findViewById(orderRadioItem[i]).setVisibility(View.INVISIBLE);
+			}
+			 for (int i = 0; i <postMentList.size(); i++) {
+				 view.findViewById(orderRadioItem[i]).setVisibility(View.INVISIBLE);
+				 RadioButton btn_rb=(RadioButton) view.findViewById(orderRadioItem[i]);
+				 String typeE =postMentList.get(i).getType();
+				 if(typeE.equals("day")){
+				 btn_rb.setText("天/"+postMentList.get(i).getPrice());
+				 }
+				 if(typeE.equals("month")){
+					 btn_rb.setText("月/"+postMentList.get(i).getPrice());
+				 }
+				 if(typeE.equals("quarter")){
+					 btn_rb.setText("季/"+postMentList.get(i).getPrice());
+				 }
+				 if(typeE.equals("year")){
+					 btn_rb.setText("年/"+postMentList.get(i).getPrice());
+				 }
+				
+			}
+			 final Dialog dl = new Dialog(aQuery.getContext());
+				dl.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				dl.setContentView(view);
+				Window dialogWindow = dl.getWindow();
+				WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+				dialogWindow.setGravity(Gravity.CENTER);
+				lp.width = 400; 
+				lp.height =300; 
+				dialogWindow.setAttributes(lp);
+				dl.show();
+				RadioGroup group = (RadioGroup) view.findViewById(R.id.radioGroup);
+				group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						// TODO Auto-generated method stub
+					}
+				});
+		 }
 }

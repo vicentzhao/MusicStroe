@@ -1,5 +1,7 @@
 package com.store.bean;
 
+import java.util.HashMap;
+
 public class Music {
 	
 	private String name;
@@ -9,6 +11,13 @@ public class Music {
 	private String image_path;
 	private String download_path;
 	private String id;
+	private PostMent postMent;
+	public PostMent getPostMent() {
+		return postMent;
+	}
+	public void setPostMent(PostMent postMent) {
+		this.postMent = postMent;
+	}
 	public String getPubName() {
 		return pubName;
 	}

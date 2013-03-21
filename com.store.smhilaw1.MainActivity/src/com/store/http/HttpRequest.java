@@ -109,7 +109,7 @@ public class HttpRequest {
 	public static String URL_QUERY_LIST__MUSICORDERED=WEB_ROOT+"index/musicshop!order.action?token=myadmin&resultType=json";//已经订阅的音乐
 	public static String URL_QUERY_LIST__SOFTORDERED=WEB_ROOT+"index/softshop!order.action?token=myadmin&resultType=json";//已经订阅的软件
 			
-
+	public static String URL_UPDATE ="apk/apk.xml";
 	
 	public static String DOWNLOAD_ID = null;
 	public static String SID = null;//验证ID
