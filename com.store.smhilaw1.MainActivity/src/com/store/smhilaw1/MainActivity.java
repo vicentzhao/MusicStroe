@@ -9,6 +9,8 @@ package com.store.smhilaw1;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,12 +19,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -76,6 +81,7 @@ import com.store.bean.OrderBean;
 import com.store.bean.PayOrderBean;
 import com.store.bean.PostMent;
 import com.store.bean.SoftwareBean;
+import com.store.bean.VersionInfo;
 import com.store.content.CommUtil;
 import com.store.content.Constant;
 import com.store.download.MediaPlayerListener;
@@ -90,6 +96,7 @@ import com.store.suffix.CryptUtil;
 import com.store.util.AuthoSharePreference;
 import com.store.util.JsonUtil;
 import com.store.util.UpdateVersion;
+import com.store.util.XmlParse;
 
 public class MainActivity extends FragmentActivity implements LeftSelectedListener, RightSelectedListener,OnClickListener{
 	private static int left_type = Constant.FLFG;
@@ -124,6 +131,7 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 	private static boolean isFristInit;
 	private static boolean isplay=false;
 	private static boolean needResume;
+	 boolean  isUpdate =false;;
 	public static String appDownPath;
 	private static ArrayList<SoftwareBean> musicDetailList;
 	private static int isWhatLeft=100013;
@@ -165,7 +173,9 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
         aQuery= new AQuery(MainActivity.this);
         initView();
         editor = sp.edit(); 
+        checkVersion();
 	}
+	
 	public void initView(){
 		myMusic = (Button)findViewById(R.id.myMusic);
 		store = (Button)findViewById(R.id.store);
@@ -2117,4 +2127,92 @@ public class MainActivity extends FragmentActivity implements LeftSelectedListen
 					}
 				});
 		 }
+		 
+		 private void checkVersion() {
+			 final Handler hd = new Handler();
+				// TODO Auto-generated method stub
+				 new AsyncTask<Void, Void, String>(){
+					@Override
+					protected void onPostExecute(String result) {
+						if(isUpdate){
+						 setUpdateDiago(path);
+						}
+						super.onPostExecute(path);
+					}
+					String path;
+					private ArrayList<VersionInfo> versionInfoList;
+					@Override
+					protected String doInBackground(Void... params) {
+						try {
+							URL url =  new URL(HttpRequest.URL_UPDATE);
+							URLConnection con = url.openConnection();
+							InputStream is = con.getInputStream();
+							XmlParse xp = new XmlParse();
+							versionInfoList = xp.getVersionInfo(is);
+							for (int i = 0; i < versionInfoList.size(); i++) {
+								if("FigureStore".equals(versionInfoList.get(i).getName())){
+									String updateVersion =versionInfoList.get(i).getVersion();
+								    PackageManager packageManager = getPackageManager();
+					                // getPackageName()是你当前类的包名，0代表是获取版本信息
+					                PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),
+					                                0);
+					                String version = packInfo.versionName;
+					                System.out.println("version============"+version);
+					                if(!version.equals(updateVersion)){
+					                	isUpdate =true;
+					                }
+					                path= HttpRequest.URL_UPDATE_ROOT+versionInfoList.get(i).getFilepath();
+					                System.out.println("下载的地址为"+path);
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						return path;
+					}
+				 }.execute();
+			}
+		 //出现更新对话
+		 void setUpdateDiago(final String path){
+
+			 System.out.println("下载的地址++++++++++++++++"+path);
+				final Handler hd = new Handler();
+					
+							
+								// TODO Auto-generated method stub
+								Dialog dialog = new AlertDialog.Builder(aQuery.getContext())
+								.setTitle("更新")
+								.setMessage("发现新版本，是否要更新")
+								.setPositiveButton(
+										"确定更新",
+										new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog,
+													int which) {
+												new AsyncTask<Void, Void, Void>(){
+													@Override
+													protected Void doInBackground(
+															Void... params) {
+														UpdateVersion uv = UpdateVersion.instance(aQuery.getContext(),hd , true);
+														uv.setUpdateUrl(path);
+														uv.run();
+														return null;
+													}
+													
+												}.execute();
+												
+											}
+										})
+								.setNegativeButton(
+										"取消",
+										new DialogInterface.OnClickListener() {
+											public void onClick(DialogInterface dialog,
+													int whichButton) {
+												dialog.dismiss();
+											}
+										}).create();
+								dialog.show();
+							}
+						
+			
 }
