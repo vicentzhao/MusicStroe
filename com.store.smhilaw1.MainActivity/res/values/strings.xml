@@ -22,6 +22,13 @@
 	<string name="serch_hint">输入搜索内容</string>
 	 <string name="nosdcard">没有找到sd卡，请插入sd卡再进行下载完成更新。</string>
 	<string name="field_title">...</string>
+	<string name="findnewversion">发现新版本，是否更新？</string>
+	<string name="vserioncontent">更新的内容</string>
+	<string name="confirm">确定</string>
+	<string name="cancle">取消</string>
+	<string name="checknetwork">网络错误，请检查</string>
+	<string name="unknownError">出现未知错误，请重试</string>
+	
 	
 	
 	

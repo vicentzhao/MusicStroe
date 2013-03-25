@@ -3,7 +3,7 @@ package com.store.download;
 import java.io.File;
 
 import com.store.content.Constant;
-import com.store.smhilaw1.MainActivity;
+import com.store.smhilaw1.MainActivity1;
 
 import android.os.Environment;
 
@@ -11,19 +11,19 @@ public class DirectoryHelper{
 	public void getSdCardPath(){
 		File sdcardDir = Environment.getExternalStorageDirectory(); 
 		String path = sdcardDir.getParent() + sdcardDir.getName();
-		Constant.filePath = "/data/data/"+MainActivity.FILE_PATH+"/shuzifaxing/";
+		Constant.filePath = "/data/data/"+MainActivity1.FILE_PATH+"/shuzifaxing/";
 		createFile();
 	}
 
 	public void createFile(){
 		try{
-			// 1.ÅÐ¶ÏÊÇ·ñ´æÔÚsdcard
+			// 1.ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½sdcard
 			if (Environment.MEDIA_MOUNTED.equals(Environment
 					.getExternalStorageState())){
 				// Ä¿Â¼
 				File path = new File(Constant.filePath);
 				if (!path.exists()){
-					// 2.´´½¨Ä¿Â¼£¬¿ÉÒÔÔÚÓ¦ÓÃÆô¶¯µÄÊ±ºò´´½¨
+					// 2.ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ò´´½ï¿½
 					path.mkdirs();
 				}
 

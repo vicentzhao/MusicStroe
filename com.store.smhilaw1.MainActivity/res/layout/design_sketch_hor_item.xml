@@ -33,7 +33,7 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
         android:text="pleasegohome"
-        android:textColor="@color/blue"
+        android:textColor="#D9D919"
         android:textSize="24dip" >
     </TextView>
 

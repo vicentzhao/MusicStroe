@@ -43,6 +43,9 @@ public class XmlParse {
                            }else if("version".equals(nodeName)){
                         	   versionInfo.setVersion(pullParser.nextText().toString().trim());
                            }
+                   else if("description".equals(nodeName)){
+                	   versionInfo.setDescription(pullParser.nextText().toString().trim());
+                   }
                            break;
                    //节点结束
                    case XmlPullParser.END_TAG:

@@ -78,7 +78,7 @@
                 android:layout_marginTop="10dip"
                 android:background="@drawable/anime_seletor"
                 android:contentDescription="@string/app_name" />
-            
+            <!--  
             <Button
                 android:id="@+id/music"
                 android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
                 android:layout_marginTop="10dip"
                 android:background="@drawable/music_seletor"
                 android:contentDescription="@string/app_name" />
-            
+            -->
             <Button
                 android:id="@+id/record"
                 android:layout_width="wrap_content"

@@ -1,4 +1,4 @@
-#Fri Mar 22 13:15:33 CST 2013
+#Mon Mar 25 17:18:24 CST 2013
 eclipse.preferences.version=1
 encoding//src/com/store/adapter/SoftwareListAdapter.java=UTF-8
 encoding//src/com/store/http/ApkLoadTask.java=gbk
@@ -6,7 +6,7 @@ encoding//src/com/store/http/CopyOfHttpRequest.java=UTF-8
 encoding//src/com/store/http/FileCache.java=UTF-8
 encoding//src/com/store/http/HttpRequest.java=UTF-8
 encoding//src/com/store/http/TokenHttpsUtil.java=UTF-8
-encoding//src/com/store/smhilaw1/MainActivity.java=UTF-8
+encoding//src/com/store/smhilaw1/MainActivity1.java=UTF-8
 encoding//src/com/store/suffix/CryptUtil.java=UTF-8
 encoding//src/com/store/suffix/StrBinaryTurn.java=UTF-8
 encoding//src/com/store/util/UpdateVersion.java=gbk
