@@ -3,7 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+    <TextView
+                android:id="@+id/btn_play"
+                android:textSize="20dp"
+                android:text="hello"
+                android:textColor="@color/red"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+        />
 <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -54,4 +61,5 @@
                 android:src="@drawable/chose_albumlist" />
 
         </LinearLayout>
+         
 </LinearLayout>

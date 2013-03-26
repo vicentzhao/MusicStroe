@@ -76,7 +76,7 @@ import com.androidquery.callback.AjaxStatus;
 import com.store.adapter.DownLoadListAdapter;
 import com.store.adapter.OrderListAdapter;
 import com.store.adapter.PayOrderListAdapter;
-import com.store.adapter.TestMusicAdapter;
+import com.store.adapter.MusicAdapter;
 import com.store.bean.Music;
 import com.store.bean.OrderBean;
 import com.store.bean.PayOrderBean;
@@ -117,7 +117,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	public static View mainView;
 	public static View itemView;
 	public static Button myMusic,store,serch;
-	public static TestMusicAdapter musicAdapter;
+	public static MusicAdapter musicAdapter;
 	public static ArrayList<HashMap<String, String>> musicTestArrayList;
 	private static AQuery aQuery;
 	private static SharedPreferences.Editor editor;
@@ -138,6 +138,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	private static int isWhatLeft=100013;
 	private static int isWhatRight=100011;
 	static LayoutInflater inflater;
+	private static musicTryplayAsyncTask musicTryTask;
 	private static Button classify, the_news, recommend, movie, teleplay, anime,softInstallButton,
 	music, record,soft;
 	SharedPreferences  sp;
@@ -146,14 +147,14 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			R.id.item_hor_07,R.id.item_hor_08,R.id.item_hor_09,
 			R.id.item_hor_10,R.id.item_hor_11,R.id.item_hor_12,R.id.item_hor_13,R.id.item_hor_14,R.id.item_hor_15};
 	
-	private static  int[] musiclistItem = {R.id.music1,R.id.music2,R.id.music3,
-		R.id.music4,R.id.music5,R.id.music6,
-		R.id.music7,R.id.music8,R.id.music9,
-		R.id.music10};
-	private static  int[] recommendItem = {R.id.music1,R.id.music2,R.id.music3,
-		R.id.music4,R.id.music5,R.id.music6,
-		R.id.music7,R.id.music8,R.id.music9,
-		R.id.music10};
+//	private static  int[] musiclistItem = {R.id.music1,R.id.music2,R.id.music3,
+//		R.id.music4,R.id.music5,R.id.music6,
+//		R.id.music7,R.id.music8,R.id.music9,
+//		R.id.music10};
+//	private static  int[] recommendItem = {R.id.music1,R.id.music2,R.id.music3,
+//		R.id.music4,R.id.music5,R.id.music6,
+//		R.id.music7,R.id.music8,R.id.music9,
+//		R.id.music10};
 	private static int[] orderRadioItem={R.id.rad1,R.id.rad2,R.id.rad3,R.id.rad4};
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -316,9 +317,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 					false);
 			leftlayout.addView(view);
 			return leftlayout;
-			
 		}
-
 		// !!!!保存状态
 		@Override
 		public void onPause() {
@@ -366,8 +365,6 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		}
 		
 	}
-
-
 	/**
 	 * 右侧栏碎片
 	 * 
@@ -380,45 +377,9 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		ArrayList<String> a = new ArrayList<String>();
 		OnRightSelectedListener oRightSelectedListener;
 		private MediaPlayer mMediaPlayer;
-		private Handler handler = new Handler() {
-			public void handleMessage(Message msg) {
-				if (!Thread.currentThread().isInterrupted()) {
-					switch (msg.what) {
-					case 1:
-						int size = msg.getData().getInt("size");
-						long total = msg.getData().getLong("total");
-						int current = (int) (((float)size/ (float)total) * 100);
-						break;
-					case -1:
-						String error = msg.getData().getString("error");
-						Toast.makeText(getActivity(), error+"", 1).show();
-						break;
-					case 2:
-						if(getActivity() == null || getActivity().equals(""))return;
-						Toast.makeText(getActivity(), R.string.success,
-								Toast.LENGTH_LONG).show();
-						if(Constant.FILE_NAME != null && Constant.FILE_NAME.toString().substring(Constant.FILE_NAME.toString().length()-3,
-								Constant.FILE_NAME.toString().length()).equals("apk")){
-							openFile(Constant.FILE_NAME);
-						}
-						break;
-					}
-				}
-				super.handleMessage(msg);
-			}
-		};
-		
 		public interface OnRightSelectedListener {
 			public void oRightSelected(int left_type);
 		}
-
-//		// 右侧栏加数据
-//		@Override
-//		public void onCreate(Bundle savedInstanceState) {
-//			super.onCreate(savedInstanceState);
-//			commUtil = new CommUtil();
-//			a = commUtil.GetRightTitle(left_type);
-//		}
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -434,51 +395,17 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		public void update(){
 			
 		}
-		private void openFile(File file) {
-			String cmd = "chmod 777 " +file;  
-			 try {
-			 Runtime.getRuntime().exec(cmd);
-			 } catch (Exception e) {
-			e.printStackTrace();
-			 }  
-			 
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.setAction(android.content.Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(file),
-                            "application/vnd.android.package-archive");
-            startActivity(intent);
-    }
+	
   
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int idx,
 				long arg3) {
-			downLoadVideo("http://bcscdn.baidu.com/netdisk/BaiduYun_3.7.0.apk");
 			isSecondRFlag = true; 
 		}
-		//新起一个线程进行文件下载
-				public void downLoadVideo(String downLoadPth) {
-					Toast.makeText(getActivity(), R.string.start_download,
-							Toast.LENGTH_LONG).show();
-					mMediaPlayer = new MediaPlayer();
-					// Sets the audio stream type for this MediaPlayer
-					mMediaPlayer.setAudioStreamType(2);
-					MediaPlayerListener listener = new MediaPlayerListener();
-					listener.setAllListener(mMediaPlayer);
-//					HttpRequest.DOWNLOAD_ID = downLoadPth;
-					ThreadForRunnable threadR = new ThreadForRunnable(getActivity(), new ProgressBar(getActivity()),
-							handler);
-					Thread thread = new Thread(threadR);  
-					thread.start();
-				}
-		@SuppressWarnings("unchecked")
 		public void updateRightFragmentBaseLeft(int left_type) {
 			myMusic.setSelected(true);
 			store.setSelected(false);
 			HashMap<String, String> hashMap ;
-			String qq = "";
-			String duomi = "";
 			if(left_type == Constant.FLFG){
 				isWhatLeft =Constant.MUSICAPP;
 				if(isWhatRight==Constant.MYMUSIC){
@@ -506,18 +433,6 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		}
 		@Override
 		public void response(int responseCode, int what, String value, Object object) {
-			switch(what){
-			case Constant.ALL_RECORD:
-//				praseShopChannelList(value);
-				softlist = JsonUtil.getProductList(value);
-				if(getActivity() == null)return;
-//				gridDiew.setAdapter(new RightFragmentGradAdapter(getActivity(),
-//						softlist));
-				setView();
-				break;
-				default:
-					break;
-			}
 		}
 		
 	}
@@ -753,330 +668,49 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			thread.start();
 		}
 
-		@Override
-		public void onClick(View v) {
-			
-			switch(v.getId()){
-			case R.id.install://download
-				//在SD卡上新建文件夹来进行文件存储
-//				login();
-				 if(AuthoSharePreference.getToken(getActivity()) == null || 
-	              AuthoSharePreference.getToken(getActivity()).equals("")){ 
-		             login();
-	              }else{
-	            	  if(left_type == Constant.SOFT){
-	  					http.DownCheck(HttpRequest.SID, Constant.SOFT_FIELD, Constant.DOWNLOAD_CHECK);
-	  				}else if(left_type == Constant.AL){
-	  					http.DownCheck(HttpRequest.SID, Constant.PAPER_FIELD, Constant.DOWNLOAD_CHECK);
-	  				}else if(left_type == Constant.FLWSYS){
-	  					http.DownCheck(HttpRequest.SID, Constant.PRINT_FIELD, Constant.DOWNLOAD_CHECK);
-	  				}else if(left_type == Constant.MOVIE){
-	  					http.DownCheck(HttpRequest.SID, Constant.MOVIE_FIELD, Constant.DOWNLOAD_CHECK);
-	  				}else if(left_type == Constant.RECRD){
-	  					http.DownCheck(HttpRequest.SID, Constant.RECRD_FIELD, Constant.DOWNLOAD_CHECK);
-	  				}else if(left_type == Constant.FLFG){
-	  					http.DownCheck(HttpRequest.SID, Constant.BOOK_FIELD, Constant.DOWNLOAD_CHECK);
-	  				}else if(left_type == Constant.TV){
-	  					http.DownCheck(HttpRequest.SID, Constant.TV_FIELD, Constant.DOWNLOAD_CHECK);
-	  				}else if(left_type == Constant.ANIME){
-	  					http.DownCheck(HttpRequest.SID, Constant.ANIME_FIELD, Constant.DOWNLOAD_CHECK); 
-	  				}else if(left_type == Constant.MUSIC){
-//	  					http.DownCheck(HttpRequest.SID, Constant.MUSIC_FIELD, Constant.DOWNLOAD_CHECK);
-		  			    http.queryOrderSoftList(http.URL_QUERY_LIST_ORDER_MUSIC,DETAIL_ID,Constant.DOWN_SOFT_LIST);
-	  				}else{
-	  					downLoadVideo("D:\\savepath\\11.mp4");
-	  					myProgressBar.setVisibility(View.VISIBLE);  
-	  				    resultView.setVisibility(View.VISIBLE);
-	  				} 
-	              }
-				break;
-			case R.id.download:
-				if(AuthoSharePreference.getToken(getActivity()) == null || 
-	              AuthoSharePreference.getToken(getActivity()).equals("")){ 
-		             login();
-	              }else{
-	            	  if(left_type == Constant.SOFT){  
-	  					http.queryOrderSoftList(http.URL_QUERY_LIST_ORDER_SOFT,DETAIL_ID,Constant.ORDER_SOFT_LIST);
-	  				}else if(left_type == Constant.MUSIC){
-	  					http.queryOrderSoftList(http.URL_QUERY_LIST_ORDER_MUSIC,DETAIL_ID,Constant.ORDER_SOFT_LIST);
-	  				}else if(left_type == Constant.MOVIE){
-	  					http.queryOrderSoftList(http.URL_QUERY_LIST_ORDER_MOVIE,DETAIL_ID,Constant.ORDER_SOFT_LIST);
-	  				}
-	              }
-//				dohttps();
-				break;
-			case R.id.download_single:
-				http.DownCheck(v.getTag()+"", Constant.MUSIC_FIELD, Constant.DOWNLOAD_CHECK);
-				if(pop != null)pop.dismiss();
-				break;
-			case R.id.login:
-				String username = userName.getText().toString();
-				if(username != null){
-					pop.dismiss();
-					http.userLogin(username.trim(), Constant.USERLOGIN,null);
-				}else{
-					Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.input_username), Toast.LENGTH_SHORT).show();
-				}
-				break;
-			case R.id.order:
-				if(AuthoSharePreference.getToken(getActivity()) == null || 
-	              AuthoSharePreference.getToken(getActivity()).equals("")){ 
-		             login();
-	              }else{
-	            	  if(left_type == Constant.SOFT){
-	  					http.OrderSoftSingle(http.URL_QUERY_SINGLE_ORDER_SOFT,v.getTag()+"",Constant.ORDER_SOFT_SINGLE);
-	  				}else if(left_type == Constant.MUSIC){
-	  					http.OrderSoftSingle(http.URL_QUERY_SINGLE_ORDER_MUSIC,v.getTag()+"",Constant.ORDER_SOFT_SINGLE);
-	  				}else if(left_type == Constant.MOVIE){
-	  					http.OrderSoftSingle(http.URL_QUERY_SINGLE_ORDER_MOVIE,v.getTag()+"",Constant.ORDER_SOFT_SINGLE);
-	  				}
-	              }
-				pop.dismiss();
-				break;
-			case R.id.cancel:
-				pop.dismiss();
-				break;
-			case R.id.pay_order:
-				if(AuthoSharePreference.getToken(getActivity()) == null || 
-	              AuthoSharePreference.getToken(getActivity()).equals("")){ 
-		             login();
-	              }else{
-	            	  http.getOrderList(Constant.ORDER_LIST);
-	              }
-				break;
-			case R.id.pay:
-				http.getOrderListNum(Constant.ORDER_LIST_NUM);
-				pop.dismiss();
-				break;
-			case R.id.listentest:
-				if(left_type == Constant.MOVIE || left_type == Constant.TV || left_type == Constant.MUSIC){
-					Uri uri = null;
-					if(left_type == Constant.MOVIE || left_type == Constant.TV){
-						uri = Uri.parse("http://192.168.1.32:8080/common/show.jsp?pathrp="+ CryptUtil.decryptURL("2F6D6E742F6469676974616C2F6D6F766965736F757263652F31332F30312F32352F3133353930393736363237383631303030312E6D7034"));
-					}else{
-						uri = Uri.parse("http://192.168.1.32:8080/common/show.jsp?pathrp="+ CryptUtil.decryptURL("2F6D6E742F6469676974616C2F6D75736963736F757263652F31332F30312F32352F3133353930393535343233333735303030312E6D7033"));
-					}
-//					videoView.setVisibility(View.VISIBLE);           
-//					logo.setVisibility(View.GONE); 
-//			        videoView.setVideoURI(uri); 
-//			        videoView.setMediaController(new MediaController(getActivity())); 
-//			        videoView.requestFocus(); 
-//			        videoView.start(); 
-				}
-				break;
-				default:
-					break;
-			}
-		}
-		
-		@Override
-		public void response(int responseCode, int what, String value, Object object) {
-			switch(what){
-			case Constant.SINGLE_RECORD:
-				if(value == null)return;
-				JSONObject jsonO;
-				try {
-					jsonO = new JSONObject(value);
-					sfotName.setText(jsonO.getString("PNAME"));
-					softInfo.setText(jsonO.getString("PNOTE"));
-					DETAIL_ID = jsonO.getString("ID");
-					InputStream in;
-					try {
-						in = http.getImageStream(jsonO.getString("PIC"));
-						Bitmap bm = BitmapFactory.decodeStream(in);
-						if(bm!=null){
-							logo.setImageBitmap(bm);
-							logo.setBackgroundDrawable(null);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				break;
-				
-			case Constant.DOWNLOAD_LIST:
-				System.out.println("value == "+ value);
-				if(value == null)return;
-				try {
-					JSONArray jsonA = new JSONArray(value);
-					if(jsonA.length() >0){
-						HttpRequest.DOWNLOAD_ID = null;
-						JSONObject json = jsonA.getJSONObject(0);
-						String str = json.getString("filepath");
-						HttpRequest.SID = json.getString("sid");
-						if(str != null || !str.equals("")) {
-//							str =  str.substring(3, str.length()); 
-							str =  str.replace("k21", ""); 
-							HttpRequest.DOWNLOAD_ID = CryptUtil.decryptURL(str);
-						}
-					}
-					} catch (Exception e) {
-						e.printStackTrace();  
-					}
-				break;
-				
-			case Constant.DOWNLOAD_CHECK:
-				if(value == null)return;
-				try {
-						JSONObject json = new JSONObject(value);
-						String str = json.getString("filepath");
-						if(json.getBoolean("success")) {
-							if(left_type == Constant.SOFT){
-			            		if(AuthoSharePreference.appList == null){
-			            			String apkName = VideoDownload.getFileName(str)+VideoDownload.getFileExtension(str);
-			            			ApkLoadTask task = new ApkLoadTask(getActivity());
-			            			String path = null;
-			            			task.execute(path);
-			            		}
-							}
-							
-							myProgressBar.setVisibility(View.VISIBLE);
-						    resultView.setVisibility(View.VISIBLE);
-							downLoadVideo(HttpRequest.DOWNLOAD_ID);
-						}else{
-							Toast.makeText(getActivity(), json.getString("errmessage")+"", Toast.LENGTH_SHORT).show();
-						}
-					} catch (Exception e) {
-						e.printStackTrace();  
-					}  
-				break;
-			case Constant.ORDER_SOFT_LIST://订购列表
-				if(value == null)return;
-				softOrderlist = JsonUtil.getOrderList(value);
-				getOrderList(softOrderlist);
-				break;
-			case Constant.ORDER_SOFT_SINGLE://订购单个商品
-				if(value == null)return;
-				value = value.equals("true")?"订购成功":"订购失败";
-				Toast.makeText(getActivity(), value+"", Toast.LENGTH_SHORT).show();
-				break;
-			case Constant.ORDER_LIST://订购单列表
-				if(value == null)return;
-				try {
-					JSONObject json = new JSONObject(value);
-					String price = json.getString("total");
-					payOrderlist = JsonUtil.getOrderNum(value);
-					getPayOrderList(payOrderlist,price);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				break;
-			case Constant.ORDER_LIST_NUM://订购单num
-				if(value == null)return;
-				try {
-					JSONObject json = new JSONObject(value);
-					String num = json.getString("num");
-					http.getOrderListID(num,Constant.ORDER_LIST_ID);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				break;
-			case Constant.ORDER_LIST_ID://获得订单ID
-				if(value == null)return;
-				try {
-					JSONObject json = new JSONObject(value);
-					String id = json.getString("ID");
-					id = "135962144985090001";
-					http.doPayOrder(id,Constant.ORDER_LIST_PAY);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				break;  
-			case Constant.ORDER_LIST_PAY://支付
-				if(value == null)return;
-				value = JsonUtil.getPayResult(value)?getActivity().getResources().getString(R.string.pay_sucess):
-					getActivity().getResources().getString(R.string.pay_fail);
-				Toast.makeText(getActivity(), value+"", Toast.LENGTH_SHORT).show();
-				break;
-				
-			case Constant.USERLOGIN://登录
-				if(value != null && value.equals("\"false\"")){
-					Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.login_fail), Toast.LENGTH_SHORT).show();
-					return;	
-				}
-				JsonUtil.setLogin(value, getActivity());
-				Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.login_secuss), Toast.LENGTH_SHORT).show();
-				break;
-			case Constant.DOWN_SOFT_LIST://下载列表
-				if(value == null)return;
-				softOrderlist = JsonUtil.getOrderList(value);
-				getDownLoadList(softOrderlist);
-				break;
-				default:
-					break;  
-			}
-		}
-		
-        public void login(){
-        	LayoutInflater inflater = LayoutInflater.from(getActivity());  
-    		View view = inflater.inflate(R.layout.login, null);
-    		login = (Button) view.findViewById(R.id.login);
-    		cancel = (Button)view.findViewById(R.id.cancel);
-    		userName = (EditText) view.findViewById(R.id.login_username); 
-    		passWord = (EditText) view.findViewById(R.id.login_pas);
-    		login.setOnClickListener(this);  
-    		cancel.setOnClickListener(this);
-    		pop = new PopupWindow(view, LayoutParams.WRAP_CONTENT,
-    				LayoutParams.WRAP_CONTENT);
-    		pop.setBackgroundDrawable(new BitmapDrawable());
-    		pop.setFocusable(true);
-    		mainView = inflater.inflate(R.layout.resource_detail, null);
-    		pop.showAtLocation(mainView, Gravity.CENTER, 0, 0);
-        }
-        
-        public void getOrderList(ArrayList<OrderBean> softOrderlist){ 
-        	LayoutInflater inflater = LayoutInflater.from(getActivity());
-    		View view = inflater.inflate(R.layout.order_list, null);
-    		order_list = (ListView) view.findViewById(R.id.order_listview);
-    		order_list.setAdapter(new OrderListAdapter(getActivity(),detailF, softOrderlist));
-    		pop = new PopupWindow(view, LayoutParams.WRAP_CONTENT,
-    				LayoutParams.WRAP_CONTENT);  
-    		pop.setBackgroundDrawable(new BitmapDrawable()); 
-    		pop.setFocusable(true);
-    		mainView = inflater.inflate(R.layout.resource_detail, null);
-    		pop.showAtLocation(mainView, Gravity.CENTER, 0, 0);
-        }
-        
-        public void getPayOrderList(ArrayList<PayOrderBean> softOrderlist,String pri){ 
-        	LayoutInflater inflater = LayoutInflater.from(getActivity());
-    		View view = inflater.inflate(R.layout.pay_order_list, null);
-    		order_list = (ListView) view.findViewById(R.id.order_listview);
-    		order_list.setAdapter(new PayOrderListAdapter(getActivity(),detailF, softOrderlist));
-    		TextView price = (TextView)view.findViewById(R.id.price);
-    		Button pay = (Button)view.findViewById(R.id.pay);
-    		price.setText(getActivity().getResources().getString(R.string.total)+pri);
-    		pay.setOnClickListener(this);
-    		pop = new PopupWindow(view, LayoutParams.WRAP_CONTENT,
-    				LayoutParams.WRAP_CONTENT);  
-    		pop.setBackgroundDrawable(new BitmapDrawable()); 
-    		pop.setFocusable(true);
-    		mainView = inflater.inflate(R.layout.resource_detail, null);
-    		pop.showAtLocation(mainView, Gravity.CENTER, 0, 0);
-        }
-        
-        public void getDownLoadList(ArrayList<OrderBean> softOrderlist){ 
-        	LayoutInflater inflater = LayoutInflater.from(getActivity());
-    		View view = inflater.inflate(R.layout.order_list, null);
-    		order_list = (ListView) view.findViewById(R.id.order_listview);
-    		order_list.setAdapter(new DownLoadListAdapter(getActivity(),detailF, softOrderlist));
-    		pop = new PopupWindow(view, LayoutParams.WRAP_CONTENT,
-    				LayoutParams.WRAP_CONTENT);  
-    		pop.setBackgroundDrawable(new BitmapDrawable()); 
-    		pop.setFocusable(true);
-    		mainView = inflater.inflate(R.layout.resource_detail, null);
-    		pop.showAtLocation(mainView, Gravity.CENTER, 0, 0);
-        }
-        
+
 
 		@Override
 		public void response(int responseCode, int what, Bitmap bm) {
-			if(bm != null){
-				logo.setImageBitmap(bm);
-				logo.setBackgroundDrawable(null);
-			}
+			// TODO Auto-generated method stub
+			
 		}
+
+
+
+		@Override
+		public void response(int responseCode, int what, String value,
+				Object object) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		
+//		
+//        public void login(){
+//        	LayoutInflater inflater = LayoutInflater.from(getActivity());  
+//    		View view = inflater.inflate(R.layout.login, null);
+//    		login = (Button) view.findViewById(R.id.login);
+//    		cancel = (Button)view.findViewById(R.id.cancel);
+//    		userName = (EditText) view.findViewById(R.id.login_username); 
+//    		passWord = (EditText) view.findViewById(R.id.login_pas);
+//    		login.setOnClickListener(this);  
+//    		cancel.setOnClickListener(this);
+//    		pop = new PopupWindow(view, LayoutParams.WRAP_CONTENT,
+//    				LayoutParams.WRAP_CONTENT);
+//    		pop.setBackgroundDrawable(new BitmapDrawable());
+//    		pop.setFocusable(true);
+//    		mainView = inflater.inflate(R.layout.resource_detail, null);
+//    		pop.showAtLocation(mainView, Gravity.CENTER, 0, 0);
+//        }
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -1156,24 +790,6 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 				editor.commit();
 			}
 			if(keyCode==KeyEvent.KEYCODE_DPAD_LEFT){
-//		if(!isFragment){
-//			if(!store.isFocused()){
-//				System.out.println("left我执行了。");
-//				String focuse = sp.getString("from","none");
-//				if(focuse.equals("one")){
-//					classify.setFocusable(true);
-//					classify.requestFocus();
-//				}
-//				if(focuse.equals("three")){
-//					recommend.setFocusable(true);
-//					recommend.requestFocus();
-//				}
-//				if(focuse.equals("two")){
-//					the_news.setFocusable(true);
-//					the_news.requestFocus();
-//				}
-//
-//		}}
 				 if(itemView.findViewById(R.id.item_hor_01).isFocused()||itemView.findViewById(R.id.item_hor_06).isFocused()||itemView.findViewById(R.id.item_hor_11).isFocused()){
 					 String focuse = sp.getString("from","none");
 						if(focuse.equals("one")){
@@ -1190,31 +806,6 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 						}
 				 }
 			}
-//			if(keyCode==KeyEvent.KEYCODE_DPAD_DOWN){
-//				System.out.println("down键被执行");
-//				 if(itemView.findViewById(R.id.item_hor_05).isFocused()){
-//					 itemView.findViewById(R.id.item_hor_10).setFocusable(true);
-//					 itemView.findViewById(R.id.item_hor_10).requestFocus();
-//				 }
-//				 
-////				 if(itemView.findViewById(R.id.item_hor_10).isFocused()){
-////					 itemView.findViewById(R.id.item_hor_15).isFocusable();
-////					 itemView.setFocusable(true);
-////					 itemView.findViewById(R.id.item_hor_15).requestFocus();
-////				 }
-////				 if(itemView.findViewById(R.id.item_hor_15).isFocused()){
-////					 itemView.findViewById(R.id.item_hor_15).setFocusable(true);
-////					 itemView.findViewById(R.id.item_hor_15).requestFocus();
-////				 }
-////				 if(itemView.findViewById(R.id.item_hor_11).isFocused()){
-////					 itemView.findViewById(R.id.item_hor_11).setFocusable(true);
-////					 itemView.findViewById(R.id.item_hor_11).requestFocus();
-////				 }
-////				 if(itemView.findViewById(R.id.item_hor_12).isFocused()){
-////					 itemView.findViewById(R.id.item_hor_12).setFocusable(true);
-////					 itemView.findViewById(R.id.item_hor_12).requestFocus();
-////				 }
-//			}
 		return super.onKeyDown(keyCode, event);
 	}
 	private void initInfoView(){
@@ -1303,20 +894,6 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 //			}
 //		});
 //	}
-	   public static void setView(){
-		   //
-		   for (int i = 0; i < musicTestArrayList.size(); i++) {
-			aQuery.find(horItems[i]).find(R.id.ItemTitle).text(musicTestArrayList.get(i).get("info"));
-		}	
-		   for (int i = 0; i < musicTestArrayList.size(); i++) {
-			   if(musicTestArrayList.get(i).get("info").equals("QQ") || musicTestArrayList.get(i).get("info").equals("QQ+")
-						||musicTestArrayList.get(i).get("info").equals("QQ++")){
-					aQuery.find(horItems[i]).find(R.id.ItemIcon).image(R.drawable.qq);
-				}else{
-					aQuery.find(horItems[i]).find(R.id.ItemIcon).image(R.drawable.duomi);
-				}
-		}
-	   }
 	   public static void initDialog(String s) {
 		   
 		   View view = null;
@@ -1597,9 +1174,9 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 					j=i;
 				}
 			}
-			for (int i = 0; i < musiclistItem.length; i++) {
-				viewFormusicdetail.findViewById(musiclistItem[i]).setVisibility(View.INVISIBLE);
-			}
+//			for (int i = 0; i < musiclistItem.length; i++) {
+//				viewFormusicdetail.findViewById(musiclistItem[i]).setVisibility(View.INVISIBLE);
+//			}
 			final Button btn_orderall=(Button)(viewFormusicdetail.findViewById(R.id.btn_order_allmusic));
 		
 			builder.setContentView(viewFormusicdetail);
@@ -1628,20 +1205,20 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 					                        musictitleList.add(jb.getString("title"));
 					                        musicsidList.add(sid);
 		                        		}
-										 for (int i = 0; i < musictitleList.size(); i++) {
-											 final String web_path =musicpathList.get(i);
-											 final String sid = musicsidList.get(i);
-											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setVisibility(View.VISIBLE);
-											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setText(musictitleList.get(i));
-											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setOnClickListener(new OnClickListener() {
-												@Override
-												public void onClick(View v) {
-													String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+web_path+"&"+"多米";
-													Toast.makeText(aQuery.getContext(), "开始播放", 1).show();
-													setMusicCross(appDownPathtrue,sid);
-												}
-											});
-									}
+//										 for (int i = 0; i < musictitleList.size(); i++) {
+//											 final String web_path =musicpathList.get(i);
+//											 final String sid = musicsidList.get(i);
+//											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setVisibility(View.VISIBLE);
+//											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setText(musictitleList.get(i));
+//											 ((Button)viewFormusicdetail.findViewById(musiclistItem[i])).setOnClickListener(new OnClickListener() {
+//												@Override
+//												public void onClick(View v) {
+//													String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+web_path+"&"+"多米";
+//													Toast.makeText(aQuery.getContext(), "开始播放", 1).show();
+//													setMusicCross(appDownPathtrue,sid);
+//												}
+//											});
+//									}
 									} catch (JSONException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -1825,17 +1402,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		}
 		//set pilot play  UI
 		public static void  setMusicPilot(final String path){
-			final Dialog dl = new Dialog(aQuery.getContext());
-			final View view = inflater.inflate(R.layout.musicplay, null);
-			dl.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			dl.setContentView(view);
-			Window dialogWindow = dl.getWindow();
-			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-			dialogWindow.setGravity(Gravity.CENTER);
-			lp.width = 400; 
-			lp.height =300; 
-			dialogWindow.setAttributes(lp);
-			dl.show();
+			final View view = inflater.inflate(R.layout.music_detail, null);
 			 final ImageButton iv =	(ImageButton) view.findViewById(R.id.btn_play);
 				mp = new MediaPlayer();
 				view.findViewById(R.id.btn_stop).setOnClickListener(new OnClickListener() {
@@ -1843,7 +1410,6 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 					  mp.stop();
-					  dl.dismiss();
 					}
 				});
 				 view.findViewById(R.id.btn_play).setOnClickListener(new OnClickListener() {
@@ -1861,44 +1427,14 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 						}
 					}
 				});
-				 dl.setOnKeyListener(new OnKeyListener() {
-					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						// TODO Auto-generated method stub
-						if(keyCode==KeyEvent.KEYCODE_BACK){
-							if(isplay){
-								if(mp!=null){
-									mp.stop();
-								}
-							}
-							  return false;
-						}
-						return false;
-					}
-				});
-				new AsyncTask<Void, Void, Void>(){
-					@Override
-					protected Void doInBackground(Void... params) {
-						try {
-							mp.setDataSource(aQuery.getContext(), Uri.parse(path));
-							mp.prepare();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						mp.start();
-						isplay =true;
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(Void result) {
-						if(iv==null){
-							Toast.makeText(aQuery.getContext(), "iv  is null,please check", 1).show();
-						}
-						iv.setImageResource(R.drawable.desktop_pausebt_b);
-						super.onPostExecute(result);
-					}
-				}.execute();
+				 
+				 if (musicTryTask != null && musicTryTask.getStatus() == AsyncTask.Status.RUNNING) {
+					 musicTryTask.cancel(true);  //  如果Task还在运行，则先取消它
+			        }else{
+			        	musicTryTask = new musicTryplayAsyncTask();
+			        }
+				 musicTryTask.execute(path);
+				
 		}
 		
 		//setmvplay
@@ -2055,19 +1591,19 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 				                        musictitleList.add(jb.getString("title"));
 				                        musicsidList.add(sid);
 	                        		}
-									 for (int i = 0; i < musictitleList.size(); i++) {
-										 final String web_path =musicpathList.get(i);
-										 final String sid = musicsidList.get(i);
-										 ((Button)view.findViewById(musiclistItem[i])).setVisibility(View.VISIBLE);
-										 ((Button)view.findViewById(musiclistItem[i])).setText(musictitleList.get(i));
-										 ((Button)view.findViewById(musiclistItem[i])).setOnClickListener(new OnClickListener() {
-											@Override
-											public void onClick(View v) {
-												String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+web_path+"&"+"duomi";
-												setMusicCross(appDownPathtrue,sid);
-											}
-										});
-								}
+//									 for (int i = 0; i < musictitleList.size(); i++) {
+//										 final String web_path =musicpathList.get(i);
+//										 final String sid = musicsidList.get(i);
+//										 ((Button)view.findViewById(musiclistItem[i])).setVisibility(View.VISIBLE);
+//										 ((Button)view.findViewById(musiclistItem[i])).setText(musictitleList.get(i));
+//										 ((Button)view.findViewById(musiclistItem[i])).setOnClickListener(new OnClickListener() {
+//											@Override
+//											public void onClick(View v) {
+//												String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+web_path+"&"+"duomi";
+//												setMusicCross(appDownPathtrue,sid);
+//											}
+//										});
+//								}
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -2211,6 +1747,26 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 										}).create();
 								dialog.show();
 							}
-						
+		 public static class  musicTryplayAsyncTask extends AsyncTask<String,Void,Void>{
+			@Override
+			protected Void doInBackground(String... params) {
+				try {
+					String path =params[0];
+					mp.setDataSource(aQuery.getContext(), Uri.parse(path));
+					mp.prepare();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				mp.start();
+				isplay =true;
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				super.onPostExecute(result);
+			}
+		
+		 }
 			
 }

@@ -7,8 +7,27 @@ public class SoftwareBean {
 	private String image_path;
 	private String download_path;
 	private String id;
+	private String author, release, //发布日期
+	environment;
 	
-	
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	public String getRelease() {
+		return release;
+	}
+	public void setRelease(String release) {
+		this.release = release;
+	}
+	public String getEnvironment() {
+		return environment;
+	}
+	public void setEnvironment(String environment) {
+		this.environment = environment;
+	}
 	public String getId() {
 		return id;
 	}
