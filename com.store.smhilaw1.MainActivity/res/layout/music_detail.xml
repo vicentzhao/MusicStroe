@@ -13,7 +13,7 @@
             android:layout_height="fill_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:text="多米音乐"
+            android:text=""
             android:textSize="22sp"
             android:textColor="@android:color/white"
             android:gravity="center"
@@ -29,7 +29,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_weight="1"
-        android:layout_height="wrap_content" >
+        android:layout_height="fill_parent" >
         <ImageView
             android:id="@+id/albumimage"
             android:layout_width="80dp"
@@ -46,7 +46,7 @@
             android:layout_marginLeft="28dp"
             android:layout_marginTop="34dp"
             android:layout_toRightOf="@+id/albumimage"
-            android:text="花蝴蝶" />
+            android:text="" />
 
         <TextView
             android:id="@+id/artist"
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/albumname"
             android:layout_below="@+id/albumname"
-            android:text="歌手：蔡依林" />
+            android:text="" />
 
         <TextView
             android:id="@+id/Issuedate"
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/artist"
             android:layout_below="@+id/artist"
-            android:text="发行日期：2013-02-26" />
+            android:text="" />
 
         <TextView
             android:id="@+id/albuminfo"
@@ -83,7 +83,7 @@
             android:layout_marginLeft="46dp"
             android:layout_alignBottom="@+id/artist"
             android:layout_toRightOf="@+id/Issuedate"
-            android:text="语言：国语" />
+            android:text="" />
 
         <TextView
             android:id="@+id/company"
@@ -92,7 +92,7 @@
             android:layout_alignBaseline="@+id/Issuedate"
             android:layout_alignBottom="@+id/Issuedate"
             android:layout_alignLeft="@+id/language"
-            android:text="唱片公司：华纳唱片" />
+            android:text="" />
       <Button
             android:id="@+id/btn_order_allmusic"
             android:layout_width="wrap_content"
@@ -121,34 +121,27 @@
     </LinearLayout>
      <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
           android:layout_weight="1"
         android:orientation="horizontal"
         >
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:layout_height="wrap_content" >
-        <!-- 
- -->
-       <ListView
-            android:id="@+id/music_listview"
-             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-           android:orientation="horizontal"
-           >
-       </ListView>
-    </ScrollView>
 
-    <include
-        android:id="@+id/item_hor_02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        layout="@layout/musicplay"
-        android:nextFocusRight="@+id/item_hor_03" />
+          <ListView
+            android:id="@+id/music_detail_list"
+            android:focusable="false"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="5.0dip"
+            android:layout_marginRight="3.0dip"
+            android:layout_weight="1.0"
+            android:cacheColorHint="#00000000"
+            android:divider="@color/transparent"
+            android:dividerHeight="5.0dip"
+            android:listSelector="@color/transparent"
+            android:paddingTop="5.0dip"
+            android:scrollbarStyle="outsideInset" >
 
+	</ListView>
     </LinearLayout>
     <TextView
         android:id="@+id/textView6"
@@ -166,7 +159,7 @@
         />
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_weight="1"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp" >

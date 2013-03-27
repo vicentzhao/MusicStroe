@@ -39,6 +39,18 @@ public class JsonUtil {
 				music.setInfo(jsonO.getString("PHID"));
 				music.setVersion(jsonO.getString("QUA"));
 				music.setId(jsonO.getString("ID"));
+				if(!jsonO.isNull("artist")){
+				music.setArtist(jsonO.getString("artist"));
+				}
+				if(!jsonO.isNull("company")){
+				music.setCompany(jsonO.getString("company"));
+				}
+				if(!jsonO.isNull("language")){
+				music.setLanguage(jsonO.getString("language"));
+				}
+				if(!jsonO.isNull("pubdate")){
+				music.setPubdate(jsonO.getString("pubdate"));
+				}
 				list.add(music);
 			}
 		} catch (JSONException e) {

@@ -12,22 +12,25 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.store.bean.SoftwareBean;
+import com.store.bean.Music;
+import com.store.content.Constant;
+import com.store.http.HttpRequest;
 import com.store.smhilaw1.MainActivity1;
 import com.store.smhilaw1.R;
 
 public class MusicAdapter extends BaseAdapter {
 	private Context mContext;
-	ArrayList<SoftwareBean> list;
+	ArrayList<Music> list;
 	private LayoutInflater inflater;
-	private MediaPlayer myMp;
+	private int isWhatRight;
 
-	public MusicAdapter(Context c, ArrayList<SoftwareBean> list,MediaPlayer mp) {
+	public MusicAdapter(Context c, ArrayList<Music> list,int iswhat) {
 		mContext = c;
 		this.list = list;
 		inflater = LayoutInflater.from(mContext);
-		myMp = mp;
+		isWhatRight =iswhat;
 	}
 
 	public int getCount() {
@@ -60,13 +63,23 @@ public class MusicAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.name.setText(list.get(position).getName());
+		if(isWhatRight==Constant.MUSICSTORE){
+			holder.btn_down.setVisibility(View.GONE);
+		}
 		holder.btn_play.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				 MainActivity1.setMusicPilot(list.get(position).getDownload_path());
+				String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+list.get(position).getDownload_path();
+				 MainActivity1.setMusicPilot(appDownPathtrue,list.get(position).getName());
 			}
 		});
-
+		holder.btn_down.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MainActivity1.setMusicDown(list.get(position).getId());
+			}
+		});
 		return convertView;
 	}
 

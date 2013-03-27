@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     <TextView
-                android:id="@+id/btn_play"
+                android:id="@+id/btn_playname"
                 android:textSize="20dp"
                 android:text="hello"
                 android:textColor="@color/red"
