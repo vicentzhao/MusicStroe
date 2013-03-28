@@ -5,6 +5,8 @@ import io.vov.vitamio.MediaPlayer;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.DialogInterface.OnKeyListener;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -74,7 +76,6 @@ public class MusicAdapter extends BaseAdapter {
 			}
 		});
 		holder.btn_down.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				MainActivity1.setMusicDown(list.get(position).getId());

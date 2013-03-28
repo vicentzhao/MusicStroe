@@ -51,6 +51,9 @@ public class JsonUtil {
 				if(!jsonO.isNull("pubdate")){
 				music.setPubdate(jsonO.getString("pubdate"));
 				}
+				if(!jsonO.isNull("TYPE")){
+					music.setType(jsonO.getString("TYPE"));
+				}
 				list.add(music);
 			}
 		} catch (JSONException e) {

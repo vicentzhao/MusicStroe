@@ -105,14 +105,14 @@ public class HttpRequest {
 	public static String URL_QUERY_LIST_ORDER_NUM = WEB_ROOT + "index/order!pay.action?resultType=json";//支付获取订单号
 	public static String URL_QUERY_LIST_PAY_ID = WEB_ROOT + "index/pay.action?token=myadmin&resultType=json&num=";//根据订单号得订单id   
 	public static String URL_QUERY_LIST_PAY = WEB_ROOT + "index/pay!pay.action?token=myadmin&resultType=json&id=";//确认支付
-	public static String URL_QUERY_LIST_PAY_ALL=WEB_ROOT+"musicshop!buy.action?ran='"+Math.random()+"'&id=";
-	public static String URL_ADD="&type=0&ordertype='+type";
+	public static String URL_QUERY_LIST_PAY_ALL=WEB_ROOT+"index/musicshop!buy.action?token=myadmin"+"&id=";
+	public static String URL_ADD="&type=0&ordertype=";
 	public static String URL_QUERY_LIST__MUSICORDERED=WEB_ROOT+"index/musicshop!order.action?token=myadmin&resultType=json";//已经订阅的音乐
 	public static String URL_QUERY_LIST__SOFTORDERED=WEB_ROOT+"index/softshop!order.action?token=myadmin&resultType=json";//已经订阅的软件
 			
 	
-	public static String URL_UPDATE ="http://124.193.177.154:9007/apk/apk.xml";
-	public static String URL_UPDATE_ROOT="http://124.193.177.154:9007/apk/";
+	public static String URL_UPDATE =WEB_ROOT+"apk/apk.xml";
+	public static String URL_UPDATE_ROOT=WEB_ROOT+"apk/";
 	public static String DOWNLOAD_ID = null;
 	public static String SID = null;//验证ID
 	

@@ -14,6 +14,13 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -408,8 +415,11 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 				else if(left_type == Constant.AL){
 					isWhatLeft =Constant.MUSICCHAPTER;
 					if(isWhatRight==Constant.MYMUSIC){
+						
+					 setMusicChapterList(Constant.MYMUSIC_CHAPTER);
 					}
 					else if(isWhatRight==Constant.MUSICSTORE){
+						setMusicChapterList(Constant.MUSICSTORE_CHAPTER);
 					}
 			}else if(left_type == Constant.FLWSYS){
 				isWhatLeft =Constant.MUSICMV;
@@ -1538,14 +1548,19 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			initDialog("three");
 			viewFormusicdetail = inflater.inflate(R.layout.music_detail, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait。。");
-			
+			final ArrayList<Music> music_chapterList = new ArrayList<Music>();
 		        aQuery.ajax(path, String.class, new AjaxCallback<String>() {
 		                @Override
 		                public void callback(String url, String json, AjaxStatus status) {
 		                        if(json != null){
 		                        	musicList = new ArrayList<Music>();
 		                        	musicList = JsonUtil.getMusicList(json);
-		                        	setMusicChapterInfo( musicList);
+		                        	for (int i = 0; i < musicList.size(); i++) {
+										if(musicList.get(i).getType().equals("1")){
+											music_chapterList .add(musicList.get(i));
+										}
+									}
+		                        	setMusicChapterInfo( music_chapterList);
 		                        	Dialog.dismiss();
 		                        }else{
 		                        	Dialog.dismiss();
@@ -1557,7 +1572,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-						   setMusicDetial(v.getId(), musicList,viewFormusicdetail);
+						   setMusicDetial(v.getId(), music_chapterList,viewFormusicdetail);
 						}
 					});
 				}
@@ -1568,14 +1583,19 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			initDialog("three");
 			viewFormusicdetail = inflater.inflate(R.layout.music_detail, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait a moment。。");
-			
+			final ArrayList<Music> mvlist = new ArrayList<Music>();
 		        aQuery.ajax(path, String.class, new AjaxCallback<String>() {
 		                @Override
 		                public void callback(String url, String json, AjaxStatus status) {
 		                        if(json != null){
 		                        	musicList = new ArrayList<Music>();
 		                        	musicList = JsonUtil.getMusicList(json);
-		                        	setMusicChapterInfo( musicList);
+		                        	for (int i = 0; i < musicList.size(); i++) {
+										if(musicList.get(i).getType().equals("0")){
+											mvlist.add(musicList.get(i));
+										}
+		                        	}
+		                        	setMusicChapterInfo( mvlist);
 		                        	Dialog.dismiss();
 		                        }else{
 		                        	Dialog.dismiss();
@@ -1587,7 +1607,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-						   setMusicDetial(v.getId(), musicList,viewFormusicdetail);
+						   setMusicDetial(v.getId(), mvlist,viewFormusicdetail);
 						}
 					});
 				}
@@ -1704,52 +1724,92 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	            });
 		}
 		//subscription
-		 static void setOrder(ArrayList<PostMent> postMentList ){
-			 final View view = inflater.inflate(R.layout.orderstype, null);
-			 for (int i = 0; i <orderRadioItem.length; i++) {
-				
-				 view.findViewById(orderRadioItem[i]).setVisibility(View.INVISIBLE);
+		 static void setOrder(final ArrayList<PostMent> postMentList ){
+			 String[] myRadio =new String[postMentList.size()] ;
+			 for (int i = 0; i < postMentList.size(); i++) {
+				String type =postMentList.get(i).getType();
+				String price = postMentList.get(i).getPrice();
+				myRadio[i] =type+"/"+price; 
+				 
 			}
-			 for (int i = 0; i <postMentList.size(); i++) {
-				 view.findViewById(orderRadioItem[i]).setVisibility(View.INVISIBLE);
-				 RadioButton btn_rb=(RadioButton) view.findViewById(orderRadioItem[i]);
-				 String typeE =postMentList.get(i).getType();
-				 if(typeE.equals("day")){
-				 btn_rb.setText("day/"+postMentList.get(i).getPrice());
-				 btn_rb.setVisibility(View.VISIBLE);
-				 }
-				 if(typeE.equals("month")){
-					 btn_rb.setText("month/"+postMentList.get(i).getPrice());
-					 btn_rb.setVisibility(View.VISIBLE);
-				 }
-				 if(typeE.equals("quarter")){
-					 btn_rb.setText("quarter/"+postMentList.get(i).getPrice());
-					 btn_rb.setVisibility(View.VISIBLE);
-				 }
-				 if(typeE.equals("year")){
-					 btn_rb.setText("year/"+postMentList.get(i).getPrice());
-					 btn_rb.setVisibility(View.VISIBLE);
-				 }
-			}
-			 final Dialog dl = new Dialog(aQuery.getContext());
-				dl.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				dl.setContentView(view);
-				Window dialogWindow = dl.getWindow();
-				WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-				dialogWindow.setGravity(Gravity.CENTER);
-				lp.width = 600; 
-				lp.height =200; 
-				dialogWindow.setAttributes(lp);
-				dl.show();
-				RadioGroup group = (RadioGroup) view.findViewById(R.id.radioGroup);
-				group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						// TODO Auto-generated method stub
+//			 final View view = inflater.inflate(R.layout.orderstype, null);
+//			 for (int i = 0; i <orderRadioItem.length; i++) {
+//				 view.findViewById(orderRadioItem[i]).setVisibility(View.INVISIBLE);
+//			}
+//			 for (int i = 0; i <postMentList.size(); i++) {
+//				 view.findViewById(orderRadioItem[i]).setVisibility(View.INVISIBLE);
+//				 RadioButton btn_rb=(RadioButton) view.findViewById(orderRadioItem[i]);
+//				 String typeE =postMentList.get(i).getType();
+//				 if(typeE.equals("day")){
+//				 btn_rb.setText("day/"+postMentList.get(i).getPrice());
+//				 btn_rb.setVisibility(View.VISIBLE);
+//				 }
+//				 if(typeE.equals("month")){
+//					 btn_rb.setText("month/"+postMentList.get(i).getPrice());
+//					 btn_rb.setVisibility(View.VISIBLE);
+//				 }
+//				 if(typeE.equals("quarter")){
+//					 btn_rb.setText("quarter/"+postMentList.get(i).getPrice());
+//					 btn_rb.setVisibility(View.VISIBLE);
+//				 }
+//				 if(typeE.equals("year")){
+//					 btn_rb.setText("year/"+postMentList.get(i).getPrice());
+//					 btn_rb.setVisibility(View.VISIBLE);
+//				 }
+//			}
+//			 final Dialog dl = new Dialog(aQuery.getContext());
+//				dl.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//				dl.setContentView(view);
+//				Window dialogWindow = dl.getWindow();
+//				WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//				dialogWindow.setGravity(Gravity.CENTER);
+//				lp.width = 600; 
+//				lp.height =200; 
+//				dialogWindow.setAttributes(lp);
+//				dl.show();
+//				RadioGroup group = (RadioGroup) view.findViewById(R.id.radioGroup);
+//				group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//					@Override
+//					public void onCheckedChanged(RadioGroup group, int checkedId) {
+//						// TODO Auto-generated method stub
+//						
+//						
+//					}
+//				});
+ 
+				 new AlertDialog.Builder(aQuery.getContext())  
+				.setTitle("请选择")  
+				.setIcon(android.R.drawable.ic_dialog_info)                  
+				.setSingleChoiceItems(myRadio, 0,   
+				new DialogInterface.OnClickListener() {  
+				  public void onClick(DialogInterface dialog, int which) {  
+				         dialog.dismiss();  
+				         Toast.makeText(aQuery.getContext(), which+"", 1).show();
+				         String type = postMentList.get(which).getType();
+				        String url = HttpRequest.URL_QUERY_LIST_PAY_ALL+postMentList.get(which).getId()+HttpRequest.URL_ADD+type;
+				        String result;
+						  
+						try {
+							HttpGet request = new HttpGet(url);
+								// 绑定到请求 Entry 
+								// 发送请求 
+								HttpResponse response = new DefaultHttpClient().execute(request); 
+								// 得到应答的字符串，这也是一个 JSON 格式保存的数据  
+								 result = EntityUtils.toString(response.getEntity());
+								System.out.println("返回的数据============="+result);
+							Toast.makeText(aQuery.getContext(), "返回的数据============="+result, 1).show();
+
+						} catch (Exception e) {
+							
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						
-						
-					}
-				});
+						}     
+				     }  
+				   }  
+				 )  
+				 .setNegativeButton("取消", null)  
+				 .show();
 		 }
 		 //check version
 		 private void checkVersion() {
