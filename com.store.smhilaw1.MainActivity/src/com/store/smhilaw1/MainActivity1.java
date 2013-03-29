@@ -145,10 +145,10 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			R.id.item_hor_07,R.id.item_hor_08,R.id.item_hor_09,
 			R.id.item_hor_10,R.id.item_hor_11,R.id.item_hor_12,R.id.item_hor_13,R.id.item_hor_14,R.id.item_hor_15};
 	
-//	private static  int[] musiclistItem = {R.id.music1,R.id.music2,R.id.music3,
-//		R.id.music4,R.id.music5,R.id.music6,
-//		R.id.music7,R.id.music8,R.id.music9,
-//		R.id.music10};
+	private static  int[] musiclistItem = {R.id.music_item_hor_01,R.id.music_item_hor_02,R.id.music_item_hor_03,
+		R.id.music_item_hor_04,R.id.music_item_hor_05,R.id.music_item_hor_06,
+		R.id.music_item_hor_07,R.id.music_item_hor_08,R.id.music_item_hor_09,
+		R.id.music_item_hor_10};
 //	private static  int[] recommendItem = {R.id.music1,R.id.music2,R.id.music3,
 //		R.id.music4,R.id.music5,R.id.music6,
 //		R.id.music7,R.id.music8,R.id.music9,
@@ -898,13 +898,13 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		   
 		   View view = null;
 		   if("three".equals(s)){
-			view= inflater.inflate(R.layout.music_detail, null);
+			view= inflater.inflate(R.layout.music_detail1, null);
 		   }
 		   if("one".equals(s)){
 			   view= inflater.inflate(R.layout.soft_detail, null);
 		   }
 		   if("three".equals(s)){
-			   view= inflater.inflate(R.layout.music_detail, null);
+			   view= inflater.inflate(R.layout.music_detail1, null);
 		   }
 			builder.setContentView(view);
 			Window dialogWindow = builder.getWindow();
@@ -1164,14 +1164,14 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		 * setMusicDetial param
 		 * 音乐详细界面
 		 */
-		public static void setMusicDetial(int id,final ArrayList<Music> list,View view) {
+		public static void setMusicDetial(int id,final ArrayList<Music> list,final View view,final String orderId) {
  			int j =0;
 			for (int i = 0; i < horItems.length; i++) {
 				if(id==horItems[i]){
 					j=i;
 				}
 			}
-			final ListView listview =(ListView) view.findViewById(R.id.music_detail_list);
+//			final ListView listview =(ListView) view.findViewById(R.id.music_detail_list);
 			final Button btn_orderall=(Button)(viewFormusicdetail.findViewById(R.id.btn_order_allmusic));
 			builder.setContentView(viewFormusicdetail);
 			Window dialogWindow = builder.getWindow();
@@ -1180,6 +1180,9 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			lp.width = 800; 
 			lp.height = 640; 
 			dialogWindow.setAttributes(lp);
+			for (int i = 0; i < musiclistItem.length; i++) {
+				view.findViewById(musiclistItem[i]).setVisibility(View.GONE);
+			}
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "缓冲中。。", "正在缓冲请稍后。。");
 				final String musicId =list.get(j).getId();
 				String web_url=HttpRequest.URL_QUERY_LIST_MUSIC+musicId;
@@ -1204,8 +1207,23 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 											musicDetialList.add(music);
 		                        		}
 										
-										MusicAdapter myMusicAdapter = new MusicAdapter(aQuery.getContext(), musicDetialList,isWhatRight);
-										listview.setAdapter(myMusicAdapter);
+//										MusicAdapter myMusicAdapter = new MusicAdapter(aQuery.getContext(), musicDetialList,isWhatRight);
+//										listview.setAdapter(myMusicAdapter);
+										
+										for (int i = 0; i < musicDetialList.size(); i++) {
+											final String path =	musicDetialList.get(i).getDownload_path();
+										   view.findViewById(musiclistItem[i]).setVisibility(View.VISIBLE);
+											TextView tv =(TextView)(view.findViewById(musiclistItem[i]).findViewById(R.id.name));
+											final String name =musicDetialList.get(i).getName();
+											tv.setText(name);
+											view.findViewById(musiclistItem[i]).setOnClickListener(new OnClickListener() {
+												String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+path;
+												@Override
+												public void onClick(View v) {
+													setMusicPilot(appDownPathtrue, name);
+												}
+											});
+											}
 									} catch (JSONException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -1282,7 +1300,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 //													          });
 //													      //m_Dialog.dismiss();
 //													      alert.create().show();
-												setOrder(postMentList);
+												setOrder(postMentList,orderId);
 												
 											}
 										});
@@ -1380,8 +1398,9 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		//default UI
 		public static void  setDefalutView(){
 			initDialog("three");
+			
 			isWhatRight=Constant.MYMUSIC;
-			viewFormusicdetail = inflater.inflate(R.layout.music_detail, null);
+			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "Loading。。", "please wait a moment。。");
 			 String url = Constant.MYMUSIC_APP;
 		        aQuery.ajax(url, String.class, new AjaxCallback<String>() {
@@ -1396,16 +1415,19 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        	Dialog.dismiss();
 		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
 		                          }
+		                        if(musicList!=null){
+		                        	for (int i = 0; i < horItems.length; i++) {
+		                        		final String musicId = musicList.get(i).getId();
+		                        		itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
+		                        			@Override
+		                        			public void onClick(View v) {
+		                        				setMusicDetial(v.getId(), musicList,viewFormusicdetail,musicId);
+		                        			}
+		                        		});
+		                        	}
+		                        }
 		                    }
 		            });
-		        for (int i = 0; i < horItems.length; i++) {
-		        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-						   setMusicDetial(v.getId(), musicList,viewFormusicdetail);
-						}
-					});
-				}
 		}
 		//set pilot play  UI
 		public static void  setMusicPilot(final String path,String name){
@@ -1546,7 +1568,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		//setMusicChapterlist
 		public static void  setMusicChapterList(String path){
 			initDialog("three");
-			viewFormusicdetail = inflater.inflate(R.layout.music_detail, null);
+			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait。。");
 			final ArrayList<Music> music_chapterList = new ArrayList<Music>();
 		        aQuery.ajax(path, String.class, new AjaxCallback<String>() {
@@ -1566,22 +1588,25 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        	Dialog.dismiss();
 		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
 		                          }
+		                        if(music_chapterList!=null){
+		                        	for (int i = 0; i < horItems.length; i++) {
+		                        		final String orderId = music_chapterList.get(i).getId();
+		                        		itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
+		                        			
+		                        			@Override
+		                        			public void onClick(View v) {
+		                        				setMusicDetial(v.getId(), music_chapterList,viewFormusicdetail, orderId);
+		                        			}
+		                        		});
+		                        	}
+		                        }
 		                    }
 		            });
-		        for (int i = 0; i < horItems.length; i++) {
-		        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-						   setMusicDetial(v.getId(), music_chapterList,viewFormusicdetail);
-						}
-					});
-				}
 		}
-		
 		//setMV list
 		public static void setMusicMvList(String path){
 			initDialog("three");
-			viewFormusicdetail = inflater.inflate(R.layout.music_detail, null);
+			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait a moment。。");
 			final ArrayList<Music> mvlist = new ArrayList<Music>();
 		        aQuery.ajax(path, String.class, new AjaxCallback<String>() {
@@ -1601,29 +1626,35 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        	Dialog.dismiss();
 		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
 		                          }
+		                        if(mvlist.size()!=0){
+		                        	for (int i = 0; i < horItems.length; i++) {
+		                        		final String orderid = mvlist.get(i).getId();
+		                        		itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
+		                        			public void onClick(View v) {
+		                        				setMusicDetial(v.getId(), mvlist,viewFormusicdetail,orderid);
+		                        			}
+		                        		});
+		                        	}
+		                        }
 		                    }
 		            });
-		        for (int i = 0; i < horItems.length; i++) {
-		        	itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-						   setMusicDetial(v.getId(), mvlist,viewFormusicdetail);
-						}
-					});
-				}
 		}
 
        //loading dialog for recommedmusic
 		public static void setRecommedMusicInfo(String musicId,final View view,Music music){
-			
+			 
+			for (int i = 0; i < musiclistItem.length; i++) {
+				view.findViewById(musiclistItem[i]).setVisibility(View.GONE);
+			}
 			 final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "Loading。。", "please wait moment。。");
 			 Dialog.show();
+			
 			String web_url=HttpRequest.URL_QUERY_LIST_MUSIC+musicId;
 			 aQuery.ajax(web_url, String.class, new AjaxCallback<String>() {
 	                @Override
 	                public void callback(String url, String json, AjaxStatus status) {
 	                        if(json != null){
-	                        	 ArrayList<Music>   musicDetialList = new ArrayList<Music>();
+	                        	 final ArrayList<Music>   musicDetialList = new ArrayList<Music>();
 		                        	System.out.println("下载的数据"+"===="+json);
 		                        	Dialog.dismiss();
 		                        	try {
@@ -1639,9 +1670,24 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 											music.setName(title);
 											musicDetialList.add(music);
 		                        		}
-										ListView listview = (ListView) view.findViewById(R.id.music_detail_list);
-										MusicAdapter myMusicAdapter = new MusicAdapter(aQuery.getContext(), musicDetialList,isWhatRight);
-										listview.setAdapter(myMusicAdapter);
+										for (int i = 0; i < musicDetialList.size(); i++) {
+										final String path =	musicDetialList.get(i).getDownload_path();
+									   view.findViewById(musiclistItem[i]).setVisibility(View.VISIBLE);
+										TextView tv =(TextView)(view.findViewById(musiclistItem[i]).findViewById(R.id.name));
+										final String name =musicDetialList.get(i).getName();
+										tv.setText(name);
+										view.findViewById(musiclistItem[i]).setOnClickListener(new OnClickListener() {
+											String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+path;
+											@Override
+											public void onClick(View v) {
+												setMusicPilot(appDownPathtrue, name);
+											}
+										});
+										}
+										
+//										ListView listview = (ListView) view.findViewById(R.id.music_detail_list);
+//										MusicAdapter myMusicAdapter = new MusicAdapter(aQuery.getContext(), musicDetialList,isWhatRight);
+//										listview.setAdapter(myMusicAdapter);
 //									 for (int i = 0; i < musictitleList.size(); i++) {
 //										 final String web_path =musicpathList.get(i);
 //										 final String sid = musicsidList.get(i);
@@ -1724,7 +1770,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	            });
 		}
 		//subscription
-		 static void setOrder(final ArrayList<PostMent> postMentList ){
+		 static void setOrder(final ArrayList<PostMent> postMentList,final String id ){
 			 String[] myRadio =new String[postMentList.size()] ;
 			 for (int i = 0; i < postMentList.size(); i++) {
 				String type =postMentList.get(i).getType();
@@ -1786,9 +1832,9 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 				         dialog.dismiss();  
 				         Toast.makeText(aQuery.getContext(), which+"", 1).show();
 				         String type = postMentList.get(which).getType();
-				        String url = HttpRequest.URL_QUERY_LIST_PAY_ALL+postMentList.get(which).getId()+HttpRequest.URL_ADD+type;
+				        String url = HttpRequest.URL_QUERY_LIST_PAY_ALL+id+HttpRequest.URL_ADD+type;
 				        String result;
-						  
+						  System.out.println("订购的地址为：==="+url);
 						try {
 							HttpGet request = new HttpGet(url);
 								// 绑定到请求 Entry 
@@ -1902,7 +1948,6 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 				myBtn=iv;
 			}
 			
-
 			@Override
 			protected Void doInBackground(String... params) {
 				try {

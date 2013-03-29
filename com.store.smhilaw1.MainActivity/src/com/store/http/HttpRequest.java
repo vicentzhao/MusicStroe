@@ -70,7 +70,7 @@ public class HttpRequest {
 	public static String URL_QUERY_SINGLE_TV = WEB_ROOT + "index/tvplayshop!content.action?token=myadmin&resultType=json&&id=";
 	public static String URL_QUERY_STROE_ALL_ANIME = WEB_ROOT + "index/cartoonshop.action?token=myadmin&resultType=json";
 	public static String URL_QUERY_SINGLE_ANIME = WEB_ROOT + "index/cartoonshop!content.action?token=myadmin&resultType=json&&id=";
-	public static String URL_QUERY_STROE_ALL_SOFT = WEB_ROOT + "index/softshop.action?token=myadmin&resultType=json";
+	public static String URL_QUERY_STROE_ALL_SOFT = WEB_ROOT + "index/softshop.action?token=myadmin&resultType=json&type=0";
 	public static String URL_QUERY_SINGLE_SOFT = WEB_ROOT + "index/softshop!content.action?token=myadmin&resultType=json&&id=";
 	
 	public static String URL_QUERY_LIST_RECORD = WEB_ROOT + "index/tapeshop!getworks.action?token=myadmin&id=";
@@ -108,7 +108,7 @@ public class HttpRequest {
 	public static String URL_QUERY_LIST_PAY_ALL=WEB_ROOT+"index/musicshop!buy.action?token=myadmin"+"&id=";
 	public static String URL_ADD="&type=0&ordertype=";
 	public static String URL_QUERY_LIST__MUSICORDERED=WEB_ROOT+"index/musicshop!order.action?token=myadmin&resultType=json";//已经订阅的音乐
-	public static String URL_QUERY_LIST__SOFTORDERED=WEB_ROOT+"index/softshop!order.action?token=myadmin&resultType=json";//已经订阅的软件
+	public static String URL_QUERY_LIST__SOFTORDERED=WEB_ROOT+"index/softshop!order.action?token=myadmin&resultType=json&type=0";//已经订阅的软件
 			
 	
 	public static String URL_UPDATE =WEB_ROOT+"apk/apk.xml";
