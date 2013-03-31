@@ -149,27 +149,8 @@
                 android:nextFocusRight="@+id/item_hor_15" />
         </LinearLayout>
     </LinearLayout>
-    <!--  
-    <RelativeLayout
-        android:id="@+id/info"
-        android:layout_width="323dip"
-        android:layout_height="500dip"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dip"
-        android:background="@drawable/epg_dian_ying_film_class_page_detail_bg"
-        android:paddingLeft="10dip" >
-        <com.store.util.MarqueeTextView
-            android:id="@+id/field_filmname"
-            style="@style/font.filmname"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dip"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:singleLine="true"
-            android:text="@string/field_title" />
+     
+       
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -178,13 +159,11 @@
             android:layout_marginBottom="-5dip"
             android:gravity="center"
             android:orientation="horizontal" >
-
             <Button
                 android:id="@+id/page_pre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/arrow_left_selector" />
-
             <TextView
                 android:id="@+id/field_page_index"
                 style="@style/font.page_index"
@@ -200,7 +179,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/arrow_right_selector" />
         </LinearLayout>
-    </RelativeLayout>
-        -->
+      
 
 </RelativeLayout>

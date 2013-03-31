@@ -128,12 +128,14 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
         android:text="01-10"
+        android:visibility="invisible"
         />
       <Button 
           android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
+        android:visibility="invisible"
         android:text="11-20"
         />
        <Button 
@@ -141,6 +143,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
+        android:visibility="invisible"
         android:text="21-30"
         />
     </LinearLayout>

@@ -72,7 +72,6 @@ public class MusicAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+list.get(position).getDownload_path();
-				 MainActivity1.setMusicPilot(appDownPathtrue,list.get(position).getName());
 			}
 		});
 		holder.btn_down.setOnClickListener(new OnClickListener() {

@@ -15,10 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -30,7 +27,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -48,7 +44,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -71,6 +66,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,10 +88,11 @@ import com.store.http.HttpRequest;
 import com.store.http.HttpRequest.OnBitmapHttpResponseListener;
 import com.store.http.HttpRequest.OnHttpResponseListener;
 import com.store.http.ImageDownloader;
-import com.store.suffix.CryptUtil;
 import com.store.util.JsonUtil;
 import com.store.util.UpdateVersion;
 import com.store.util.XmlParse;
+import com.wenchuang.music.play.Simplayer;
+import com.wenchuang.music.play.StreamingMediaPlayer;
 
 public class MainActivity1 extends FragmentActivity implements LeftSelectedListener, RightSelectedListener,OnClickListener{
 	private static int left_type = Constant.FLFG;
@@ -139,6 +136,13 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	static ArrayList<Music> music_chapterList;
 	 static ArrayList<Music> mvlist;
 	private static musicTryplayAsyncTask musicTryTask;
+	
+	 static int whatisplay =1; //判断哪个音乐播放。用来暂停或者
+	 static StreamingMediaPlayer audioStreamer ; //播放器
+	 static int ismusic =000011; //判断是否为music 还是mv
+	 static int isMv =000012;
+	 
+	  private static int page =1;
 	private static Button classify, the_news, recommend, movie, teleplay, anime,softInstallButton,
 	music, record,soft;
 	SharedPreferences  sp;
@@ -213,11 +217,11 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			store.setSelected(false);
 			isWhatRight =Constant.MYMUSIC;
 			if(isWhatLeft ==Constant.MUSICAPP){
-				setAppStoreList(Constant.MYMUSIC_APP);
+				setAppStoreList(Constant.MYMUSIC_APP+page);
 			}else if(isWhatLeft==Constant.MUSICCHAPTER){
-			    setMusicChapterList(Constant.MYMUSIC_CHAPTER);
+			    setMusicChapterList(Constant.MYMUSIC_CHAPTER+page);
 			}else if(isWhatLeft==Constant.MUSICMV){
-				setMusicMvList(Constant.MYMUSIC_MV);
+				setMusicMvList(Constant.MYMUSIC_MV+page);
 			}
 			break;
 		case R.id.store:
@@ -408,20 +412,20 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			if(left_type == Constant.FLFG){
 				isWhatLeft =Constant.MUSICAPP;
 				if(isWhatRight==Constant.MYMUSIC){
-					setAppStoreList(Constant.MYMUSIC_APP);
+					setAppStoreList(Constant.MYMUSIC_APP+page);
 				}
 				else if(isWhatRight==Constant.MUSICSTORE){
-					setAppStoreList(Constant.MUSICSTORE_APP);
+					setAppStoreList(Constant.MUSICSTORE_APP+page);
 				}
 			}
 				else if(left_type == Constant.AL){
 					isWhatLeft =Constant.MUSICCHAPTER;
 					if(isWhatRight==Constant.MYMUSIC){
 						
-					 setMusicChapterList(Constant.MYMUSIC_CHAPTER);
+					 setMusicChapterList(Constant.MYMUSIC_CHAPTER+page);
 					}
 					else if(isWhatRight==Constant.MUSICSTORE){
-						setMusicChapterList(Constant.MUSICSTORE_CHAPTER);
+						setMusicChapterList(Constant.MUSICSTORE_CHAPTER+page);
 					}
 			}else if(left_type == Constant.FLWSYS){
 				isWhatLeft =Constant.MUSICMV;
@@ -1166,7 +1170,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		 * setMusicDetial param
 		 * 音乐详细界面
 		 */
-		public static void setMusicDetial(int id,final ArrayList<Music> list,final View view,final String orderId) {
+		public static void setMusicDetial(int id,final ArrayList<Music> list,final View view,final String orderId,final int bo) {
  			int j =0;
 			for (int i = 0; i < horItems.length; i++) {
 				if(id==horItems[i]){
@@ -1215,6 +1219,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 										for (int i = 0; i < musicDetialList.size(); i++) {
 											final String path =	musicDetialList.get(i).getDownload_path();
 										   view.findViewById(musiclistItem[i]).setVisibility(View.VISIBLE);
+											final int viewid =musiclistItem[i];
 											TextView tv =(TextView)(view.findViewById(musiclistItem[i]).findViewById(R.id.name));
 											final String name =musicDetialList.get(i).getName();
 											tv.setText(name);
@@ -1222,7 +1227,12 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 												String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+path;
 												@Override
 												public void onClick(View v) {
-													setMusicPilot(appDownPathtrue, name);
+													if(bo==ismusic){
+														
+														setMusicPilot(appDownPathtrue, view,viewid);
+													}else{
+														setMVPilot(appDownPathtrue);
+													}
 												}
 											});
 											}
@@ -1335,7 +1345,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		 * @param softList
 		 * 设定软件列表信息
 		 */
-		public static void setSoftInfo(ArrayList<SoftwareBean> list) {
+		public static void setSoftInfo(ArrayList<SoftwareBean> list,final String path) {
 			for (int i = 0; i < horItems.length; i++) {
 				itemView.findViewById(horItems[14-i]).setVisibility(View.VISIBLE);
 			}
@@ -1345,6 +1355,40 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 					itemView.findViewById(horItems[14-i]).setVisibility(View.INVISIBLE);
 				}
 			}
+			Button btn_pre=(Button) itemView.findViewById(R.id.page_pre);
+			btn_pre.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					
+						Toast.makeText(aQuery.getContext(), "我已经被点击了前一页", 1).show();
+						page=page-1;
+						if(page==0){
+							page=1;
+						}
+						String  truePath = path.substring(0, path.lastIndexOf("=")+1);
+						System.out.println("TruePATH==========="+truePath);
+						String myPath =   truePath+page;
+						System.out.println("我要加载的真实的地址"+myPath);
+						setAppStoreList(myPath);
+					
+				    	
+				}
+			});
+			Button btn_next=(Button) itemView.findViewById(R.id.page_next);
+			btn_next.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(aQuery.getContext(), "我已经被点击了后一页", 1).show();
+						page=page+1;
+						String  truePath = path.substring(0, path.lastIndexOf("=")+1);
+						System.out.println("TruePATH==========="+truePath);
+						String myPath =   truePath+page;
+						setAppStoreList(myPath);
+					}
+				
+			});
 			for (int i = 0; i < list.size(); i++) {
 				aQuery.find(horItems[i]).find(R.id.ItemTitle).text(list.get(i).getName());
 				String url = list.get(i).getImage_path();
@@ -1355,15 +1399,15 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			
 		}
 		//音乐app
-		public static void  setAppStoreList(String path){
+		public static void  setAppStoreList(final String path){
 			viewForsoftDetail= inflater.inflate(R.layout.soft_detail, null);
-				builder.setContentView(viewForsoftDetail);
-				Window dialogWindow = builder.getWindow();
-				WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-				dialogWindow.setGravity(Gravity.CENTER);
-				lp.width = 800; 
-				lp.height = 640; 
-				dialogWindow.setAttributes(lp);
+//				builder.setContentView(viewForsoftDetail);
+//				Window dialogWindow = builder.getWindow();
+//				WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//				dialogWindow.setGravity(Gravity.CENTER);
+//				lp.width = 800; 
+//				lp.height = 640; 
+//				dialogWindow.setAttributes(lp);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait a moment。。");
 			aQuery.ajax(path, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
                 @Override
@@ -1371,7 +1415,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
                         if(json != null){
                         	musicAppList =  new ArrayList<SoftwareBean>();
                         	musicAppList = JsonUtil.getProductList(json);
-                        	setSoftInfo(musicAppList);
+                        	setSoftInfo(musicAppList,path);
                         	Dialog.dismiss();
                          //successful ajax call, show status code and json content
                         }else{
@@ -1404,7 +1448,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			isWhatRight=Constant.MYMUSIC;
 			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "Loading。。", "please wait a moment。。");
-			 String url = Constant.MYMUSIC_APP;
+			 String url = Constant.MYMUSIC_CHAPTER;
 		        aQuery.ajax(url, String.class, new AjaxCallback<String>() {
 		                @Override
 		                public void callback(String url, String json, AjaxStatus status) {
@@ -1423,7 +1467,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        		itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
 		                        			@Override
 		                        			public void onClick(View v) {
-		                        				setMusicDetial(v.getId(), musicList,viewFormusicdetail,musicId);
+		                        				setMusicDetial(v.getId(), musicList,viewFormusicdetail,musicId,ismusic);
 		                        			}
 		                        		});
 		                        	}
@@ -1432,78 +1476,112 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		            });
 		}
 		//set pilot play  UI
-		public static void  setMusicPilot(final String path,String name){
-//			
-			final Dialog dl = new Dialog(aQuery.getContext());
-			final View view = inflater.inflate(R.layout.musicplay, null);
-			dl.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			dl.setContentView(view);
-			Window dialogWindow = dl.getWindow();
-			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-			dialogWindow.setGravity(Gravity.CENTER);
-			lp.width = 400; 
-			lp.height =300; 
-			dialogWindow.setAttributes(lp);
-			dl.show();
-			 final ImageButton iv =	(ImageButton) view.findViewById(R.id.btn_play);
-			 ((TextView)view.findViewById(R.id.btn_playname)).setText(name);
-				mp = new MediaPlayer();
-				view.findViewById(R.id.btn_stop).setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-					  mp.stop();
-					  dl.dismiss();
+		public static void  setMusicPilot(final String path,View v1,int viewid){
+			 
+			 try { 
+			 if(whatisplay==1){
+				 whatisplay =viewid;
+				 final SeekBar progressBar = (SeekBar) (v1.findViewById(viewid).findViewById(R.id.progress_bar));
+				 progressBar.setVisibility(View.VISIBLE);
+		    		final TextView playTime = (TextView) (v1.findViewById(viewid).findViewById(R.id.playTime));
+		    		audioStreamer = new StreamingMediaPlayer(aQuery.getContext(),  progressBar,playTime);
+		     		audioStreamer.startStreaming(path);
+			 } else if(whatisplay==viewid){
+				 whatisplay =viewid;
+					if(audioStreamer.getMediaPlayer().isPlaying()){
+					audioStreamer.getMediaPlayer().pause();
+					}else if(!audioStreamer.getMediaPlayer().isPlaying()){
+						audioStreamer.getMediaPlayer().start();
+						audioStreamer.startPlayProgressUpdater();
 					}
-				});
-				 view.findViewById(R.id.btn_play).setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if(isplay){
-							 mp.pause();
-							 iv.setImageResource(R.drawable.desktop_playbt_b);
-							 isplay=false;
+			 } 
+			 else if(whatisplay!=viewid){
+				 final SeekBar progressBarold = (SeekBar) (v1.findViewById(whatisplay).findViewById(R.id.progress_bar));
+				 progressBarold.setVisibility(View.INVISIBLE);
+				 whatisplay=viewid;
+				 if(audioStreamer.getMediaPlayer().isPlaying()){
+						audioStreamer.getMediaPlayer().stop();
 						}
-						else if(!isplay){
-							mp.start();
-							 iv.setImageResource(R.drawable.desktop_pausebt_b);
-							isplay =true;
-						}
-					}
-				});
-				 dl.setOnKeyListener(new OnKeyListener() {
-					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						// TODO Auto-generated method stub
-						if(keyCode==KeyEvent.KEYCODE_BACK){
-							if(isplay){
-								if(mp!=null){
-									mp.stop();
-								}
-							}
-							  return false;
-						}
-						return false;
-					}
-				});
-				 
-				 if (musicTryTask != null && musicTryTask.getStatus() == AsyncTask.Status.RUNNING) {
-					 musicTryTask.cancel(true);  //  如果Task还在运行，则先取消它
-			        }else{
-			        	musicTryTask = new musicTryplayAsyncTask(iv);
-			        }
-				 musicTryTask.execute(path);
+				 final SeekBar progressBar = (SeekBar) (v1.findViewById(viewid).findViewById(R.id.progress_bar));
+				 progressBar.setVisibility(View.VISIBLE);
+		    		final TextView playTime = (TextView) (v1.findViewById(viewid).findViewById(R.id.playTime));
+		    		audioStreamer = new StreamingMediaPlayer(aQuery.getContext(),  progressBar,playTime);
+		     		audioStreamer.startStreaming(path);
+			 }
+	    		
+	    	} catch (Exception e) {
+	    	}
+////			
+//			final Dialog dl = new Dialog(aQuery.getContext());
+//			final View view = inflater.inflate(R.layout.musicplay, null);
+//			dl.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//			dl.setContentView(view);
+//			Window dialogWindow = dl.getWindow();
+//			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//			dialogWindow.setGravity(Gravity.CENTER);
+//			lp.width = 400; 
+//			lp.height =300; 
+//			dialogWindow.setAttributes(lp);
+//			dl.show();
+//			 final ImageButton iv =	(ImageButton) view.findViewById(R.id.btn_play);
+//			 ((TextView)view.findViewById(R.id.btn_playname)).setText(name);
+//				mp = new MediaPlayer();
+//				view.findViewById(R.id.btn_stop).setOnClickListener(new OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						// TODO Auto-generated method stub
+//					  mp.stop();
+//					  dl.dismiss();
+//					}
+//				});
+//				 view.findViewById(R.id.btn_play).setOnClickListener(new OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						if(isplay){
+//							 mp.pause();
+//							 iv.setImageResource(R.drawable.desktop_playbt_b);
+//							 isplay=false;
+//						}
+//						else if(!isplay){
+//							mp.start();
+//							 iv.setImageResource(R.drawable.desktop_pausebt_b);
+//							isplay =true;
+//						}
+//					}
+//				});
+//				 dl.setOnKeyListener(new OnKeyListener() {
+//					@Override
+//					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+//						// TODO Auto-generated method stub
+//						if(keyCode==KeyEvent.KEYCODE_BACK){
+//							if(isplay){
+//								if(mp!=null){
+//									mp.stop();
+//								}
+//							}
+//							  return false;
+//						}
+//						return false;
+//					}
+//				});
+//				 
+//				 if (musicTryTask != null && musicTryTask.getStatus() == AsyncTask.Status.RUNNING) {
+//					 musicTryTask.cancel(true);  //  如果Task还在运行，则先取消它
+//			        }else{
+//			        	musicTryTask = new musicTryplayAsyncTask(iv);
+//			        }
+//				 musicTryTask.execute(path);
 				
 		}
 		
 		//setmvplay
 		public static void  setMVPilot(final String path){
-			
 			Intent i  = new Intent();
 			i.putExtra("path", path);
-			i.setClass(aQuery.getContext(), PlayActivity.class);
+//			i.setClass(aQuery.getContext(), PlayActivity.class);
+			i.setClass(aQuery.getContext(), Simplayer.class);
+			
 			aQuery.getContext().startActivity(i);
-		
 		}
 		//setdown（music，mv）
 		public static void setMusicDown(String sid){
@@ -1591,7 +1669,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        			
 		                        			@Override
 		                        			public void onClick(View v) {
-		                        				setMusicDetial(v.getId(), music_chapterList,viewFormusicdetail, orderId);
+		                        				setMusicDetial(v.getId(), music_chapterList,viewFormusicdetail, orderId,ismusic);
 		                        			}
 		                        		});
 		                        	}
@@ -1622,7 +1700,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        		final String orderid = mvlist.get(i).getId();
 		                        		itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
 		                        			public void onClick(View v) {
-		                        				setMusicDetial(v.getId(), mvlist,viewFormusicdetail,orderid);
+		                        				setMusicDetial(v.getId(), mvlist,viewFormusicdetail,orderid,isMv);
 		                        			}
 		                        		});
 		                        	}
@@ -1630,10 +1708,8 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                    }
 		            });
 		}
-
        //loading dialog for recommedmusic
 		public static void setRecommedMusicInfo(String musicId,final View view,Music music){
-			 
 			for (int i = 0; i < musiclistItem.length; i++) {
 				view.findViewById(musiclistItem[i]).setVisibility(View.GONE);
 			}
@@ -1663,6 +1739,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        		}
 										for (int i = 0; i < musicDetialList.size(); i++) {
 										final String path =	musicDetialList.get(i).getDownload_path();
+										final int viewid =musiclistItem[i];
 									   view.findViewById(musiclistItem[i]).setVisibility(View.VISIBLE);
 										TextView tv =(TextView)(view.findViewById(musiclistItem[i]).findViewById(R.id.name));
 										final String name =musicDetialList.get(i).getName();
@@ -1671,7 +1748,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 											String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+path;
 											@Override
 											public void onClick(View v) {
-												setMusicPilot(appDownPathtrue, name);
+												setMusicPilot(appDownPathtrue,view,viewid);
 											}
 										});
 										}
@@ -1958,7 +2035,6 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 				 myBtn.setImageResource(R.drawable.desktop_pause_b);
 				super.onPostExecute(result);
 			}
-		
 		 }
 			
 }
