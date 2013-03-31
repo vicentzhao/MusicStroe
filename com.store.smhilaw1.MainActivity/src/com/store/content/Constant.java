@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.store.http.HttpRequest;
 /*
- * Ò»Ð©µÄ³£Á¿
+ * Ò»Ð©ï¿½Ä³ï¿½ï¿½ï¿½
  */
 public class Constant {
 	   	
@@ -20,7 +20,7 @@ public class Constant {
 	
 	   public static File FILE_NAME = null;
 	   public static String filePath = "";
-		//×ó²àÀàÐÍ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		public static final int FLFG = 0x1;
 		public static final int AL = 0x2;
 		public static final int FLWSYS = 0x3;
@@ -31,23 +31,23 @@ public class Constant {
 		public static final int MUSIC = 0x8;
 		public static final int SOFT = 0x9;
 		
-		//ÇëÇóÀàÐÍ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		public static final int ALL_MOVIES =10004;
-		public static final int ALL_RECORD =10005;//·ÖÀàÁÐ±í
-		public static final int SINGLE_RECORD =100051;//µ¥¸öÏêÇé
+		public static final int ALL_RECORD =10005;//ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+		public static final int SINGLE_RECORD =100051;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		public static final int SINGLE_IMAGE =100052;//Í¼Æ¬
-		public static final int DOWNLOAD_LIST =100053;//ÏÂÔØÁÐ±í
-		public static final int DOWNLOAD_CHECK =10006;//ÏÂÔØÑéÖ¤
-		public static final int ORDER_SOFT_LIST=100091;//¶©¹ºÁÐ±í
-		public static final int ORDER_SOFT_SINGLE=100092;//¶©¹ºµ¥¸öÉÌÆ·
-		public static final int ORDER_LIST=100093;//¶©µ¥ÁÐ±í
-		public static final int ORDER_LIST_NUM=100094;//¶©µ¥ºÅ
-		public static final int ORDER_LIST_ID=100095;//¶©µ¥ID
-		public static final int ORDER_LIST_PAY=100000;//Ö§¸¶
-		public static final int DOWN_SOFT_LIST=100001;//ÏÂÔØÁÐ±í
-		public static final int USERLOGIN=100010;//Ö§¸¶
+		public static final int DOWNLOAD_LIST =100053;//ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+		public static final int DOWNLOAD_CHECK =10006;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤
+		public static final int ORDER_SOFT_LIST=100091;//ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+		public static final int ORDER_SOFT_SINGLE=100092;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·
+		public static final int ORDER_LIST=100093;//ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+		public static final int ORDER_LIST_NUM=100094;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		public static final int ORDER_LIST_ID=100095;//ï¿½ï¿½ï¿½ï¿½ID
+		public static final int ORDER_LIST_PAY=100000;//Ö§ï¿½ï¿½
+		public static final int DOWN_SOFT_LIST=100001;//ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+		public static final int USERLOGIN=100010;//Ö§ï¿½ï¿½
 		
-		//Ò»Ð©³£Á¿
+		//Ò»Ð©ï¿½ï¿½ï¿½ï¿½
 		public static final int MYMUSIC = 100011;
 		public static final int MUSICSTORE = 100012;
 		public static final int MUSICAPP = 100013;
@@ -55,14 +55,14 @@ public class Constant {
 		public static final int MUSICMV = 100015;
 		
 		public static final String MYMUSIC_APP=HttpRequest.URL_QUERY_LIST__SOFTORDERED;
-		public static final String MYMUSIC_CHAPTER=HttpRequest.URL_QUERY_LIST__MUSICORDERED;
-		public static final String MYMUSIC_MV=HttpRequest.URL_QUERY_LIST__MUSICORDERED;
+		public static final String MYMUSIC_CHAPTER=HttpRequest.URL_QUERY_LIST__CHAPTERORDER;
+		public static final String MYMUSIC_MV=HttpRequest.URL_QUERY_LIST__MVCORDERED;
 		public static final String MUSICSTORE_APP=HttpRequest.URL_QUERY_STROE_ALL_SOFT;
-		public static final String MUSICSTORE_CHAPTER=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
-		public static final String MUSICSTORE_MV=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
-		public static final String MUSIC_DEFALUT=HttpRequest.URL_QUERY_STROE_ALL_MUSIC;
+		public static final String MUSICSTORE_CHAPTER=HttpRequest.URL_QUERY_STROE_ALL_MUSICCHAPTER;
+		public static final String MUSICSTORE_MV=HttpRequest.URL_QUERY_STROE_ALL_MUSICMV;
+		public static final String MUSIC_DEFALUT=HttpRequest.URL_QUERY_STROE_ALL_MUSICCHAPTER;
 		
-		//ÁÙÊ±µÄ
+		//ï¿½ï¿½Ê±ï¿½ï¿½
 	 
 		
 		

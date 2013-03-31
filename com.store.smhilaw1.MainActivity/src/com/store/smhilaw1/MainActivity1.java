@@ -136,6 +136,8 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	private static int isWhatLeft=100013;
 	private static int isWhatRight=100011;
 	static LayoutInflater inflater;
+	static ArrayList<Music> music_chapterList;
+	 static ArrayList<Music> mvlist;
 	private static musicTryplayAsyncTask musicTryTask;
 	private static Button classify, the_news, recommend, movie, teleplay, anime,softInstallButton,
 	music, record,soft;
@@ -1570,18 +1572,12 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			initDialog("three");
 			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait。。");
-			final ArrayList<Music> music_chapterList = new ArrayList<Music>();
 		        aQuery.ajax(path, String.class, new AjaxCallback<String>() {
 		                @Override
 		                public void callback(String url, String json, AjaxStatus status) {
 		                        if(json != null){
-		                        	musicList = new ArrayList<Music>();
-		                        	musicList = JsonUtil.getMusicList(json);
-		                        	for (int i = 0; i < musicList.size(); i++) {
-										if(musicList.get(i).getType().equals("1")){
-											music_chapterList .add(musicList.get(i));
-										}
-									}
+		                        	music_chapterList  = new ArrayList<Music>();
+		                        	music_chapterList = JsonUtil.getMusicList(json);
 		                        	setMusicChapterInfo( music_chapterList);
 		                        	Dialog.dismiss();
 		                        }else{
@@ -1608,24 +1604,19 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			initDialog("three");
 			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait a moment。。");
-			final ArrayList<Music> mvlist = new ArrayList<Music>();
+		
 		        aQuery.ajax(path, String.class, new AjaxCallback<String>() {
 		                @Override
 		                public void callback(String url, String json, AjaxStatus status) {
 		                        if(json != null){
-		                        	musicList = new ArrayList<Music>();
-		                        	musicList = JsonUtil.getMusicList(json);
-		                        	for (int i = 0; i < musicList.size(); i++) {
-										if(musicList.get(i).getType().equals("0")){
-											mvlist.add(musicList.get(i));
-										}
-		                        	}
+		                        	mvlist = new ArrayList<Music>();
+		                        	mvlist = JsonUtil.getMusicList(json);
 		                        	setMusicChapterInfo( mvlist);
 		                        	Dialog.dismiss();
-		                        }else{
-		                        	Dialog.dismiss();
-		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
-		                          }
+		                        	}else{
+		                        		Dialog.dismiss();
+		  		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+		                        	}
 		                        if(mvlist.size()!=0){
 		                        	for (int i = 0; i < horItems.length; i++) {
 		                        		final String orderid = mvlist.get(i).getId();
