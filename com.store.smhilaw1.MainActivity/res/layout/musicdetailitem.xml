@@ -3,39 +3,41 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
      android:focusable="true"
-    android:focusableInTouchMode="true"
      android:background="@drawable/ring_box_selector"
-    android:orientation="horizontal"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
      >
+      <LinearLayout
+                android:layout_width="fill_parent"
+                android:orientation="vertical"
+			    android:layout_height="wrap_content" >
   <TextView 
         android:layout_width="fill_parent"
-         android:layout_height="50dip"
+         android:layout_height="20dip"
          android:text="风往北吹"
          android:id="@+id/name"
-         android:textSize="20dp"
-         android:layout_weight="1"
       />  
-        <LinearLayout 
+        <TextView  
+          	android:layout_weight="1"
+              android:id="@+id/playTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00/00:00"
+    ></TextView>
+        </LinearLayout>
+      <LinearLayout
+                android:layout_width="fill_parent"
+			    android:layout_height="wrap_content" >
+		    	<SeekBar
+    android:id="@+id/progress_bar" 
+    android:layout_weight="1"
+    android:layout_height="50dp"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:layout_alignBottom="@id/name"
-    android:layout_weight="2"
-     >
-  <Button 
-      android:layout_weight="1"
-      android:id="@+id/play_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-         android:text="试播"
-         android:visibility="invisible"
-      />
-    <Button 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-         android:text="下载"
-         android:layout_weight="1"
-      />
-    </LinearLayout>
+      android:thumb="@drawable/thumb_selector"
+                android:thumbOffset="20dip" 
+    android:progressDrawable="@drawable/menu_player_controller_seekbar_style"
+    style="?android:attr/progressBarStyleHorizontal"
+    />
+ 
+</LinearLayout>	
 </LinearLayout>

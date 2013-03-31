@@ -137,7 +137,7 @@
         android:text="11-20"
         />
        <Button 
-          android:layout_width="wrap_content"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
@@ -150,34 +150,24 @@
           android:layout_weight="1"
         android:orientation="vertical"
         >
-         <LinearLayout
-            android:id="@+id/items01"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-            <include
+      <include
                 android:id="@+id/music_item_hor_01"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/musicdetailitem"
                 android:nextFocusRight="@+id/item_hor_02" />
             <include
                 android:id="@+id/music_item_hor_02"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/musicdetailitem"
                 android:nextFocusRight="@+id/item_hor_03" />
-        </LinearLayout>
-    <LinearLayout
-            android:id="@+id/items01"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
+      
             <include
                 android:id="@+id/music_item_hor_03"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/musicdetailitem"
@@ -185,20 +175,15 @@
                 android:nextFocusRight="@+id/item_hor_04" />
             <include
                 android:id="@+id/music_item_hor_04"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/musicdetailitem"
                 android:nextFocusRight="@+id/item_hor_05" />
-        </LinearLayout>   
-        <LinearLayout
-            android:id="@+id/items01"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
+      
             <include
                 android:id="@+id/music_item_hor_05"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:nextFocusLeft="@+id/item_hor_04" 
                 android:layout_weight="1"
@@ -206,54 +191,44 @@
                 android:nextFocusRight="@+id/item_hor_02" />
             <include
                 android:id="@+id/music_item_hor_06"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/musicdetailitem"
                 android:nextFocusRight="@+id/item_hor_07" 
                 />
-        </LinearLayout>  
-         <LinearLayout
-            android:id="@+id/items01"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
+      
             <include
                 android:id="@+id/music_item_hor_07"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/musicdetailitem"
                 android:nextFocusRight="@+id/item_hor_02" />
             <include
                 android:id="@+id/music_item_hor_08"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:nextFocusLeft="@+id/item_hor_07" 
                 android:layout_weight="1"
                 layout="@layout/musicdetailitem"
                 android:nextFocusRight="@+id/item_hor_09" />
-        </LinearLayout>   <LinearLayout
-            android:id="@+id/items01"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
             <include
                 android:id="@+id/music_item_hor_09"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:nextFocusLeft="@+id/item_hor_07" 
                 layout="@layout/musicdetailitem"
-                android:nextFocusRight="@+id/item_hor_10" />
+                android:nextFocusRight="@+id/item_hor_10" 
+                />
             <include
                 android:id="@+id/music_item_hor_10"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/musicdetailitem"
-                />
-        </LinearLayout>
+                />    
 
     </LinearLayout>
     <TextView
