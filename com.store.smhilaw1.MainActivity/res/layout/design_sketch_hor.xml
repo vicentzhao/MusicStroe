@@ -172,7 +172,7 @@
                 android:layout_marginBottom="3dip"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="0/0" />
+                android:text="第1页" />
             <Button
                 android:id="@+id/page_next"
                 android:layout_width="wrap_content"

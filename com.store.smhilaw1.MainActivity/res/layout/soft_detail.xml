@@ -15,7 +15,6 @@
             android:layout_height="fill_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:text="多米音乐"
             android:textSize="22sp"
             android:textColor="@android:color/white"
             android:gravity="center"

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -44,12 +45,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -142,7 +145,19 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	 static int ismusic =000011; //判断是否为music 还是mv
 	 static int isMv =000012;
 	 
+	  static String currentPath;  //搜索判断
+	  
+
+	 //判断是否为最后一页
+	 private static boolean isAppLastIndex=false;
+	 private static boolean isMusicChapterLastIndex=false;
+	 private static boolean isMvLastIndex=false;
+	 
 	  private static int page =1;
+	  
+	  private static boolean isSearch =false;//判断是否为search
+	  
+	  private EditText searchContentEdit;
 	private static Button classify, the_news, recommend, movie, teleplay, anime,softInstallButton,
 	music, record,soft;
 	SharedPreferences  sp;
@@ -184,7 +199,8 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	public void initView(){
 		myMusic = (Button)findViewById(R.id.myMusic);
 		store = (Button)findViewById(R.id.store);
-		serch = (Button)findViewById(R.id.serch_button);
+		serch = (Button)findViewById(R.id.search_button);
+		searchContentEdit =(EditText)findViewById(R.id.search_input);
 		myMusic.setOnClickListener(this);
 		store.setOnClickListener(this);
 		serch.setOnClickListener(this);
@@ -211,37 +227,64 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	public void onClick(View v) {
 		switch(v.getId()){
 		case R.id.myMusic:
+			isSearch =false;
 			myMusic.setSelected(true);
 			store.setTextColor(Color.WHITE);
 			myMusic.setTextColor(Color.YELLOW);
 			store.setSelected(false);
 			isWhatRight =Constant.MYMUSIC;
 			if(isWhatLeft ==Constant.MUSICAPP){
+				initPageParms();
 				setAppStoreList(Constant.MYMUSIC_APP+page);
 			}else if(isWhatLeft==Constant.MUSICCHAPTER){
+				initPageParms();
 			    setMusicChapterList(Constant.MYMUSIC_CHAPTER+page);
 			}else if(isWhatLeft==Constant.MUSICMV){
+				initPageParms();
 				setMusicMvList(Constant.MYMUSIC_MV+page);
 			}
 			break;
 		case R.id.store:
+			isSearch =false;
 			myMusic.setSelected(true);
 			store.setTextColor(Color.YELLOW);
 			myMusic.setTextColor(Color.WHITE);
 			store.setSelected(false);
 			isWhatRight =Constant.MUSICSTORE;
 			if(isWhatLeft ==Constant.MUSICAPP){
+				initPageParms();
 				setAppStoreList(Constant.MUSICSTORE_APP);
 			}else if(isWhatLeft==Constant.MUSICCHAPTER){
+				initPageParms();
 				 setMusicChapterList(Constant.MUSICSTORE_CHAPTER);
 			}else if(isWhatLeft==Constant.MUSICMV){
+				initPageParms();
 				setMusicMvList(Constant.MUSICSTORE_MV);
 			}
 			myMusic.setSelected(false);
 			store.setSelected(true);
 			break;
-		case R.id.serch_button:
-			Toast.makeText(this, "暂无功能", Toast.LENGTH_SHORT).show();
+		case R.id.search_button:
+			isSearch =true;
+			String searchContent = searchContentEdit.getText().toString().trim();
+			if("".equals(searchContent)){
+				Toast.makeText(aQuery.getContext(), aQuery.getContext().getResources().getString(R.string.searchkey), 1).show();
+			}else{
+				page=1;
+				String friString = URLEncoder.encode(searchContent);
+				String currPath =currentPath+"&pname="+URLEncoder.encode(friString)+"&currentPage="+page; 
+				System.out.println("currpath搜索的地址为==========="+currPath);
+			if(isWhatLeft ==Constant.MUSICAPP){
+				initPageParms();
+				setAppStoreList(currPath);
+			}else if(isWhatLeft==Constant.MUSICCHAPTER){
+				initPageParms();
+				 setMusicChapterList(currPath);
+			}else if(isWhatLeft==Constant.MUSICMV){
+				initPageParms();
+				setMusicMvList(currPath);
+			}
+			}
 			break;
 			default :
 				break;
@@ -412,27 +455,34 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			if(left_type == Constant.FLFG){
 				isWhatLeft =Constant.MUSICAPP;
 				if(isWhatRight==Constant.MYMUSIC){
+					initPageParms();
 					setAppStoreList(Constant.MYMUSIC_APP+page);
 				}
 				else if(isWhatRight==Constant.MUSICSTORE){
+					initPageParms();
 					setAppStoreList(Constant.MUSICSTORE_APP+page);
 				}
 			}
 				else if(left_type == Constant.AL){
+				
 					isWhatLeft =Constant.MUSICCHAPTER;
 					if(isWhatRight==Constant.MYMUSIC){
-						
+						initPageParms();
 					 setMusicChapterList(Constant.MYMUSIC_CHAPTER+page);
 					}
 					else if(isWhatRight==Constant.MUSICSTORE){
+						initPageParms();
 						setMusicChapterList(Constant.MUSICSTORE_CHAPTER+page);
 					}
 			}else if(left_type == Constant.FLWSYS){
+				
 				isWhatLeft =Constant.MUSICMV;
                if(isWhatRight==Constant.MYMUSIC){
+            	   initPageParms();
 					setMusicMvList(Constant.MYMUSIC_MV);
 				}
 				else if(isWhatRight==Constant.MUSICSTORE){
+					initPageParms();
 					setMusicMvList(Constant.MUSICSTORE_MV);
 				}
 			}
@@ -925,7 +975,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		 * setAllMusic 音乐
 		 * @param list
 		 */
-		public static void setMusicChapterInfo(ArrayList<Music> list) {
+		public static void setMusicChapterInfo(ArrayList<Music> list,String path) {
 			for (int i = 0; i < horItems.length; i++) {
 				itemView.findViewById(horItems[14-i]).setVisibility(View.VISIBLE);
 			}
@@ -935,6 +985,8 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 					itemView.findViewById(horItems[14-i]).setVisibility(View.INVISIBLE);
 				}
 			}
+			
+			  UpdatePaging(path, "musicChapter");
 			for (int i = 0; i < list.size(); i++) {
 				aQuery.find(horItems[i]).find(R.id.ItemTitle).text(list.get(i).getName());
 				String url = list.get(i).getImage_path();
@@ -953,10 +1005,10 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	    	int j  =0 ;
 	    	if(list.size()<5){
 	    		for (int s = 0; s < 5-list.size(); s++) {
-	    			view.findViewById(horItems[14-s]).setVisibility(View.GONE);
+	    			view.findViewById(horItems[4-s]).setVisibility(View.GONE);
 				}
    	}
-	    	for (int i = 0; i < list.size(); i++) {
+	    	for (int i = 0; i < ((list.size()<=5)?list.size():5); i++) {
 	    		final String image_path_boots=list.get(i).getImage_path();
 	    		final int h =horItems[i];
 				 SoftwareBean sb = list.get(i);
@@ -993,7 +1045,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	    			view.findViewById(horItems[4-s]).setVisibility(View.INVISIBLE);
 	    		}
 	    	}
-	    	for (int i = 0; i < list.size(); i++) {
+	    	for (int i = 0; i <((list.size()<=5)?list.size():5); i++) {
 	    		final Music sb = list.get(i);
 	    		String image_path = sb.getImage_path();
 	    		final String title = sb.getName();
@@ -1004,7 +1056,6 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	    		 view.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							  
 							 ((TextView)view.findViewById(R.id.albumname)).setText(title);
 							ImageView  imageView =(ImageView)view.findViewById(R.id.albumimage);
 							ImageDownloader downloader = new ImageDownloader(aQuery.getContext());
@@ -1116,7 +1167,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 													protected Void doInBackground(
 															Void... params) {
 														UpdateVersion updateVersion  = UpdateVersion.instance(aQuery.getContext(), hdHandler,true);
-													updateVersion.setUpdateUrl(appDownPath);
+													    updateVersion.setUpdateUrl(appDownPath);
 	                                    				updateVersion.run();
 														return null;
 													}
@@ -1150,6 +1201,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 								 String name =jb.getString("PNAME");
 								 builder.show();
 								 ((TextView)viewForsoftDetail.findViewById(R.id.appname)).setText(name);	
+								 ((TextView)viewForsoftDetail.findViewById(R.id.title_text)).setText(name);	
 								 setSoftrecommend(list, viewForsoftDetail);
 									String path =HttpRequest.URL_QUERY_SINGLE_IMAGE+image_path_boot;
 									ImageView  imageView =(ImageView)viewForsoftDetail.findViewById(R.id.appimage);
@@ -1186,6 +1238,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 			lp.width = 800; 
 			lp.height = 640; 
 			dialogWindow.setAttributes(lp);
+			
 			for (int i = 0; i < musiclistItem.length; i++) {
 				view.findViewById(musiclistItem[i]).setVisibility(View.GONE);
 			}
@@ -1291,32 +1344,13 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 											
 											@Override
 											public void onClick(View v) {
-//												 AlertDialog.Builder alert = new AlertDialog.Builder(
-//													       aQuery.getContext());
-//													      alert.setTitle("订购确认")
-//													        .setMessage("是否全部订阅")
-//													        .setPositiveButton("订阅",
-//													          new DialogInterface.OnClickListener() {
-//													           public void onClick(
-//													             DialogInterface dialog,
-//													             int which) {
-//													           }
-//													          })
-//													        .setNegativeButton("取消",
-//													          new DialogInterface.OnClickListener() {
-//													           public void onClick(
-//													             DialogInterface dialog,
-//													             int which) {
-//													            dialog.dismiss();
-//													           }
-//													          });
-//													      //m_Dialog.dismiss();
-//													      alert.create().show();
+
 												setOrder(postMentList,orderId);
 												
 											}
 										});
 									builder.show();
+									((TextView)viewFormusicdetail.findViewById(R.id.musicdetail_text)).setText(name);							
 									 ((TextView)viewFormusicdetail.findViewById(R.id.albumname)).setText(name);							
 									 ((TextView)viewFormusicdetail.findViewById(R.id.albuminfo)).setText(note);		
 									 ((TextView)viewFormusicdetail.findViewById(R.id.artist)).setText(aQuery.getContext().getResources().getString(R.string.artist)+" : "+artist);		
@@ -1355,40 +1389,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 					itemView.findViewById(horItems[14-i]).setVisibility(View.INVISIBLE);
 				}
 			}
-			Button btn_pre=(Button) itemView.findViewById(R.id.page_pre);
-			btn_pre.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					
-						Toast.makeText(aQuery.getContext(), "我已经被点击了前一页", 1).show();
-						page=page-1;
-						if(page==0){
-							page=1;
-						}
-						String  truePath = path.substring(0, path.lastIndexOf("=")+1);
-						System.out.println("TruePATH==========="+truePath);
-						String myPath =   truePath+page;
-						System.out.println("我要加载的真实的地址"+myPath);
-						setAppStoreList(myPath);
-					
-				    	
-				}
-			});
-			Button btn_next=(Button) itemView.findViewById(R.id.page_next);
-			btn_next.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Toast.makeText(aQuery.getContext(), "我已经被点击了后一页", 1).show();
-						page=page+1;
-						String  truePath = path.substring(0, path.lastIndexOf("=")+1);
-						System.out.println("TruePATH==========="+truePath);
-						String myPath =   truePath+page;
-						setAppStoreList(myPath);
-					}
-				
-			});
+			UpdatePaging(path,"soft");
 			for (int i = 0; i < list.size(); i++) {
 				aQuery.find(horItems[i]).find(R.id.ItemTitle).text(list.get(i).getName());
 				String url = list.get(i).getImage_path();
@@ -1400,14 +1401,8 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		}
 		//音乐app
 		public static void  setAppStoreList(final String path){
+			currentPath = path.substring(0,path.lastIndexOf("&"));
 			viewForsoftDetail= inflater.inflate(R.layout.soft_detail, null);
-//				builder.setContentView(viewForsoftDetail);
-//				Window dialogWindow = builder.getWindow();
-//				WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-//				dialogWindow.setGravity(Gravity.CENTER);
-//				lp.width = 800; 
-//				lp.height = 640; 
-//				dialogWindow.setAttributes(lp);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait a moment。。");
 			aQuery.ajax(path, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
                 @Override
@@ -1415,7 +1410,15 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
                         if(json != null){
                         	musicAppList =  new ArrayList<SoftwareBean>();
                         	musicAppList = JsonUtil.getProductList(json);
+                        	if(musicAppList.size()!=0){
+                        	if(musicAppList.size()<15){
+                        		isAppLastIndex =true;
+                        	}
                         	setSoftInfo(musicAppList,path);
+                        
+                        	}else{
+                        		 Toast.makeText(aQuery.getContext(), aQuery.getContext().getResources().getString(R.string.nocontent),Toast.LENGTH_LONG).show();
+                        	}
                         	Dialog.dismiss();
                          //successful ajax call, show status code and json content
                         }else{
@@ -1423,7 +1426,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
                         	if(status.getCode()==-101){
                       Toast.makeText(aQuery.getContext(), "Error:" +status.getCode()+aQuery.getContext().getResources().getString(R.string.checknetwork),Toast.LENGTH_LONG).show();
                         	}else{
-                                Toast.makeText(aQuery.getContext(), "Error:" +status.getCode()+aQuery.getContext().getResources().getString(R.string.unknownError),Toast.LENGTH_LONG).show();
+                                Toast.makeText(aQuery.getContext(), aQuery.getContext().getResources().getString(R.string.nocontent),Toast.LENGTH_LONG).show();
                         	}
                           }
                     }
@@ -1433,7 +1436,6 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 						@Override
 						public void onClick(View v) {
                             System.out.println("item被点击了");
-							
 							setSoftDetail(v.getId(),musicAppList);
 							int id = v.getId();
 						}
@@ -1442,42 +1444,30 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		};
 		
 		//default UI
+		
 		public static void  setDefalutView(){
-			initDialog("three");
 			
 			isWhatRight=Constant.MYMUSIC;
-			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
-			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "Loading。。", "please wait a moment。。");
-			 String url = Constant.MYMUSIC_CHAPTER;
-		        aQuery.ajax(url, String.class, new AjaxCallback<String>() {
-		                @Override
-		                public void callback(String url, String json, AjaxStatus status) {
-		                        if(json != null){
-		                        	musicList = new ArrayList<Music>();
-		                        	musicList = JsonUtil.getMusicList(json);
-		                        	setMusicChapterInfo(musicList);
-		                        	Dialog.dismiss();
-		                        }else{
-		                        	Dialog.dismiss();
-		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
-		                          }
-		                        if(musicList!=null){
-		                        	for (int i = 0; i < horItems.length; i++) {
-		                        		final String musicId = musicList.get(i).getId();
-		                        		itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
-		                        			@Override
-		                        			public void onClick(View v) {
-		                        				setMusicDetial(v.getId(), musicList,viewFormusicdetail,musicId,ismusic);
-		                        			}
-		                        		});
-		                        	}
-		                        }
-		                    }
-		            });
+			initPageParms();
+			setAppStoreList(Constant.MYMUSIC_APP+page);
 		}
 		//set pilot play  UI
 		public static void  setMusicPilot(final String path,View v1,int viewid){
 			 
+			v1.setOnKeyListener(new OnKeyListener() {
+				
+				@Override
+				public boolean onKey(View v, int keyCode, KeyEvent event) {
+					if(keyCode==KeyEvent.KEYCODE_BACK){
+						if(audioStreamer!=null){
+							if(audioStreamer.getMediaPlayer()!=null){
+								audioStreamer.getMediaPlayer().stop();
+							}
+						}
+					}
+					return false;
+				}
+			});
 			 try { 
 			 if(whatisplay==1){
 				 whatisplay =viewid;
@@ -1646,7 +1636,8 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		
 		
 		//setMusicChapterlist
-		public static void  setMusicChapterList(String path){
+		public static void  setMusicChapterList(final String path){
+			currentPath = path.substring(0,path.lastIndexOf("&"));
 			initDialog("three");
 			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait。。");
@@ -1656,17 +1647,27 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        if(json != null){
 		                        	music_chapterList  = new ArrayList<Music>();
 		                        	music_chapterList = JsonUtil.getMusicList(json);
-		                        	setMusicChapterInfo( music_chapterList);
+		                        	if(music_chapterList.size()!=0){
+		                        	if(music_chapterList.size()<15){
+		                        		isMusicChapterLastIndex=true;
+		                        	}
+		                        	setMusicChapterInfo( music_chapterList,path);
+		                        	}else{
+		                        		  Toast.makeText(aQuery.getContext(), aQuery.getContext().getResources().getString(R.string.nocontent),Toast.LENGTH_LONG).show();
+		                        	}
 		                        	Dialog.dismiss();
 		                        }else{
 		                        	Dialog.dismiss();
-		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+		                        	if(status.getCode()==-101){
+		                                Toast.makeText(aQuery.getContext(), "Error:" +status.getCode()+aQuery.getContext().getResources().getString(R.string.checknetwork),Toast.LENGTH_LONG).show();
+		                                  	}else{
+		                                          Toast.makeText(aQuery.getContext(), aQuery.getContext().getResources().getString(R.string.nocontent),Toast.LENGTH_LONG).show();
+		                                  	}
 		                          }
 		                        if(music_chapterList!=null){
 		                        	for (int i = 0; i < horItems.length; i++) {
 		                        		final String orderId = music_chapterList.get(i).getId();
 		                        		itemView.findViewById(horItems[i]).setOnClickListener(new OnClickListener() {
-		                        			
 		                        			@Override
 		                        			public void onClick(View v) {
 		                        				setMusicDetial(v.getId(), music_chapterList,viewFormusicdetail, orderId,ismusic);
@@ -1678,7 +1679,8 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		            });
 		}
 		//setMV list
-		public static void setMusicMvList(String path){
+		public static void setMusicMvList(final String path){
+			currentPath = path.substring(0,path.lastIndexOf("&"));
 			initDialog("three");
 			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait a moment。。");
@@ -1689,11 +1691,22 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        if(json != null){
 		                        	mvlist = new ArrayList<Music>();
 		                        	mvlist = JsonUtil.getMusicList(json);
-		                        	setMusicChapterInfo( mvlist);
+		                        	if(mvlist.size()!=0){
+		                        	if(mvlist.size()<15){
+		                        		isMvLastIndex=true;
+		                        	}
+		                        	setMusicChapterInfo( mvlist,path);
+		                        	}else{
+		                        		  Toast.makeText(aQuery.getContext(), aQuery.getContext().getResources().getString(R.string.nocontent),Toast.LENGTH_LONG).show();
+		                        	}
 		                        	Dialog.dismiss();
 		                        	}else{
 		                        		Dialog.dismiss();
-		  		                      Toast.makeText(aQuery.getContext(), "Error:" +status.getCode(),Toast.LENGTH_LONG).show();
+		                        		if(status.getCode()==-101){
+		                                    Toast.makeText(aQuery.getContext(), "Error:" +status.getCode()+aQuery.getContext().getResources().getString(R.string.checknetwork),Toast.LENGTH_LONG).show();
+		                                      	}else{
+		                                              Toast.makeText(aQuery.getContext(), aQuery.getContext().getResources().getString(R.string.nocontent),Toast.LENGTH_LONG).show();
+		                                      	}
 		                        	}
 		                        if(mvlist.size()!=0){
 		                        	for (int i = 0; i < horItems.length; i++) {
@@ -1837,7 +1850,12 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	                    }
 	            });
 		}
-		//subscription
+		
+		/**
+		 *  subscription
+		 * @param postMentList		
+		 * @param id
+		 */
 		 static void setOrder(final ArrayList<PostMent> postMentList,final String id ){
 			 String[] myRadio =new String[postMentList.size()] ;
 			 for (int i = 0; i < postMentList.size(); i++) {
@@ -1925,7 +1943,9 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 				 .setNegativeButton("取消", null)  
 				 .show();
 		 }
-		 //check version
+		 /**
+		  * check version
+		  */
 		 private void checkVersion() {
 			 final Handler hd = new Handler();
 				// TODO Auto-generated method stub
@@ -1972,7 +1992,12 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 					}
 				 }.execute();
 			}
-		 // appearUpdateDialog
+		
+		 /**
+		  * appearUpdateDialog
+		  * @param path   Update url path
+		  * @param desc	  Update content
+ 		  */
 		 void setUpdateDiago(final String path,String desc){
 				final Handler hd = new Handler();
 							
@@ -2008,7 +2033,106 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 											}
 										}).create();
 								dialog.show();
+			
+								 }
+		 /**
+		  * set Next or Pre page 
+		  * @param path  Url path
+		  * @param what  soft or musicChapter or mv
+		  * 
+		  */
+		 static void UpdatePaging(final String path ,final String what){
+			 final TextView tv =(TextView) itemView.findViewById(R.id.field_page_index);
+			 Button btn_pre=(Button) itemView.findViewById(R.id.page_pre);
+				btn_pre.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+							page=page-1;
+							if(page==0){
+								page=1;
+								Toast.makeText(aQuery.getContext(), "已经是第一页了", 1).show();
+								isAppLastIndex=false;
+								isMusicChapterLastIndex=false;
+								isMvLastIndex=false;
+								tv.setText("第"+page+"页");
+							}else{
+								isAppLastIndex=false;
+								isMusicChapterLastIndex=false;
+								isMvLastIndex=false;
+								tv.setText("第"+page+"页");
+							String  truePath = path.substring(0, path.lastIndexOf("=")+1);
+							System.out.println("TruePATH==========="+truePath);
+							String myPath =   truePath+page;
+							if(what.equals("soft")){
+								setAppStoreList(myPath);
+							}else if(what.equals("musicChapter")){
+								setMusicChapterList(myPath);
+							}else if(what.equals("mv")){
+								setMusicMvList(myPath);
 							}
+							}
+					}
+				});
+				Button btn_next=(Button) itemView.findViewById(R.id.page_next);
+				btn_next.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						  
+							
+							if(what.equals("soft")){
+								if(isAppLastIndex){
+									   Toast.makeText(aQuery.getContext(), "已经是最后一页了", 1).show();
+								   }else{
+									   page=page+1;
+									   tv.setText("第"+page+"页");
+								String  truePath = path.substring(0, path.lastIndexOf("=")+1);
+								String myPath =   truePath+page;
+								setAppStoreList(myPath);
+								   }
+							}else if(what.equals("musicChapter")){
+								if(isMusicChapterLastIndex){
+									   Toast.makeText(aQuery.getContext(), "已经是最后一页了", 1).show();
+								   }else{
+									   page=page+1;
+									   tv.setText("第"+page+"页");
+								String  truePath = path.substring(0, path.lastIndexOf("=")+1);
+								String myPath =   truePath+page;
+								setMusicChapterList(myPath);
+								   }
+								
+							}else if(what.equals("mv")){
+								if(isMvLastIndex){
+									   Toast.makeText(aQuery.getContext(), "已经是最后一页了", 1).show();
+								   }else{
+								page=page+1;
+								tv.setText("第"+page+"页");
+								String  truePath = path.substring(0, path.lastIndexOf("=")+1);
+								String myPath =   truePath+page;
+								setMusicMvList(myPath);
+								   }
+								
+							}
+						}
+					
+				
+				});
+			 
+		 }
+		 
+		 /**
+		  * 初始化一些页面参数
+		  * @author zhyq
+		  *
+		  */
+		 public static void initPageParms(){
+				page =1;
+				   isAppLastIndex=false;
+				  isMusicChapterLastIndex=false;
+				 isMvLastIndex=false;
+				TextView tv= (TextView)(itemView.findViewById(R.id.field_page_index));
+				tv.setText("第"+page+"页");
+		 }
 		 public static class  musicTryplayAsyncTask extends AsyncTask<String,Void,Void>{
 			 
 			 private ImageButton myBtn;
