@@ -1218,6 +1218,15 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	                    }
 	            });
 		}
+		
+		static boolean isExit=false;
+		static Handler mHandler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+				isExit=false;
+			}
+		};
 		/**
 		 * setMusicDetial param
 		 * 音乐详细界面
@@ -1229,6 +1238,22 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 					j=i;
 				}
 			}
+			view.setOnKeyListener(new OnKeyListener() {
+				@Override
+				public boolean onKey(View v, int keyCode, KeyEvent event) {
+					  if(keyCode == KeyEvent.KEYCODE_BACK){
+			              if(!isExit){
+			                   isExit=true;
+			                   Toast.makeText(aQuery.getContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+			                   mHandler.sendEmptyMessageDelayed(0, 2000);
+			              }
+			              else{
+			            	  builder.dismiss();
+			              }
+			         }
+					return false;
+				}
+			});
 //			final ListView listview =(ListView) view.findViewById(R.id.music_detail_list);
 			final Button btn_orderall=(Button)(viewFormusicdetail.findViewById(R.id.btn_order_allmusic));
 			builder.setContentView(viewFormusicdetail);
@@ -1401,7 +1426,9 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		}
 		//音乐app
 		public static void  setAppStoreList(final String path){
+			if(!isSearch){
 			currentPath = path.substring(0,path.lastIndexOf("&"));
+			}
 			viewForsoftDetail= inflater.inflate(R.layout.soft_detail, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait a moment。。");
 			aQuery.ajax(path, String.class, new AjaxCallback<String>() {//这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
@@ -1568,8 +1595,8 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		public static void  setMVPilot(final String path){
 			Intent i  = new Intent();
 			i.putExtra("path", path);
-//			i.setClass(aQuery.getContext(), PlayActivity.class);
-			i.setClass(aQuery.getContext(), Simplayer.class);
+			i.setClass(aQuery.getContext(), PlayActivity.class);
+//			i.setClass(aQuery.getContext(), Simplayer.class);
 			
 			aQuery.getContext().startActivity(i);
 		}
@@ -1637,7 +1664,9 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		
 		//setMusicChapterlist
 		public static void  setMusicChapterList(final String path){
+			if(!isSearch){
 			currentPath = path.substring(0,path.lastIndexOf("&"));
+			}
 			initDialog("three");
 			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait。。");
@@ -1680,7 +1709,9 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		}
 		//setMV list
 		public static void setMusicMvList(final String path){
+			if(!isSearch){
 			currentPath = path.substring(0,path.lastIndexOf("&"));
+			}
 			initDialog("three");
 			viewFormusicdetail = inflater.inflate(R.layout.music_detail1, null);
 			final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(), "loading。。", "please wait a moment。。");
@@ -1761,27 +1792,15 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 											String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+path;
 											@Override
 											public void onClick(View v) {
+												if(isWhatLeft==Constant.MUSICCHAPTER){
 												setMusicPilot(appDownPathtrue,view,viewid);
+												}else if(isWhatLeft==Constant.MUSICMV){
+													
+													setMVPilot(appDownPathtrue);
+												}
 											}
 										});
 										}
-										
-//										ListView listview = (ListView) view.findViewById(R.id.music_detail_list);
-//										MusicAdapter myMusicAdapter = new MusicAdapter(aQuery.getContext(), musicDetialList,isWhatRight);
-//										listview.setAdapter(myMusicAdapter);
-//									 for (int i = 0; i < musictitleList.size(); i++) {
-//										 final String web_path =musicpathList.get(i);
-//										 final String sid = musicsidList.get(i);
-//										 ((Button)view.findViewById(musiclistItem[i])).setVisibility(View.VISIBLE);
-//										 ((Button)view.findViewById(musiclistItem[i])).setText(musictitleList.get(i));
-//										 ((Button)view.findViewById(musiclistItem[i])).setOnClickListener(new OnClickListener() {
-//											@Override
-//											public void onClick(View v) {
-//												String appDownPathtrue  =HttpRequest.URL_QUERY_DOWNLOAD_URL+web_path+"&"+"duomi";
-//												setMusicCross(appDownPathtrue,sid);
-//											}
-//										});
-//								}
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();

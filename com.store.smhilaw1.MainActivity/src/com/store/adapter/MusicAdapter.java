@@ -1,12 +1,8 @@
 package com.store.adapter;
 
-import io.vov.vitamio.MediaPlayer;
-
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.content.DialogInterface.OnKeyListener;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.store.bean.Music;
 import com.store.content.Constant;
