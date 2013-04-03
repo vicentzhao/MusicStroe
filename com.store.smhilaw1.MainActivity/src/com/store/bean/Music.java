@@ -13,6 +13,7 @@ public class Music {
 	private String id;
 	private PostMent postMent;
 	private String type;
+	private PagenationBean pagep;
 	private String 
 	artist, language, pubdate ,company;
 	public String getArtist() {

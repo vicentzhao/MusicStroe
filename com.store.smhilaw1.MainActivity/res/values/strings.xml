@@ -33,6 +33,7 @@
 	<string name="language">语言</string>
 	<string name="company">唱片公司</string>
 	<string name="searchkey">请输入关键字</string>
-	
 	<string name="nocontent">没有您想要的数据，请重试</string>
+	<string name="exit">是否选择退出</string>
+	<string name="exitContent">是否选择退出音乐商城</string>
 </resources>

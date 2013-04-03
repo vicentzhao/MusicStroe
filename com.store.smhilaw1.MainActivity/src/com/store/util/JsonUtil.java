@@ -29,7 +29,9 @@ public class JsonUtil {
 		if(str == null)return list;
 		Music music = null;
 		try {
-			JSONArray jsonA = new JSONArray(str);
+			JSONObject jsonObject =  new JSONObject(str);
+			JSONArray jsonA = jsonObject.getJSONArray("data");
+			JSONObject jsonB = jsonObject.getJSONObject("page");
 			for(int i =0;i<jsonA.length();i++){
 				JSONObject jsonO = jsonA.getJSONObject(i);
 				music = new Music();
@@ -56,6 +58,7 @@ public class JsonUtil {
 				}
 				list.add(music);
 			}
+			 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,7 +71,9 @@ public class JsonUtil {
 		SoftwareBean bean = null;
 		if(str == null)return list;
 		try {
-			JSONArray jsonA = new JSONArray(str);
+         JSONObject jsonObject =  new JSONObject(str);
+			
+			JSONArray jsonA = jsonObject.getJSONArray("data");
 			for(int i =0;i<jsonA.length();i++){
 				JSONObject jsonO = jsonA.getJSONObject(i);
 				bean = new SoftwareBean();
