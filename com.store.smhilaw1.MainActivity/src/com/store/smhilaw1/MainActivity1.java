@@ -45,7 +45,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -94,7 +93,6 @@ import com.store.http.ImageDownloader;
 import com.store.util.JsonUtil;
 import com.store.util.UpdateVersion;
 import com.store.util.XmlParse;
-import com.wenchuang.music.play.Simplayer;
 import com.wenchuang.music.play.StreamingMediaPlayer;
 
 public class MainActivity1 extends FragmentActivity implements LeftSelectedListener, RightSelectedListener,OnClickListener{
@@ -152,6 +150,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 	 private static boolean isAppLastIndex=false;
 	 private static boolean isMusicChapterLastIndex=false;
 	 private static boolean isMvLastIndex=false;
+	 private static String LastIndexId;
 	 
 	  private static int page =1;
 	  
@@ -1308,7 +1307,7 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 													if(bo==ismusic){
 														
 														setMusicPilot(appDownPathtrue, view,viewid);
-													}else{
+													}else if(bo==isMv){
 														setMVPilot(appDownPathtrue);
 													}
 												}
@@ -1440,6 +1439,12 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
                         	if(musicAppList.size()!=0){
                         	if(musicAppList.size()<15){
                         		isAppLastIndex =true;
+                        	}else if(musicAppList.size()==15){
+                        		 String id = musicAppList.get(14).getId();
+                        		 if(LastIndexId.equals(id)){
+                        			 isAppLastIndex =true;
+                        		 }
+                        		 LastIndexId =id;
                         	}
                         	setSoftInfo(musicAppList,path);
                         
@@ -1679,6 +1684,12 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        	if(music_chapterList.size()!=0){
 		                        	if(music_chapterList.size()<15){
 		                        		isMusicChapterLastIndex=true;
+		                        	}else if(music_chapterList.size()==15){
+		                        		 String id = music_chapterList.get(14).getId();
+		                        		 if(LastIndexId.equals(id)){
+		                        			 isMusicChapterLastIndex =true;
+		                        		 }
+		                        		 LastIndexId =id;
 		                        	}
 		                        	setMusicChapterInfo( music_chapterList,path);
 		                        	}else{
@@ -1725,6 +1736,12 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 		                        	if(mvlist.size()!=0){
 		                        	if(mvlist.size()<15){
 		                        		isMvLastIndex=true;
+		                        	}else if(mvlist.size()==15){
+		                        		 String id = mvlist.get(14).getId();
+		                        		 if(LastIndexId.equals(id)){
+		                        			 isMvLastIndex =true;
+		                        		 }
+		                        		 LastIndexId =id;
 		                        	}
 		                        	setMusicChapterInfo( mvlist,path);
 		                        	}else{
@@ -2179,5 +2196,8 @@ public class MainActivity1 extends FragmentActivity implements LeftSelectedListe
 				super.onPostExecute(result);
 			}
 		 }
+		 
+		 //
+		
 			
 }
