@@ -20,7 +20,7 @@ public class Constant {
 	
 	   public static File FILE_NAME = null;
 	   public static String filePath = "";
-		//�������
+		
 		public static final int FLFG = 0x1;
 		public static final int AL = 0x2;
 		public static final int FLWSYS = 0x3;
@@ -31,23 +31,7 @@ public class Constant {
 		public static final int MUSIC = 0x8;
 		public static final int SOFT = 0x9;
 		
-		//��������
-		public static final int ALL_MOVIES =10004;
-		public static final int ALL_RECORD =10005;//�����б�
-		public static final int SINGLE_RECORD =100051;//��������
-		public static final int SINGLE_IMAGE =100052;//ͼƬ
-		public static final int DOWNLOAD_LIST =100053;//�����б�
-		public static final int DOWNLOAD_CHECK =10006;//������֤
-		public static final int ORDER_SOFT_LIST=100091;//�����б�
-		public static final int ORDER_SOFT_SINGLE=100092;//����������Ʒ
-		public static final int ORDER_LIST=100093;//�����б�
-		public static final int ORDER_LIST_NUM=100094;//������
-		public static final int ORDER_LIST_ID=100095;//����ID
-		public static final int ORDER_LIST_PAY=100000;//֧��
-		public static final int DOWN_SOFT_LIST=100001;//�����б�
-		public static final int USERLOGIN=100010;//֧��
 		
-		//һЩ����
 		public static final int MYMUSIC = 100011;
 		public static final int MUSICSTORE = 100012;
 		public static final int MUSICAPP = 100013;
@@ -62,7 +46,7 @@ public class Constant {
 		public static final String MUSICSTORE_MV=HttpRequest.URL_QUERY_STROE_ALL_MUSICMV;
 		public static final String MUSIC_DEFALUT=HttpRequest.URL_QUERY_STROE_ALL_MUSICCHAPTER;
 		
-		//��ʱ��
+	    public static final  boolean useVitamio = true;  //是否使用vitamio
 	 
 		
 		

@@ -60,6 +60,11 @@
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
+         <activity
+            android:name=".play.VitamioPlayer"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
     </application>
 
 </manifest>

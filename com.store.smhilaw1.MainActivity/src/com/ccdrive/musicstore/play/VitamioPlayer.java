@@ -12,6 +12,8 @@ import io.vov.vitamio.MediaPlayer.OnVideoSizeChangedListener;
 
 import java.io.IOException;
 
+import org.apache.http.HttpRequest;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -183,7 +185,8 @@ public class VitamioPlayer extends Activity {
 //					finish();
 //					return;
 //				}
-				 url=movie.getDownload_path();
+				String path =movie.getDownload_path();
+				url=com.ccdrive.musicstore.http.HttpRequest.URL_QUERY_DOWNLOAD_URL+path;
 				title = movie.getName() + "(" + (index + 1) + ")";
 			}
 		}

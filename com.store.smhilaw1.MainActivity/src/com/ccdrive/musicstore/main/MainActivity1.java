@@ -89,6 +89,7 @@ import com.ccdrive.musicstore.http.HttpRequest.OnHttpResponseListener;
 import com.ccdrive.musicstore.http.ImageDownloader;
 import com.ccdrive.musicstore.play.PlayerActivity;
 import com.ccdrive.musicstore.play.StreamingMediaPlayer;
+import com.ccdrive.musicstore.play.VitamioPlayer;
 
 public class MainActivity1 extends FragmentActivity implements
 		LeftSelectedListener, RightSelectedListener, OnClickListener {
@@ -647,99 +648,6 @@ public class MainActivity1 extends FragmentActivity implements
 			install.setOnClickListener(this);
 			download.setOnClickListener(this);
 			pay.setOnClickListener(this);
-			listentest.setOnClickListener(this);
-			if (left_type == Constant.MOVIE) {
-				if (right_grid_id != null) {
-					http.querySingleMovie(right_grid_id,
-							Constant.SINGLE_RECORD, null);
-					http.queryListDowanloadSoft(right_grid_id,
-							HttpRequest.URL_QUERY_LIST_MOVIE,
-							Constant.DOWNLOAD_LIST, null);
-					listentest.setVisibility(View.VISIBLE);
-					listentest.setText("试播");
-				}
-			} else if (left_type == Constant.AL) {
-				if (right_grid_id != null) {
-					http.querySingleNewspaper(right_grid_id,
-							Constant.SINGLE_RECORD, null);
-					http.queryListDowanloadSoft(right_grid_id,
-							HttpRequest.URL_QUERY_LIST_NEWSPAPER,
-							Constant.DOWNLOAD_LIST, null);
-					download.setEnabled(false);
-				}
-
-			} else if (left_type == Constant.FLWSYS) {
-				if (right_grid_id != null) {
-					http.querySinglePrint(right_grid_id,
-							Constant.SINGLE_RECORD, null);
-					http.queryListDowanloadSoft(right_grid_id,
-							HttpRequest.URL_QUERY_LIST_PRINT,
-							Constant.DOWNLOAD_LIST, null);
-					download.setEnabled(false);
-				}
-
-			} else if (left_type == Constant.FLFG) {
-				if (right_grid_id != null) {
-					http.querySingleBook(right_grid_id, Constant.SINGLE_RECORD,
-							null);
-					http.queryListDowanloadSoft(right_grid_id,
-							HttpRequest.URL_QUERY_LIST_BOOK,
-							Constant.DOWNLOAD_LIST, null);
-					download.setEnabled(false);
-				}
-
-			} else if (left_type == Constant.ANIME) {
-				if (right_grid_id != null) {
-					http.querySingleANIME(right_grid_id,
-							Constant.SINGLE_RECORD, null);
-					http.queryListDowanloadSoft(right_grid_id,
-							HttpRequest.URL_QUERY_LIST_ANIME,
-							Constant.DOWNLOAD_LIST, null);
-					download.setEnabled(false);
-				}
-
-			} else if (left_type == Constant.TV) {
-				if (right_grid_id != null) {
-					http.querySingleTv(right_grid_id, Constant.SINGLE_RECORD,
-							null);
-					http.queryListDowanloadSoft(right_grid_id,
-							HttpRequest.URL_QUERY_LIST_TV,
-							Constant.DOWNLOAD_LIST, null);
-					download.setEnabled(false);
-					listentest.setVisibility(View.VISIBLE);
-					listentest.setText("试播");
-				}
-
-			} else if (left_type == Constant.MUSIC) {
-				if (right_grid_id != null) {
-					http.querySingleMusic(right_grid_id,
-							Constant.SINGLE_RECORD, null);
-					http.queryListDowanloadSoft(right_grid_id,
-							HttpRequest.URL_QUERY_LIST_MUSIC,
-							Constant.DOWNLOAD_LIST, null);
-					listentest.setVisibility(View.VISIBLE);
-				}
-
-			} else if (left_type == Constant.RECRD) {
-				if (right_grid_id != null) {
-					http.querySingleRecord(right_grid_id,
-							Constant.SINGLE_RECORD, null);
-					http.queryListDowanloadSoft(right_grid_id,
-							HttpRequest.URL_QUERY_LIST_RECORD,
-							Constant.DOWNLOAD_LIST, null);
-					download.setEnabled(false);
-				}
-			} else if (left_type == Constant.SOFT) {
-				install.setText("安装");
-				// download.setEnabled(false);
-				if (right_grid_id != null) {
-					http.querySingleSoft(right_grid_id, Constant.SINGLE_RECORD,
-							null);
-					http.queryListDowanloadSoft(right_grid_id,
-							HttpRequest.URL_QUERY_LIST_SOFT,
-							Constant.DOWNLOAD_LIST, null);
-				}
-			}
 			layout.addView(view);
 			return layout;
 		}
@@ -1826,8 +1734,12 @@ public class MainActivity1 extends FragmentActivity implements
 
 	// setmvplay
 	public static void setMVPilot(final Music music) {
-	
-		Intent it =  new Intent(aQuery.getContext(),PlayerActivity.class);
+		Intent it;
+		if(Constant.useVitamio){
+			it =  new Intent(aQuery.getContext(),VitamioPlayer.class);
+		}else{
+			 it =  new Intent(aQuery.getContext(),PlayerActivity.class);
+		}
 		
 		it.putExtra("clientControll", false);
 		it.putExtra("movie",music);
