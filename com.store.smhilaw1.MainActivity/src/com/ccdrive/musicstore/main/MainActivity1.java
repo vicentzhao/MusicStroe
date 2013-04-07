@@ -259,13 +259,13 @@ public class MainActivity1 extends FragmentActivity implements
 			isWhatRight = Constant.MUSICSTORE;
 			if (isWhatLeft == Constant.MUSICAPP) {
 				initPageParms();
-				setAppStoreList(Constant.MUSICSTORE_APP);
+				setAppStoreList(Constant.MUSICSTORE_APP+ pageCount);
 			} else if (isWhatLeft == Constant.MUSICCHAPTER) {
 				initPageParms();
-				setMusicChapterList(Constant.MUSICSTORE_CHAPTER);
+				setMusicChapterList(Constant.MUSICSTORE_CHAPTER+ pageCount);
 			} else if (isWhatLeft == Constant.MUSICMV) {
 				initPageParms();
-				setMusicMvList(Constant.MUSICSTORE_MV);
+				setMusicMvList(Constant.MUSICSTORE_MV+ pageCount);
 			}
 			myMusic.setSelected(false);
 			store.setSelected(true);
@@ -500,10 +500,10 @@ public class MainActivity1 extends FragmentActivity implements
 				isWhatLeft = Constant.MUSICMV;
 				if (isWhatRight == Constant.MYMUSIC) {
 					initPageParms();
-					setMusicMvList(Constant.MYMUSIC_MV);
+					setMusicMvList(Constant.MYMUSIC_MV+pageCount);
 				} else if (isWhatRight == Constant.MUSICSTORE) {
 					initPageParms();
-					setMusicMvList(Constant.MUSICSTORE_MV);
+					setMusicMvList(Constant.MUSICSTORE_MV+pageCount);
 				}
 			}
 		}
@@ -892,15 +892,15 @@ public class MainActivity1 extends FragmentActivity implements
 		itemView.findViewById(R.id.item_hor_10).setNextFocusRightId(
 				R.id.item_hor_11);
 		itemView.findViewById(R.id.item_hor_11).setNextFocusDownId(
-				R.id.item_hor_11);
+				R.id.page_pre);
 		itemView.findViewById(R.id.item_hor_12).setNextFocusDownId(
-				R.id.item_hor_12);
+				R.id.page_pre);
 		itemView.findViewById(R.id.item_hor_13).setNextFocusDownId(
-				R.id.item_hor_13);
+				R.id.page_pre);
 		itemView.findViewById(R.id.item_hor_14).setNextFocusDownId(
-				R.id.item_hor_14);
+				R.id.page_next);
 		itemView.findViewById(R.id.item_hor_15).setNextFocusDownId(
-				R.id.item_hor_15);
+				R.id.page_next);
 
 	}
 

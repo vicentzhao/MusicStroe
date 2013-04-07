@@ -81,11 +81,11 @@ public class VitamioPlayer extends Activity {
 
 	private int mVideoLayout = VIDEO_LAYOUT_KEEP;
 
-	public static final int VIDEO_LAYOUT_ORIGIN = 0;// ԭʼ��С
+	public static final int VIDEO_LAYOUT_ORIGIN = 0;
 	public static final int VIDEO_LAYOUT_SCALE = 1;//
-	public static final int VIDEO_LAYOUT_STRETCH = 2;// ȫ������
+	public static final int VIDEO_LAYOUT_STRETCH = 2;// 
 	public static final int VIDEO_LAYOUT_ZOOM = 3;//
-	public static final int VIDEO_LAYOUT_KEEP = 4;// ���ֱ�������
+	public static final int VIDEO_LAYOUT_KEEP = 4;// 
 
 	private boolean clientControll = false;
 	// -------------------------------------------
@@ -1151,7 +1151,7 @@ public class VitamioPlayer extends Activity {
 			if (!mMediaPlayer.isPlaying()) {
 				play();
 			} else
-				Log.d(TAG, "����Ƶ�Ѿ��ڲ����ˡ�����");
+				Log.d(TAG, "未知错误");
 		}
 
 		public void stop() {
