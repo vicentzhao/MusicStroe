@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.store.smhilaw1"
+    package="com.ccdrive.musicstore"
     android:versionCode="2"
-    android:versionName="1.1.6。1" >
+    android:versionName="1.1.6.5" >
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="11" />
@@ -25,7 +25,7 @@
         android:theme="@android:style/Theme.NoTitleBar"
         >
         <activity
-            android:name=".MainActivity1"
+            android:name=".main.MainActivity1"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape" >
              <intent-filter>
@@ -34,17 +34,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.store.smhilaw1.PlayActivity"
+            android:name=".main.PlayTestActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="com.wenchuang.music.play.Simplayer"
+            android:name=".play.Simplayer"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape" >
             
@@ -55,6 +55,16 @@
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
+         <activity
+            android:name=".play.PlayerActivity"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+         <activity
+            android:name=".play.VitamioPlayer"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@
 	<classpathentry kind="lib" path="libs/json-lib-2.4-jdk15.jar"/>
 	<classpathentry kind="lib" path="libs/commons-io-2.3.jar"/>
 	<classpathentry kind="lib" path="libs/android-query-full.0.25.5-beta.jar"/>
+	<classpathentry kind="lib" path="libs/VHttpProxy (1).jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>

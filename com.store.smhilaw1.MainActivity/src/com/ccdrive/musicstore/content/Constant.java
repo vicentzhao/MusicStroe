@@ -1,0 +1,53 @@
+package com.ccdrive.musicstore.content;
+
+import java.io.File;
+
+import com.ccdrive.musicstore.http.HttpRequest;
+/*
+ * һЩ�ĳ���
+ */
+public class Constant {
+	   	
+       public static final String SOFT_FIELD = "soft";	
+       public static final String BOOK_FIELD = "book";	
+       public static final String PAPER_FIELD = "paper";	 
+       public static final String PRINT_FIELD = "journal";	 
+       public static final String MOVIE_FIELD = "movie";	 
+       public static final String TV_FIELD = "tvplay";	 
+       public static final String ANIME_FIELD = "cartoon";	 
+       public static final String MUSIC_FIELD = "music";	 
+       public static final String RECRD_FIELD = "tape";	 
+	
+	   public static File FILE_NAME = null;
+	   public static String filePath = "";
+		
+		public static final int FLFG = 0x1;
+		public static final int AL = 0x2;
+		public static final int FLWSYS = 0x3;
+		public static final int MOVIE = 0x4;
+		public static final int RECRD = 0x5;
+		public static final int TV = 0x6;
+		public static final int ANIME = 0x7;
+		public static final int MUSIC = 0x8;
+		public static final int SOFT = 0x9;
+		
+		
+		public static final int MYMUSIC = 100011;
+		public static final int MUSICSTORE = 100012;
+		public static final int MUSICAPP = 100013;
+		public static final int MUSICCHAPTER = 100014;
+		public static final int MUSICMV = 100015;
+		
+		public static final String MYMUSIC_APP=HttpRequest.URL_QUERY_LIST__SOFTORDERED;
+		public static final String MYMUSIC_CHAPTER=HttpRequest.URL_QUERY_LIST__CHAPTERORDER;
+		public static final String MYMUSIC_MV=HttpRequest.URL_QUERY_LIST__MVCORDERED;
+		public static final String MUSICSTORE_APP=HttpRequest.URL_QUERY_STROE_ALL_SOFT;
+		public static final String MUSICSTORE_CHAPTER=HttpRequest.URL_QUERY_STROE_ALL_MUSICCHAPTER;
+		public static final String MUSICSTORE_MV=HttpRequest.URL_QUERY_STROE_ALL_MUSICMV;
+		public static final String MUSIC_DEFALUT=HttpRequest.URL_QUERY_STROE_ALL_MUSICCHAPTER;
+		
+	    public static final  boolean useVitamio = true;  //是否使用vitamio
+	 
+		
+		
+}
