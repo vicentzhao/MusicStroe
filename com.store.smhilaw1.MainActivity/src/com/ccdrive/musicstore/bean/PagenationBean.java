@@ -1,9 +1,5 @@
 package com.ccdrive.musicstore.bean;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnKeyListener;
-import android.view.KeyEvent;
 
 public class PagenationBean {
 	/** 总记录数 */

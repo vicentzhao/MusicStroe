@@ -3,7 +3,8 @@ package com.ccdrive.musicdrive.util;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import com.ccdrive.musicstore.R;
+
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ccdrive.musicstore.R;
 import com.ccdrive.musicstore.http.HttpUtil;
 
 public class UpdateVersion implements Runnable {
@@ -164,7 +166,7 @@ public class UpdateVersion implements Runnable {
 		try {
 			int i = 1/0 ;
 		} catch (Exception e) {
-			showToast("没锟斤拷锟揭碉拷锟借备锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟截★拷") ;
+			showToast("出现错误") ;
 		}
 	}
 	

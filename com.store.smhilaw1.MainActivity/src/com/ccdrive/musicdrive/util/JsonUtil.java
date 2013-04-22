@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.ccdrive.musicstore.bean.PostMent;
 import com.ccdrive.musicstore.bean.Music;
 import com.ccdrive.musicstore.bean.OrderBean;
 import com.ccdrive.musicstore.bean.PayOrderBean;
@@ -181,5 +182,41 @@ public class JsonUtil {
     	   temp=temp.replace("]", "").trim();
     	   return temp;
 	}
-
+	/**
+	 * 获取单个app的信息
+	 * @param str
+	 * @return
+	 */
+	public static SoftwareBean getSoftBean(String str){
+		SoftwareBean bean = null;
+		ArrayList<PostMent> postMentList  =new ArrayList<PostMent>();
+		try {
+         JSONObject jsonO =  new JSONObject(str);
+				bean = new SoftwareBean();
+				bean.setImage_path(jsonO.getString("PIC"));
+				bean.setName(jsonO.getString("PNAME"));
+				bean.setInfo(jsonO.getString("PNOTE"));
+				bean.setId(jsonO.getString("ID"));
+				bean.setAuthor(jsonO.getString("AUTHOR"));
+				bean.setRelease(jsonO.getString("RELEASE"));
+				bean.setVersion(jsonO.getString("VERSION"));
+				bean.setEnvironment(jsonO.getString("ENVIRONMENT"));
+				bean.setAddDate(jsonO.getString("ADDTIME"));
+				JSONArray postOb = jsonO.getJSONArray("potype");
+				for (int i = 0; i < postOb.length(); i++) {
+					PostMent pm = new PostMent();
+					pm.setType(postOb.getJSONObject(i)
+							.getString("TYPE"));
+					pm.setId(postOb.getJSONObject(i).getString("PUBID"));
+					pm.setPrice(postOb.getJSONObject(i).getString(
+							"PRICE"));
+					postMentList.add(pm);
+				}
+				bean.setPostMentList(postMentList);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return bean;
+	}
 }

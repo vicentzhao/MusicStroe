@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
+       android:background="#333333"
     >
 <LinearLayout 
     android:layout_width="wrap_content"
@@ -9,7 +10,7 @@
     android:orientation="vertical" >
     <RelativeLayout 
         android:layout_width="fill_parent"
-        android:layout_height="30dp"
+        android:layout_height="45sp"
         >
         <TextView
             android:id="@+id/musicdetail_text"
@@ -36,24 +37,26 @@
         android:layout_height="wrap_content" >
         <ImageView
             android:id="@+id/albumimage"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="35dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="30dp"
             android:src="@drawable/ic_launcher" />
         <TextView
             android:id="@+id/albumname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="28dp"
+            android:textSize="30sp"
             android:layout_marginTop="34dp"
             android:layout_toRightOf="@+id/albumimage"
             android:text="花蝴蝶" />
 
         <TextView
             android:id="@+id/artist"
+            android:textSize="24sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/albumname"
@@ -62,51 +65,73 @@
 
         <TextView
             android:id="@+id/Issuedate"
+            android:textSize="24sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/artist"
             android:layout_below="@+id/artist"
             android:text="发行日期：2013-02-26" />
-
+         <TextView
+            android:id="@+id/language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/artist"
+            android:textSize="24sp"
+            android:layout_below="@id/Issuedate"
+            android:text="语言：国语" />
+         <TextView
+            android:id="@+id/company"
+             android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/language"
+            android:layout_alignLeft="@+id/language"
+            android:text="唱片公司：华纳唱片" />
+<ImageView
+           android:id="@+id/fengefu"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8.0dip"
+            android:layout_marginTop="12.0dip"
+            android:layout_below="@+id/company"
+            android:scaleType="fitXY"
+            android:src="@drawable/drawable_divider" />
         <TextView
             android:id="@+id/albuminfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="45dp"
-            android:layout_below="@+id/albumimage"
+            android:layout_marginTop="20dp"
+             android:textSize="24sp"
+            android:layout_below="@+id/company"
             android:layout_marginRight="15dp"
             android:singleLine="false"
             android:lines="4"
             android:text="    2009年万众期待华人天后蔡依林全新国语专辑【花蝴蝶】即将登场！蔡依林千变万化，不断创新的尝试，来到华纳发行的第一张专辑，Jolin和唱片公司老板工作员工都更上一层楼，以倍数的创意、预算、成本、力量务求带给歌迷前所未有的视听感受，从造型/舞蹈/包装/照片/MV,每个层面都涵盖......：" />
         
 
-        <TextView
-            android:id="@+id/language"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="46dp"
-            android:layout_alignBottom="@+id/artist"
-            android:layout_toRightOf="@+id/Issuedate"
-            android:text="语言：国语" />
+       
 
-        <TextView
-            android:id="@+id/company"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/Issuedate"
-            android:layout_alignBottom="@+id/Issuedate"
-            android:layout_alignLeft="@+id/language"
-            android:text="唱片公司：华纳唱片" />
+        
       <Button
             android:id="@+id/btn_order_allmusic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             android:layout_toRightOf="@+id/language"
+             android:layout_toRightOf="@+id/Issuedate"
             android:layout_marginLeft="86dp"
-            android:layout_alignBaseline="@+id/artist"
-            android:layout_alignBottom="@+id/Issuedate"
-             android:text="订阅全部歌曲"
+            android:layout_alignBaseline="@+id/albumname"
+            android:layout_alignBottom="@+id/albumname"
+             android:text="订阅全部"
            />
+      <ImageView
+           android:id="@+id/fengefu"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8.0dip"
+            android:layout_marginTop="12.0dip"
+            android:layout_below="@+id/company"
+            android:scaleType="fitXY"
+            android:src="@drawable/drawable_divider" />
 
     </RelativeLayout>
        <LinearLayout
@@ -121,9 +146,10 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:text="曲目列表"
+        android:textSize="30sp"
         android:layout_marginLeft="20dp" />
     <Button 
-          android:layout_width="wrap_content"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
@@ -147,10 +173,18 @@
         android:text="21-30"
         />
     </LinearLayout>
+    <ImageView
+           android:id="@+id/fengefu"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8.0dip"
+            android:layout_marginTop="12.0dip"
+            android:layout_below="@+id/company"
+            android:scaleType="fitXY"
+            android:src="@drawable/drawable_divider" />
      <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-          android:layout_weight="1"
         android:orientation="vertical"
         >
       <include
@@ -239,15 +273,19 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+         android:textSize="30sp"
         android:text="热门推荐"
         android:layout_marginLeft="20dp" />
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="fill_parent"
-        android:layout_height="5dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        />
+    
+   <ImageView
+           android:id="@+id/fengefu"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8.0dip"
+            android:layout_marginTop="12.0dip"
+            android:layout_below="@+id/company"
+            android:scaleType="fitXY"
+            android:src="@drawable/drawable_divider" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -21,12 +21,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-public class StreamingMediaPlayer  {
+public class StreamingMediaPlayerControl  {
     private static final int INTIAL_KB_BUFFER =  96*10/8;//assume 96kbps*10secs/8bits per byte
 	private SeekBar 	progressBar;
 	private TextView playTime;
 	private long mediaLengthInKb, mediaLengthInSeconds;
 	private int totalKbRead = 0;
+	private StreamingMediaPlayerControl playerControl;
 	int s =0;
 	private boolean isbreak =true;
 	Thread thread ;
@@ -44,14 +45,49 @@ public class StreamingMediaPlayer  {
 	private boolean isInterrupted;
 	private Context context;
 	private int counter = 0;
- 	public StreamingMediaPlayer(Context  context, SeekBar	progressBar,TextView playTime) 
- 	{
- 		this.context = context;
-		this.playTime=playTime; //播放的进度时刻
+	
+	
+// 	public StreamingMediaPlayerControl(Context  context, SeekBar	progressBar,TextView playTime) 
+// 	{
+// 		this.context = context;
+//		this.playTime=playTime; //播放的进度时刻
+//		this.progressBar = progressBar;
+//	}
+	
+	
+ 	
+ 	   public  StreamingMediaPlayerControl getPlayControl(){
+ 		   if(playerControl==null){
+ 			   playerControl =new StreamingMediaPlayerControl();
+ 		   }
+ 		   return playerControl;
+ 	   }
+	
+    public SeekBar getProgressBar() {
+		return progressBar;
+	}
+
+	public void setProgressBar(SeekBar progressBar) {
 		this.progressBar = progressBar;
 	}
-	
-    /**  
+
+	public TextView getPlayTime() {
+		return playTime;
+	}
+
+	public void setPlayTime(TextView playTime) {
+		this.playTime = playTime;
+	}
+
+	public Context getContext() {
+		return context;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+	/**  
      * 开启一个线程，下载数据
      */  
     public void startStreaming(final String mediaUrl) throws IOException {
@@ -300,20 +336,5 @@ public class StreamingMediaPlayer  {
     	}
     }
   
-
-//	@Override
-//	protected Object doInBackground(Object... params) {
-//		String mediaUrl = (String) params[0];
-//		if(mediaUrl!=null){
-//			try {
-//				downloadAudioIncrement(mediaUrl);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 	
 }

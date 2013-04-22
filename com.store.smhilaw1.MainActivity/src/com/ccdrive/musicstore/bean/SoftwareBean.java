@@ -1,6 +1,9 @@
 package com.ccdrive.musicstore.bean;
 
-public class SoftwareBean {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class SoftwareBean implements Serializable {
 	private String name;
 	private String info;
 	private String version;
@@ -8,8 +11,22 @@ public class SoftwareBean {
 	private String download_path;
 	private String id;
 	private String author, release, //发布日期
-	environment;
+	environment,addDate;
+	public String getAddDate() {
+		return addDate;
+	}
+	public void setAddDate(String addDate) {
+		this.addDate = addDate;
+	}
+	private ArrayList<PostMent> postMentList;
 	
+	
+	public ArrayList<PostMent> getPostMentList() {
+		return postMentList;
+	}
+	public void setPostMentList(ArrayList<PostMent> postMentList) {
+		this.postMentList = postMentList;
+	}
 	public String getAuthor() {
 		return author;
 	}

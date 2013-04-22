@@ -25,7 +25,7 @@
         android:theme="@android:style/Theme.NoTitleBar"
         >
         <activity
-            android:name=".main.MainActivity1"
+            android:name=".main.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape" >
              <intent-filter>
@@ -44,12 +44,6 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".main.MainActivity"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape" >
-            
-        </activity>
-        <activity
             android:name="io.vov.vitamio.activity.InitActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:launchMode="singleTop"
@@ -62,6 +56,16 @@
         </activity>
          <activity
             android:name=".play.VitamioPlayer"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+         <activity
+            android:name=".page.AppDetailActivity"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+         <activity
+            android:name=".page.MusicsDetailActivity"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>

@@ -1,7 +1,6 @@
 package com.ccdrive.musicstore.bean;
 
 import java.io.Serializable;
-import java.util.HashMap;
 
 public class Music implements Serializable{
 	

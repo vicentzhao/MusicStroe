@@ -15,7 +15,7 @@ import com.ccdrive.musicstore.R;
 import com.ccdrive.musicstore.bean.Music;
 import com.ccdrive.musicstore.content.Constant;
 import com.ccdrive.musicstore.http.HttpRequest;
-import com.ccdrive.musicstore.main.MainActivity1;
+import com.ccdrive.musicstore.main.MainActivity;
 
 public class MusicAdapter extends BaseAdapter {
 	private Context mContext;
@@ -72,7 +72,7 @@ public class MusicAdapter extends BaseAdapter {
 		holder.btn_down.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MainActivity1.setMusicDown(list.get(position).getId());
+				MainActivity.setMusicDown(list.get(position).getId());
 			}
 		});
 		return convertView;

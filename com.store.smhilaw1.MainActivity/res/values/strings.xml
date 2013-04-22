@@ -55,4 +55,14 @@
 	<string name="do_again_exit">再按一次返回键退出！</string>
 	<string name="pleasewait">请稍后。。</string>
 	<string name="movie">电影</string>
+	<string name="downComplete">下载完成</string>
+	 	
+  	<!-- 
+  	     soft的一些标题
+  	 -->
+  	 <string  name ="soft_company">公司  ： </string>
+  	 <string  name="soft_addDate">添加日期  ：</string>
+  	 <string  name="soft_version">1.【版本】  </string>
+  	 <string name="soft_reledate">2.【发布日期】 </string>
+  	 <string name="soft_evenment">3.【应用平台】 </string>
 </resources>

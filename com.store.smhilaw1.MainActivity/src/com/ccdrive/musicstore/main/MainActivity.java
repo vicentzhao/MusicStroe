@@ -1,46 +1,1557 @@
 package com.ccdrive.musicstore.main;
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.os.StrictMode;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
+import com.ccdrive.musicdrive.util.JsonUtil;
+import com.ccdrive.musicdrive.util.UpdateVersion;
+import com.ccdrive.musicdrive.util.XmlParse;
 import com.ccdrive.musicstore.R;
+import com.ccdrive.musicstore.bean.Music;
+import com.ccdrive.musicstore.bean.PagenationBean;
+import com.ccdrive.musicstore.bean.SoftwareBean;
+import com.ccdrive.musicstore.bean.VersionInfo;
+import com.ccdrive.musicstore.content.CommUtil;
+import com.ccdrive.musicstore.content.Constant;
+import com.ccdrive.musicstore.download.MediaPlayerListener;
+import com.ccdrive.musicstore.download.ThreadForRunnable;
+import com.ccdrive.musicstore.http.HttpRequest;
+import com.ccdrive.musicstore.http.HttpRequest.OnBitmapHttpResponseListener;
+import com.ccdrive.musicstore.http.HttpRequest.OnHttpResponseListener;
+import com.ccdrive.musicstore.http.ImageDownloader;
+import com.ccdrive.musicstore.page.AppDetailActivity;
+import com.ccdrive.musicstore.page.MusicsDetailActivity;
+import com.ccdrive.musicstore.play.StreamingMediaPlayerControl;
 
-public class MainActivity  extends Activity{
-	
-	 @Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+public class MainActivity extends FragmentActivity implements
+		LeftSelectedListener, RightSelectedListener, OnClickListener {
+
+	private static int left_type = Constant.FLFG;
+	private static RightFragment rFragment;
+	private static RelativeLayout leftlayout;
+	private static HttpRequest http;
+	public static View itemView;
+	public static Button myMusic, store, serch;
+	private static AQuery aQuery;
+	private static SharedPreferences.Editor editor;
+	public static boolean isFragment = true;
+	private boolean isfirst = true;
+	private static MediaPlayer mp;
+	static ArrayList<SoftwareBean> musicAppList;
+	static Dialog builder;
+	private static View viewForsoftDetail;
+	boolean isUpdate = false;;
+	private static int isWhatLeft = 100013;
+	private static int isWhatRight = 100011;
+	static LayoutInflater inflater;
+	static ArrayList<Music> music_chapterList;
+	static ArrayList<Music> mvlist;
+
+	static int whatisplay = 1; // 判断哪个音乐播放。用来暂停或者
+	static StreamingMediaPlayerControl audioStreamer; // 播放器
+	static int ismusic = 000011; // 判断是否为music 还是mv
+	static int isMv = 000012;
+
+	static String currentPath; // 搜索判断
+
+	private static int pageCount = 1;
+
+	private static boolean isSearch = false;// 判断是否为search
+
+	// 分页
+	private static PagenationBean page = new PagenationBean();
+	private EditText searchContentEdit;
+	private static Button classify, the_news, recommend, movie, teleplay,
+			anime, softInstallButton, music, record, soft;
+	SharedPreferences sp;
+	private static int[] horItems = { R.id.item_hor_01, R.id.item_hor_02,
+			R.id.item_hor_03, R.id.item_hor_04, R.id.item_hor_05,
+			R.id.item_hor_06, R.id.item_hor_07, R.id.item_hor_08,
+			R.id.item_hor_09, R.id.item_hor_10, R.id.item_hor_11,
+			R.id.item_hor_12, R.id.item_hor_13, R.id.item_hor_14,
+			R.id.item_hor_15 };
+
+	private static int[] orderRadioItem = { R.id.rad1, R.id.rad2, R.id.rad3,
+			R.id.rad4 };
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-		setContentView(R.layout.splash); 
-		PackageManager pm = getPackageManager();
-		try {
-		PackageInfo pi = pm.getPackageInfo("com.lyt.android", 0);
-		TextView versionNumber = (TextView) findViewById(R.id.versionNumber);
-		versionNumber.setText("Version " + pi.versionName);
-		} catch (NameNotFoundException e) {
-		e.printStackTrace();
-		}
-
-		new Handler().postDelayed(new Runnable(){
-
-		@Override
-		public void run() {
-		Intent intent = new Intent(MainActivity.this,MainActivity1.class);
-		startActivity(intent);
-		MainActivity.this.finish();
-		}
-
-		}, 2500);
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		setContentView(R.layout.activity_main_1920);
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+				.detectDiskReads().detectDiskWrites().detectNetwork()
+				.penaltyLog().build());
+		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+				.detectLeakedSqlLiteObjects().penaltyLog().penaltyDeath()
+				.build());
+		sp = getPreferences(MODE_PRIVATE);
+		aQuery = new AQuery(MainActivity.this);
+		initView();
+		editor = sp.edit();
+		checkVersion();
 	}
 
+	public void initView() {
+		myMusic = (Button) findViewById(R.id.myMusic);
+		store = (Button) findViewById(R.id.store);
+		serch = (Button) findViewById(R.id.search_button);
+		searchContentEdit = (EditText) findViewById(R.id.search_input);
+		myMusic.setOnClickListener(this);
+		store.setOnClickListener(this);
+		serch.setOnClickListener(this);
+		inflater = LayoutInflater.from(this);
+		builder = new Dialog(MainActivity.this);
+		DiaglogDimiss(builder);
+		builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		int h;
+		View softDetail = inflater.inflate(R.layout.soft_detail, null);
+		softInstallButton = (Button) softDetail.findViewById(R.id.install);
+		softInstallButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Toast.makeText(MainActivity.this, "开始下载", 1).show();
+				System.out.println("我已经开始下载");
+			}
+		});
+		myMusic.setText(getResources().getString(R.string.my_music));
+		myMusic.setSelected(true);
+		myMusic.setTextColor(Color.YELLOW);
+		store.setText(getResources().getString(R.string.music_store));
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.myMusic:
+			isSearch = false;
+			myMusic.setSelected(true);
+			store.setTextColor(Color.WHITE);
+			myMusic.setTextColor(Color.YELLOW);
+			store.setSelected(false);
+			isWhatRight = Constant.MYMUSIC;
+			if (isWhatLeft == Constant.MUSICAPP) {
+				setAppStoreList(Constant.MYMUSIC_APP + pageCount);
+			} else if (isWhatLeft == Constant.MUSICCHAPTER) {
+				setMusicChapterList(Constant.MYMUSIC_CHAPTER + pageCount);
+			} else if (isWhatLeft == Constant.MUSICMV) {
+				setMusicMvList(Constant.MYMUSIC_MV + pageCount);
+			}
+			break;
+		case R.id.store:
+			isSearch = false;
+			myMusic.setSelected(true);
+			store.setTextColor(Color.YELLOW);
+			myMusic.setTextColor(Color.WHITE);
+			store.setSelected(false);
+			isWhatRight = Constant.MUSICSTORE;
+			if (isWhatLeft == Constant.MUSICAPP) {
+				setAppStoreList(Constant.MUSICSTORE_APP+ pageCount);
+			} else if (isWhatLeft == Constant.MUSICCHAPTER) {
+				setMusicChapterList(Constant.MUSICSTORE_CHAPTER+ pageCount);
+			} else if (isWhatLeft == Constant.MUSICMV) {
+				setMusicMvList(Constant.MUSICSTORE_MV+ pageCount);
+			}
+			myMusic.setSelected(false);
+			store.setSelected(true);
+			break;
+		case R.id.search_button:
+			isSearch = true;
+			String searchContent = searchContentEdit.getText().toString()
+					.trim();
+			if ("".equals(searchContent)) {
+				Toast.makeText(
+						aQuery.getContext(),
+						aQuery.getContext().getResources()
+								.getString(R.string.searchkey), 1).show();
+			} else {
+				pageCount = 1;
+				String friString = URLEncoder.encode(searchContent);
+				String currPath = currentPath + "&pname="
+						+ URLEncoder.encode(friString) + "&currentPage="
+						+ pageCount;
+				System.out.println("currpath搜索的地址为===========" + currPath);
+				if (isWhatLeft == Constant.MUSICAPP) {
+					setAppStoreList(currPath);
+				} else if (isWhatLeft == Constant.MUSICCHAPTER) {
+					setMusicChapterList(currPath);
+				} else if (isWhatLeft == Constant.MUSICMV) {
+					setMusicMvList(currPath);
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	// 左侧栏碎片
+	public static class LeftFragment extends Fragment implements
+			OnClickListener {
+		OnLeftSelectedListener oLeftSelectedListener;
+		View view;
+		FragmentTransaction fragmentTransaction;
+
+		// ！！！可恢复状态时用
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setHasOptionsMenu(true);
+		}
+
+		public interface OnLeftSelectedListener {
+			public void onLeftSelected(int left_type);
+		}
+
+		@Override
+		public void onAttach(Activity activity) {
+			super.onAttach(activity);
+			try {
+				oLeftSelectedListener = (OnLeftSelectedListener) activity;
+			} catch (Exception e) {
+				// 抛一个自己定义 的异常
+				throw new ClassCastException(activity.toString()
+						+ "must implement OnLeftSelectedListener");
+			}
+		}
+
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			// 用getActivity找到对应控件
+			classify = (Button) getActivity().findViewById(R.id.flfg);
+			the_news = (Button) getActivity().findViewById(R.id.al);
+			recommend = (Button) getActivity().findViewById(R.id.flwsys);
+			movie = (Button) getActivity().findViewById(R.id.movie);
+			teleplay = (Button) getActivity().findViewById(R.id.teleplay);
+			anime = (Button) getActivity().findViewById(R.id.anime);
+			record = (Button) getActivity().findViewById(R.id.record);
+			soft = (Button) getActivity().findViewById(R.id.soft);
+			classify.setOnClickListener(this);
+			the_news.setOnClickListener(this);
+			recommend.setOnClickListener(this);
+			movie.setOnClickListener(this);
+			teleplay.setOnClickListener(this);
+			anime.setOnClickListener(this);
+			// music.setOnClickListener(this);
+			record.setOnClickListener(this);
+			soft.setOnClickListener(this);
+			classify.setSelected(true);
+		}
+
+		// 将fragment加入activity
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			FragmentManager fragmentManager = getFragmentManager();
+			if (fragmentTransaction == null) {
+				fragmentTransaction = fragmentManager.beginTransaction();
+			}
+			if (rFragment == null ) {
+				rFragment = new RightFragment();
+				fragmentTransaction.add(R.id.right, rFragment);
+			} else {
+				fragmentManager.popBackStack();
+				fragmentTransaction.replace(R.id.right, rFragment);
+			}
+			fragmentTransaction.commit();
+			if (container == null) {
+				// return null;
+			}
+			leftlayout = new RelativeLayout(getActivity());
+			view = inflater.inflate(R.layout.fragment_left_title1920,
+					container, false);
+			leftlayout.addView(view);
+			return leftlayout;
+		}
+
+		// !!!!保存状态
+		@Override
+		public void onPause() {
+			super.onPause();
+		}
+
+		@Override
+		public void onClick(View v) {
+			if (v == classify) {
+				classify.setSelected(true);
+				the_news.setSelected(false);
+				recommend.setSelected(false);
+				movie.setSelected(false);
+				teleplay.setSelected(false);
+				anime.setSelected(false);
+				// music.setSelected(false);
+				record.setSelected(false);
+				soft.setSelected(false);
+				left_type = Constant.FLFG;
+			} else if (v == the_news) {
+				classify.setSelected(false);
+				the_news.setSelected(true);
+				recommend.setSelected(false);
+				movie.setSelected(false);
+				teleplay.setSelected(false);
+				anime.setSelected(false);
+				// music.setSelected(false);
+				record.setSelected(false);
+				soft.setSelected(false);
+				left_type = Constant.AL;
+			} else if (v == recommend) {
+				classify.setSelected(false);
+				the_news.setSelected(false);
+				recommend.setSelected(true);
+				movie.setSelected(false);
+				teleplay.setSelected(false);
+				anime.setSelected(false);
+				// music.setSelected(false);
+				record.setSelected(false);
+				soft.setSelected(false);
+				left_type = Constant.FLWSYS;
+			}
+			oLeftSelectedListener.onLeftSelected(left_type);
+		}
+
+	}
+
+	/**
+	 * 右侧栏碎片
+	 * 
+	 * @author sl
+	 * 
+	 */
+	public static class RightFragment extends Fragment implements
+			OnItemClickListener, OnHttpResponseListener {
+		private CommUtil commUtil;
+		ArrayList<String> a = new ArrayList<String>();
+		OnRightSelectedListener oRightSelectedListener;
+		private MediaPlayer mMediaPlayer;
+
+		public interface OnRightSelectedListener {
+			public void oRightSelected(int left_type);
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			http = new HttpRequest();
+			http.setHttpResponseListener(this);
+			RelativeLayout layout = new RelativeLayout(getActivity());
+			itemView = inflater.inflate(R.layout.design_sketch_hor, container,
+					false);
+			initHorizontalView();
+			layout.addView(itemView);
+			setDefalutView();
+			return layout;
+		}
+
+		public void update() {
+
+		}
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int idx,
+				long arg3) {
+		}
+
+		public void updateRightFragmentBaseLeft(int left_type) {
+			myMusic.setSelected(true);
+			store.setSelected(false);
+			HashMap<String, String> hashMap;
+			if (left_type == Constant.FLFG) {
+				isWhatLeft = Constant.MUSICAPP;
+				if (isWhatRight == Constant.MYMUSIC) {
+					setAppStoreList(Constant.MYMUSIC_APP + pageCount);
+				} else if (isWhatRight == Constant.MUSICSTORE) {
+					setAppStoreList(Constant.MUSICSTORE_APP + pageCount);
+				}
+			} else if (left_type == Constant.AL) {
+
+				isWhatLeft = Constant.MUSICCHAPTER;
+				if (isWhatRight == Constant.MYMUSIC) {
+					setMusicChapterList(Constant.MYMUSIC_CHAPTER + pageCount);
+				} else if (isWhatRight == Constant.MUSICSTORE) {
+					setMusicChapterList(Constant.MUSICSTORE_CHAPTER + pageCount);
+				}
+			} else if (left_type == Constant.FLWSYS) {
+
+				isWhatLeft = Constant.MUSICMV;
+				if (isWhatRight == Constant.MYMUSIC) {
+					setMusicMvList(Constant.MYMUSIC_MV+pageCount);
+				} else if (isWhatRight == Constant.MUSICSTORE) {
+					setMusicMvList(Constant.MUSICSTORE_MV+pageCount);
+				}
+			}
+		}
+
+		@Override
+		public void response(int responseCode, int what, String value,
+				Object object) {
+		}
+
+	}
+
+	// 右边第二级碎片
+	public static class DetailFragment extends Fragment implements
+			OnClickListener, OnHttpResponseListener,
+			OnBitmapHttpResponseListener {
+		private EditText userName, passWord;
+		private PopupWindow pop;
+		private Button install, download, login, cancel, pay, listentest;
+		private ListView order_list;
+		private RadioGroup radioGroup;
+		private RadioButton price1, price2, price3;
+		private TextView sfotName, softInfo, softVersion;
+		private ImageView logo;
+		private ProgressBar myProgressBar;// 显示进度条的ProgressBar
+		TextView resultView;
+		private MediaPlayer mMediaPlayer;
+		Thread thread;
+
+		private boolean isFinish = false;
+		// 子线程发送消息给UI线程来更新ProgressBar的进度
+		private Handler handler = new Handler() {
+			public void handleMessage(Message msg) {
+				if (!Thread.currentThread().isInterrupted()) {
+					switch (msg.what) {
+					case 1:
+						int size = msg.getData().getInt("size");
+						long total = msg.getData().getLong("total");
+						int current = (int) (((float) size / (float) total) * 100);
+						myProgressBar.setMax(100);
+						myProgressBar.setProgress(current);// 设置当前刻度
+						resultView.setText(current + "%");
+						if (myProgressBar.getMax() == myProgressBar
+								.getProgress() && !isFinish) {
+							current = 0;
+							isFinish = true;
+						}
+						break;
+					case -1:
+						String error = msg.getData().getString("error");
+						Toast.makeText(getActivity(), error + "", 1).show();
+						myProgressBar.setVisibility(View.GONE);
+						resultView.setVisibility(View.GONE);
+						break;
+
+					case 2:
+						if (getActivity() == null || getActivity().equals(""))
+							return;
+						Toast.makeText(getActivity(), R.string.success,
+								Toast.LENGTH_LONG).show();
+						if (Constant.FILE_NAME != null
+								&& Constant.FILE_NAME
+										.toString()
+										.substring(
+												Constant.FILE_NAME.toString()
+														.length() - 3,
+												Constant.FILE_NAME.toString()
+														.length())
+										.equals("apk")) {
+							openFile(Constant.FILE_NAME);
+						}
+						myProgressBar.setVisibility(View.GONE);
+						resultView.setVisibility(View.GONE);
+						break;
+					}
+				}
+				super.handleMessage(msg);
+			}
+		};
+
+		private void openFile(File file) {
+			String cmd = "chmod 777 " + file;
+			try {
+				Runtime.getRuntime().exec(cmd);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			Intent intent = new Intent();
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			intent.setAction(android.content.Intent.ACTION_VIEW);
+			intent.setDataAndType(Uri.fromFile(file),
+					"application/vnd.android.package-archive");
+			startActivity(intent);
+		}
+
+		// ！！！可恢复状态时用
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setHasOptionsMenu(true);
+
+		}
+
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			// 用getActivity找到对应控件
+		}
+
+		// 将fragment加入activity
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			FragmentManager fragmentManager = getFragmentManager();
+			FragmentTransaction fragmentTransaction = fragmentManager
+					.beginTransaction();
+			// 利用inflater返回根布局给activity
+			View view = null;
+			http = new HttpRequest();
+			http.setHttpResponseListener(this);
+			http.setbitmapHttpResponseListener(this);
+			RelativeLayout layout = new RelativeLayout(getActivity());
+			view = inflater.inflate(R.layout.resource_detail, container, false);
+			radioGroup = (RadioGroup) view.findViewById(R.id.price);
+			price1 = (RadioButton) view.findViewById(R.id.price1);
+			price2 = (RadioButton) view.findViewById(R.id.price2);
+			price3 = (RadioButton) view.findViewById(R.id.price3);
+			radioGroup
+					.setOnCheckedChangeListener(new OnCheckedChangeListenerImpl());
+
+			sfotName = (TextView) view.findViewById(R.id.soft_name);
+			softInfo = (TextView) view.findViewById(R.id.soft_info);
+			softVersion = (TextView) view.findViewById(R.id.soft_version);
+			myProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+			resultView = (TextView) view.findViewById(R.id.result);
+			logo = (ImageView) view.findViewById(R.id.logo);
+			install = (Button) view.findViewById(R.id.install);
+			download = (Button) view.findViewById(R.id.download);
+			pay = (Button) view.findViewById(R.id.pay_order);
+			listentest = (Button) view.findViewById(R.id.listentest);
+			install.setOnClickListener(this);
+			download.setOnClickListener(this);
+			pay.setOnClickListener(this);
+			layout.addView(view);
+			return layout;
+		}
+
+		private class OnCheckedChangeListenerImpl implements
+				OnCheckedChangeListener {
+
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				if (price1.getId() == checkedId) {
+
+				} else if (price2.getId() == checkedId) {
+
+				} else if (price3.getId() == checkedId) {
+
+				}
+			}
+		}
+
+		// !!!!保存状态
+		@Override
+		public void onPause() {
+			super.onPause();
+		}
+
+		// 新起一个线程进行文件下载
+		public void downLoadVideo(String downLoadPth) {
+			Toast.makeText(getActivity(), R.string.start_download,
+					Toast.LENGTH_LONG).show();
+			mMediaPlayer = new MediaPlayer();
+			// Sets the audio stream type for this MediaPlayer
+			mMediaPlayer.setAudioStreamType(2);
+			MediaPlayerListener listener = new MediaPlayerListener();
+			listener.setAllListener(mMediaPlayer);
+
+			HttpRequest.DOWNLOAD_ID = downLoadPth;
+			ThreadForRunnable threadR = new ThreadForRunnable(getActivity(),
+					myProgressBar, handler);
+			// new Thread(threadR).start();
+			thread = new Thread(threadR);
+			thread.start();
+		}
+
+		@Override
+		public void response(int responseCode, int what, Bitmap bm) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void response(int responseCode, int what, String value,
+				Object object) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+		return true;
+	}
+
+	// 实现activity基于left传值更新rightFragment
+	@Override
+	public void onLeftSelected(int left_type) {
+		if (rFragment == null) {
+			rFragment = (RightFragment)
+			// getSupportFragmentManager().findFragmentById(R.id.right);
+			getSupportFragmentManager().findFragmentByTag("rightF");
+		}
+		FragmentManager fragmentManager = rFragment.getFragmentManager();
+		fragmentManager.popBackStack();
+		FragmentTransaction fragmentTransaction = fragmentManager
+				.beginTransaction();
+		fragmentTransaction.replace(R.id.right, rFragment);
+		fragmentTransaction.addToBackStack(null);
+		fragmentTransaction.commit();
+		if (rFragment != null) {
+			rFragment.updateRightFragmentBaseLeft(left_type);
+		}
+	}
+
+	@Override
+	public void oRightSelected(int left_type) {
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+		if (isfirst) {
+			if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+				myMusic.setFocusable(true);
+				myMusic.requestFocus();
+				myMusic.setSelected(true);
+			}
+			if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+				myMusic.setFocusable(true);
+				myMusic.requestFocus();
+				myMusic.setSelected(true);
+
+			}
+			if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+				myMusic.setFocusable(true);
+				myMusic.requestFocus();
+				myMusic.setSelected(true);
+			}
+			if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+				myMusic.setFocusable(true);
+				myMusic.requestFocus();
+				myMusic.setSelected(true);
+			}
+			isfirst = false;
+		}
+
+		if (!recommend.isFocused() & !classify.isFocused()
+				& !the_news.isFocused()) {
+			isFragment = false;
+		}
+		if (recommend.isFocused() || classify.isFocused()
+				|| the_news.isFocused()) {
+			isFragment = true;
+		}
+		if (classify.isFocused()) {
+			editor.clear();
+			editor.putString("from", "one");
+			editor.commit();
+		}
+		if (the_news.isFocused()) {
+			editor.clear();
+			editor.putString("from", "two");
+			editor.commit();
+		}
+		if (recommend.isFocused()) {
+			SharedPreferences.Editor edit = sp.edit();
+			editor.putString("from", "three");
+			editor.commit();
+		}
+		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+			if (itemView.findViewById(R.id.item_hor_01).isFocused()
+					|| itemView.findViewById(R.id.item_hor_06).isFocused()
+					|| itemView.findViewById(R.id.item_hor_11).isFocused()) {
+				String focuse = sp.getString("from", "none");
+				if (focuse.equals("one")) {
+					classify.setFocusable(true);
+					classify.requestFocus();
+				}
+				if (focuse.equals("three")) {
+					recommend.setFocusable(true);
+					recommend.requestFocus();
+				}
+				if (focuse.equals("two")) {
+					the_news.setFocusable(true);
+					the_news.requestFocus();
+				}
+			}
+		}
+		 if(keyCode == KeyEvent.KEYCODE_BACK){
+			 Dialog dialog = new AlertDialog.Builder(aQuery.getContext())
+				.setTitle(getResources().getString(R.string.exit))
+				.setMessage(
+						getResources().getString(R.string.exitContent)
+								)
+				.setPositiveButton(getResources().getString(R.string.confirm),
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								 if(audioStreamer!=null){
+									  if(audioStreamer.getMediaPlayer()!=null){
+										  if(audioStreamer.getMediaPlayer().isPlaying()){
+											  audioStreamer.stopplay();
+											  audioStreamer=null;
+										  }
+									  }
+								  }
+								 MainActivity.this.finish();
+								
+							}
+					
+				})
+				.setNegativeButton(getResources().getString(R.string.cancle),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								dialog.dismiss();
+							}
+						}).create();
+			 dialog.show();
+			 }
+		return super.onKeyDown(keyCode, event);
+	}
+
+	private void initInfoView() {
+	
+	}
+
+	private static void initHorizontalView() {
+		// initInfoView();
+		itemView.findViewById(R.id.item_hor_05).setNextFocusRightId(
+				R.id.item_hor_06);
+		itemView.findViewById(R.id.item_hor_10).setNextFocusRightId(
+				R.id.item_hor_11);
+		itemView.findViewById(R.id.item_hor_11).setNextFocusDownId(
+				R.id.page_pre);
+		itemView.findViewById(R.id.item_hor_12).setNextFocusDownId(
+				R.id.page_pre);
+		itemView.findViewById(R.id.item_hor_13).setNextFocusDownId(
+				R.id.page_pre);
+		itemView.findViewById(R.id.item_hor_14).setNextFocusDownId(
+				R.id.page_next);
+		itemView.findViewById(R.id.item_hor_15).setNextFocusDownId(
+				R.id.page_next);
+
+	}
+
+	public static void initDialog(String s) {
+
+		View view = null;
+		if ("three".equals(s)) {
+			view = inflater.inflate(R.layout.music_detail1, null);
+		}
+		if ("one".equals(s)) {
+			view = inflater.inflate(R.layout.soft_detail, null);
+		}
+		if ("three".equals(s)) {
+			view = inflater.inflate(R.layout.music_detail1, null);
+		}
+		builder.setContentView(view);
+		Window dialogWindow = builder.getWindow();
+		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+		dialogWindow.setGravity(Gravity.CENTER);
+		lp.width = 800;
+		lp.height = 640;
+		dialogWindow.setAttributes(lp);
+	}
+
+	/**
+	 * setAllMusic 音乐
+	 * 
+	 * @param list
+	 */
+	public static void setMusicMvInfo(ArrayList<Music> list, String path) {
+		for (int i = 0; i < horItems.length; i++) {
+			itemView.findViewById(horItems[14 - i]).setVisibility(View.VISIBLE);
+		}
+		if (list.size() < 15) {
+			int j = 15 - list.size();
+			for (int i = 0; i < j; i++) {
+				itemView.findViewById(horItems[14 - i]).setVisibility(
+						View.INVISIBLE);
+			}
+		}
+
+		UpdatePaging(path, "mv");
+		for (int i = 0; i < list.size(); i++) {
+			aQuery.find(horItems[i]).find(R.id.ItemTitle)
+					.text(list.get(i).getName());
+			String url = list.get(i).getImage_path();
+			String URL_QUERY_SINGLE_IMAGE = HttpRequest.WEB_ROOT
+					+ "download.action?token=myadmin&inputPath=";
+			String uslPath = URL_QUERY_SINGLE_IMAGE + url;
+			aQuery.find(horItems[i]).find(R.id.ItemIcon).image(uslPath);
+		}
+	}
+
+	public static void setMusicChapterInfo(ArrayList<Music> list, String path) {
+		for (int i = 0; i < horItems.length; i++) {
+			itemView.findViewById(horItems[14 - i]).setVisibility(View.VISIBLE);
+		}
+		if (list.size() < 15) {
+			int j = 15 - list.size();
+			for (int i = 0; i < j; i++) {
+				itemView.findViewById(horItems[14 - i]).setVisibility(
+						View.INVISIBLE);
+			}
+		}
+
+		UpdatePaging(path, "musicChapter");
+		for (int i = 0; i < list.size(); i++) {
+			aQuery.find(horItems[i]).find(R.id.ItemTitle)
+					.text(list.get(i).getName());
+			String url = list.get(i).getImage_path();
+			String URL_QUERY_SINGLE_IMAGE = HttpRequest.WEB_ROOT
+					+ "download.action?token=myadmin&inputPath=";
+			String uslPath = URL_QUERY_SINGLE_IMAGE + url;
+			aQuery.find(horItems[i]).find(R.id.ItemIcon).image(uslPath);
+		}
+	}
+
+	// Set softrecommend 软件推荐
+	private static void setSoftrecommend(ArrayList<SoftwareBean> list,
+			final View view) {
+
+		ImageDownloader Downloader = new ImageDownloader(aQuery.getContext());
+		for (int i = 0; i < 5; i++) {
+			view.findViewById(horItems[i]).setVisibility(View.VISIBLE);
+		}
+		int j = 0;
+		if (list.size() < 5) {
+			for (int s = 0; s < 5 - list.size(); s++) {
+				view.findViewById(horItems[4 - s]).setVisibility(View.GONE);
+			}
+		}
+		for (int i = 0; i < ((list.size() <= 5) ? list.size() : 5); i++) {
+			final String image_path_boots = list.get(i).getImage_path();
+			final int h = horItems[i];
+			SoftwareBean sb = list.get(i);
+			final String name = list.get(i).getName();
+			final String path_root = list.get(i).getDownload_path();
+			String image_path = sb.getImage_path();
+			final String title = sb.getName();
+			String turePath = HttpRequest.URL_QUERY_SINGLE_IMAGE + image_path;
+			Downloader.download(
+					turePath,
+					((ImageView) view.findViewById(horItems[i]).findViewById(
+							R.id.ItemIcon)));
+			((TextView) view.findViewById(horItems[i]).findViewById(
+					R.id.ItemTitle)).setText(title);
+			view.findViewById(horItems[i]).setOnClickListener(
+					new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+						String	appDownPath = HttpRequest.URL_QUERY_DOWNLOAD_URL
+									+ path_root;
+							((TextView) viewForsoftDetail
+									.findViewById(R.id.appname)).setText(name);
+							String path = HttpRequest.URL_QUERY_SINGLE_IMAGE
+									+ image_path_boots;
+							ImageView imageView = (ImageView) viewForsoftDetail
+									.findViewById(R.id.appimage);
+							ImageDownloader downloader = new ImageDownloader(
+									aQuery.getContext());
+							downloader.download(path, imageView);
+						}
+					});
+		}
+	}
+
+
+	static boolean isExit = false;
+	static Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			isExit = false;
+		}
+	};
+
+	
+
+	/**
+	 * setAllSoftinfo
+	 * 
+	 * @param softList
+	 *            设定软件列表信息
+	 */
+	public static void setSoftInfo(ArrayList<SoftwareBean> list,
+			final String path) {
+		for (int i = 0; i < horItems.length; i++) {
+			itemView.findViewById(horItems[14 - i]).setVisibility(View.VISIBLE);
+		}
+		if (list.size() < 15) {
+			int j = 15 - list.size();
+			for (int i = 0; i < j; i++) {
+				itemView.findViewById(horItems[14 - i]).setVisibility(
+						View.INVISIBLE);
+			}
+		}
+		UpdatePaging(path, "soft");
+		for (int i = 0; i < list.size(); i++) {
+			aQuery.find(horItems[i]).find(R.id.ItemTitle)
+					.text(list.get(i).getName());
+			String url = list.get(i).getImage_path();
+			String URL_QUERY_SINGLE_IMAGE = HttpRequest.WEB_ROOT
+					+ "download.action?token=myadmin&inputPath=";
+			String uslPath = URL_QUERY_SINGLE_IMAGE + url;
+			aQuery.find(horItems[i]).find(R.id.ItemIcon).image(uslPath);
+		}
+
+	}
+
+	// 音乐app
+	public static void setAppStoreList(final String path) {
+		if (!isSearch) {
+			currentPath = path.substring(0, path.lastIndexOf("&"));
+		}
+		viewForsoftDetail = inflater.inflate(R.layout.soft_detail, null);
+		final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(),
+				"loading。。", "please wait a moment。。");
+		ProDiaglogDimiss(Dialog);
+		for (int i = 0; i < horItems.length; i++) {
+			itemView.findViewById(horItems[i]).setVisibility(View.GONE);
+		}
+		aQuery.ajax(path, String.class, new AjaxCallback<String>() {// 这里的函数是一个内嵌函数如果是函数体比较复杂的话这种方法就不太合适了
+					@Override
+					public void callback(String url, String json,
+							AjaxStatus status) {
+						if (json != null) {
+							JSONObject jsObject;
+							try {
+								jsObject = new JSONObject(json);
+
+								JSONObject pageObject = jsObject
+										.getJSONObject("page");
+								String currentPage = pageObject
+										.getString("currentPage");
+								String pageSize = pageObject
+										.getString("pageSize");
+								int totalRows = pageObject.getInt("totalRows");
+								page.init(currentPage, pageSize, totalRows);
+								TextView tv = (TextView) (itemView.findViewById(R.id.field_page_index));
+								tv.setText("第" + page.getCurrentPage() + "页"+"/"+"总"+page.getTotalPage()+"页");
+								musicAppList = new ArrayList<SoftwareBean>();
+								musicAppList = JsonUtil.getProductList(json);
+								if (musicAppList.size() != 0) {
+									setSoftInfo(musicAppList, path);
+
+								} else {
+									Toast.makeText(
+											aQuery.getContext(),
+											aQuery.getContext()
+													.getResources()
+													.getString(
+															R.string.nocontent),
+											Toast.LENGTH_LONG).show();
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							Dialog.dismiss();
+							// successful ajax call, show status code and json
+							// content
+						} else {
+							Dialog.dismiss();
+							if (status.getCode() == -101) {
+								Toast.makeText(
+										aQuery.getContext(),
+										"Error:"
+												+ status.getCode()
+												+ aQuery.getContext()
+														.getResources()
+														.getString(
+																R.string.checknetwork),
+										Toast.LENGTH_LONG).show();
+							} else {
+								Toast.makeText(
+										aQuery.getContext(),
+										aQuery.getContext().getResources()
+												.getString(R.string.nocontent),
+										Toast.LENGTH_LONG).show();
+							}
+						}
+					}
+				});
+		for (int i = 0; i < horItems.length; i++) {
+			itemView.findViewById(horItems[i]).setOnClickListener(
+					new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent t = new Intent(aQuery.getContext(),AppDetailActivity.class);
+							 t.putExtra("itemid", v.getId());
+							 t.putExtra("appList", musicAppList);
+							  aQuery.getContext().startActivity(t);
+						}
+					});
+		}
+	};
+
+	// default UI
+
+	public static void setDefalutView() {
+		
+		isWhatRight = Constant.MYMUSIC;
+		setAppStoreList(Constant.MYMUSIC_APP + pageCount);
+	}
+
+	// setdown（music，mv）
+	public static void setMusicDown(String sid) {
+		// downcheck
+		String path = HttpRequest.URL_QUERY_DOWNLOAD_CHECK + "sid=" + sid
+				+ "&type=music";
+		final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(),
+				"Checking。。", "please wait a moment。。");
+		ProDiaglogDimiss(Dialog);
+		final Handler handler = new Handler();
+		Dialog.show();
+		aQuery.ajax(path, String.class, new AjaxCallback<String>() {
+
+			@Override
+			public void callback(String url, String json, AjaxStatus status) {
+				if (json != null) {
+					System.out.println(json);
+					Dialog.dismiss();
+					try {
+						JSONObject jb = new JSONObject(json);
+						if ("true".equals(jb.get("success"))) {
+							String filepath = jb.getString("filepath");
+							String filename = jb.getString("filename");
+							final String path = HttpRequest.URL_QUERY_DOWNLOAD_URL
+									+ filepath + "&" + "duomi";
+							new AsyncTask<Void, Void, Void>() {
+								@Override
+								protected Void doInBackground(Void... params) {
+									UpdateVersion updateVersion = UpdateVersion
+											.instance(aQuery.getContext(),
+													handler, false);
+									updateVersion.setUpdateUrl(path);
+									updateVersion.run();
+									return null;
+								}
+							}.execute();
+
+						} else {
+							String errmessage = jb.getString("errmessage");
+							if (errmessage != null) {
+								Toast.makeText(aQuery.getContext(), errmessage,
+										1).show();
+
+							} else {
+								Toast.makeText(
+										aQuery.getContext(),
+										aQuery.getContext()
+												.getResources()
+												.getString(
+														R.string.unknownError),
+										1).show();
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				}
+
+				else {
+					Dialog.dismiss();
+					if (status.getCode() == -101) {
+						Toast.makeText(
+								aQuery.getContext(),
+								aQuery.getContext().getResources()
+										.getString(R.string.checknetwork),
+								Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(aQuery.getContext(),
+								"Error:" + status.getCode(), Toast.LENGTH_LONG)
+								.show();
+					}
+				}
+			}
+		});
+	}
+
+	// setMusicChapterlist
+	public static void setMusicChapterList(final String path) {
+		if (!isSearch) {
+			currentPath = path.substring(0, path.lastIndexOf("&"));
+		}
+		for (int i = 0; i < horItems.length; i++) {
+			itemView.findViewById(horItems[i]).setVisibility(View.GONE);
+		}
+		initDialog("three");
+		final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(),
+				"loading。。", "please wait。。");
+		ProDiaglogDimiss(Dialog);
+		aQuery.ajax(path, String.class, new AjaxCallback<String>() {
+			@Override
+			public void callback(String url, String json, AjaxStatus status) {
+				if (json != null) {
+					JSONObject jsObject;
+				
+						try {
+							jsObject = new JSONObject(json);
+						
+						JSONObject pageObject = jsObject
+								.getJSONObject("page");
+						String currentPage = pageObject
+								.getString("currentPage");
+						String pageSize = pageObject
+								.getString("pageSize");
+						int totalRows = pageObject.getInt("totalRows");
+						page.init(currentPage, pageSize, totalRows);
+						TextView tv = (TextView) (itemView.findViewById(R.id.field_page_index));
+						tv.setText("第" + page.getCurrentPage() + "页"+"/"+"总"+page.getTotalPage()+"页");
+					music_chapterList = new ArrayList<Music>();
+					music_chapterList = JsonUtil.getMusicList(json);
+					if (music_chapterList.size() != 0) {
+						setMusicChapterInfo(music_chapterList, path);
+					} else {
+						Toast.makeText(
+								aQuery.getContext(),
+								aQuery.getContext().getResources()
+										.getString(R.string.nocontent),
+								Toast.LENGTH_LONG).show();
+					}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					Dialog.dismiss();
+				} else {
+					Dialog.dismiss();
+					if (status.getCode() == -101) {
+						Toast.makeText(
+								aQuery.getContext(),
+								"Error:"
+										+ status.getCode()
+										+ aQuery.getContext()
+												.getResources()
+												.getString(
+														R.string.checknetwork),
+								Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(
+								aQuery.getContext(),
+								aQuery.getContext().getResources()
+										.getString(R.string.nocontent),
+								Toast.LENGTH_LONG).show();
+					}
+				}
+				if (music_chapterList != null) {
+					for (int i = 0; i < horItems.length; i++) {
+						final String orderId = music_chapterList.get(i).getId();
+						itemView.findViewById(horItems[i]).setOnClickListener(
+								new OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Intent i = new Intent(aQuery.getContext(),MusicsDetailActivity.class);
+										i.putExtra("id", v.getId());
+										i.putExtra("orderId", orderId);
+										i.putExtra("list", music_chapterList);
+										i.putExtra("iswhat", ismusic);
+										i.putExtra("isWhatRight", isWhatRight);
+										i.putExtra("isWhatLeft", isWhatLeft);
+										aQuery.getContext().startActivity(i);
+									}
+								});
+					}
+				}
+			}
+		});
+	}
+
+	// setMV list
+	public static void setMusicMvList(final String path) {
+		if (!isSearch) {
+			currentPath = path.substring(0, path.lastIndexOf("&"));
+		}
+		for (int i = 0; i < horItems.length; i++) {
+			itemView.findViewById(horItems[i]).setVisibility(View.GONE);
+		}
+		initDialog("three");
+		final ProgressDialog Dialog = ProgressDialog.show(aQuery.getContext(),
+				"loading。。", "please wait a moment。。");
+		ProDiaglogDimiss(Dialog);
+		aQuery.ajax(path, String.class, new AjaxCallback<String>() {
+			@Override
+			public void callback(String url, String json, AjaxStatus status) {
+				if (json != null) {
+					JSONObject jsObject;
+				
+						try {
+							jsObject = new JSONObject(json);
+						
+					JSONObject pageObject = jsObject
+							.getJSONObject("page");
+					String currentPage = pageObject
+							.getString("currentPage");
+					String pageSize = pageObject
+							.getString("pageSize");
+					int totalRows = pageObject.getInt("totalRows");
+					page.init(currentPage, pageSize, totalRows);
+					TextView tv = (TextView) (itemView.findViewById(R.id.field_page_index));
+					tv.setText("第" + page.getCurrentPage() + "页"+"/"+"总"+page.getTotalPage()+"页");
+					mvlist = new ArrayList<Music>();
+					mvlist = JsonUtil.getMusicList(json);
+					if (mvlist.size() != 0) {
+						setMusicMvInfo(mvlist, path);
+					} else {
+						Toast.makeText(
+								aQuery.getContext(),
+								aQuery.getContext().getResources()
+										.getString(R.string.nocontent),
+								Toast.LENGTH_LONG).show();
+					}} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				
+					Dialog.dismiss();
+				} else {
+					Dialog.dismiss();
+					if (status.getCode() == -101) {
+						Toast.makeText(
+								aQuery.getContext(),
+								"Error:"
+										+ status.getCode()
+										+ aQuery.getContext()
+												.getResources()
+												.getString(
+														R.string.checknetwork),
+								Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(
+								aQuery.getContext(),
+								aQuery.getContext().getResources()
+										.getString(R.string.nocontent),
+								Toast.LENGTH_LONG).show();
+					}
+				}
+				if (mvlist.size() != 0) {
+					for (int i = 0; i < horItems.length; i++) {
+						final String orderid = mvlist.get(i).getId();
+						itemView.findViewById(horItems[i]).setOnClickListener(
+								new OnClickListener() {
+									public void onClick(View v) {
+										Intent i = new Intent(aQuery.getContext(),MusicsDetailActivity.class);
+										i.putExtra("id", v.getId());
+										i.putExtra("orderId", orderid);
+										i.putExtra("list", mvlist);
+										i.putExtra("iswhat", isMv);
+										i.putExtra("isWhatRight", isWhatRight);
+										i.putExtra("isWhatLeft", isWhatLeft);
+										aQuery.getContext().startActivity(i);
+									}
+								});
+					}
+				}
+			}
+		});
+	}
+
+
+	/**
+	 * check version
+	 */
+	private void checkVersion() {
+		final Handler hd = new Handler();
+		// TODO Auto-generated method stub
+		new AsyncTask<Void, Void, String>() {
+			@Override
+			protected void onPostExecute(String result) {
+				if (isUpdate) {
+					setUpdateDiago(path, desc);
+				}
+				super.onPostExecute(path);
+			}
+
+			String path;
+			String desc;
+			private ArrayList<VersionInfo> versionInfoList;
+
+			@Override
+			protected String doInBackground(Void... params) {
+				try {
+					URL url = new URL(HttpRequest.URL_UPDATE);
+					URLConnection con = url.openConnection();
+					InputStream is = con.getInputStream();
+					XmlParse xp = new XmlParse();
+					versionInfoList = xp.getVersionInfo(is);
+					for (int i = 0; i < versionInfoList.size(); i++) {
+						if ("FigureStore".equals(versionInfoList.get(i)
+								.getName())) {
+							String updateVersion = versionInfoList.get(i)
+									.getVersion();
+							PackageManager packageManager = getPackageManager();
+							PackageInfo packInfo = packageManager
+									.getPackageInfo(getPackageName(), 0);
+							String version = packInfo.versionName;
+							System.out.println("version============" + version);
+							if (!version.equals(updateVersion)) {
+								isUpdate = true;
+							}
+							path = HttpRequest.URL_UPDATE_ROOT
+									+ versionInfoList.get(i).getFilepath();
+							desc = versionInfoList.get(i).getDescription();
+							System.out.println("下载的地址为" + path);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return path;
+			}
+		}.execute();
+	}
+
+	/**
+	 * appearUpdateDialog
+	 * 
+	 * @param path
+	 *            Update url path
+	 * @param desc
+	 *            Update content
+	 */
+	void setUpdateDiago(final String path, String desc) {
+		final Handler hd = new Handler();
+
+		// TODO Auto-generated method stub
+		Dialog dialog = new AlertDialog.Builder(aQuery.getContext())
+				.setTitle(getResources().getString(R.string.findnewversion))
+				.setMessage(
+						getResources().getString(R.string.vserioncontent)
+								+ "\n" + desc)
+				.setPositiveButton(getResources().getString(R.string.confirm),
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								new AsyncTask<Void, Void, Void>() {
+									@Override
+									protected Void doInBackground(
+											Void... params) {
+										UpdateVersion uv = UpdateVersion
+												.instance(aQuery.getContext(),
+														hd, true);
+										uv.setUpdateUrl(path);
+										uv.run();
+										return null;
+									}
+
+								}.execute();
+							}
+						})
+				.setNegativeButton(getResources().getString(R.string.cancle),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								dialog.dismiss();
+							}
+						}).create();
+		dialog.show();
+
+	}
+
+	/**
+	 * set Next or Pre page
+	 * 
+	 * @param path
+	 *            Url path
+	 * @param what
+	 *            soft or musicChapter or mv
+	 * 
+	 */
+	static void UpdatePaging(final String path, final String what) {
+		final TextView tv = (TextView) itemView
+				.findViewById(R.id.field_page_index);
+		Button btn_pre = (Button) itemView.findViewById(R.id.page_pre);
+		btn_pre.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+				if (page.isFirstPage()) {
+					pageCount = 1;
+					Toast.makeText(aQuery.getContext(), "已经是第一页了", 1).show();
+					tv.setText("第" + pageCount + "页");
+				} else {
+					pageCount = page.getCurrentPage()-1;
+					tv.setText("第" + pageCount + "页"+"/"+"总"+page.getTotalPage()+"页");
+					String truePath = path.substring(0,
+							path.lastIndexOf("=") + 1);
+					System.out.println("TruePATH===========" + truePath);
+					String myPath = truePath + pageCount;
+					if (what.equals("soft")) {
+						setAppStoreList(myPath);
+					} else if (what.equals("musicChapter")) {
+						setMusicChapterList(myPath);
+					} else if (what.equals("mv")) {
+						setMusicMvList(myPath);
+					}
+				}
+			}
+		});
+		Button btn_next = (Button) itemView.findViewById(R.id.page_next);
+		btn_next.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(!page.isLastPage()){
+				if (what.equals("soft")) {
+						Toast.makeText(aQuery.getContext(), "已经是最后一页了", 1)
+						.show();
+						pageCount = page.getCurrentPage() + 1;
+						tv.setText("第" + pageCount + "页"+"/"+"总"+page.getTotalPage()+"页");
+						String truePath = path.substring(0,
+								path.lastIndexOf("=") + 1);
+						String myPath = truePath + pageCount;
+						setAppStoreList(myPath);
+					
+				} else if (what.equals("musicChapter")) {
+						Toast.makeText(aQuery.getContext(), "已经是最后一页了", 1)
+						.show();
+						pageCount = page.getCurrentPage() + 1;;
+						tv.setText("第" + pageCount + "页"+"/"+"总"+page.getTotalPage()+"页");
+						String truePath = path.substring(0,
+								path.lastIndexOf("=") + 1);
+						String myPath = truePath + pageCount;
+						setMusicChapterList(myPath);
+
+				} else if (what.equals("mv")) {
+						Toast.makeText(aQuery.getContext(), "已经是最后一页了", 1)
+						.show();
+						pageCount = page.getCurrentPage() + 1;
+						tv.setText("第" + pageCount + "页"+"/"+"总"+page.getTotalPage()+"页");
+						String truePath = path.substring(0,
+								path.lastIndexOf("=") + 1);
+						String myPath = truePath + pageCount;
+						setMusicMvList(myPath);
+				}
+			}else{
+				Toast.makeText(aQuery.getContext(), "已经为最后一页了", 1).show();
+			}
+			}
+		});
+
+	}
+	
+	  public static void DiaglogDimiss(Dialog dialog){
+		  dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+				@Override
+				public boolean onKey(DialogInterface dialog, int keyCode,
+						KeyEvent event) {
+					 if (keyCode == KeyEvent.KEYCODE_BACK){
+					          // Perform action on key press
+						 dialog.dismiss();
+						 whatisplay = 1;
+						  if(audioStreamer!=null){
+							  if(audioStreamer.getMediaPlayer()!=null){
+								  if(audioStreamer.getMediaPlayer().isPlaying()){
+									  audioStreamer.getMediaPlayer().stop();
+									  audioStreamer=null;
+								  }
+							  }
+						  }
+					          return true;
+					        }
+					return false;
+				}
+			});
+	  }
+	  public static void ProDiaglogDimiss(ProgressDialog dialog){
+		  dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+			  @Override
+			  public boolean onKey(DialogInterface dialog, int keyCode,
+					  KeyEvent event) {
+				  if (keyCode == KeyEvent.KEYCODE_BACK){
+					  // Perform action on key press
+					  dialog.dismiss();
+					  if(audioStreamer!=null){
+						  if(audioStreamer.getMediaPlayer()!=null){
+							  if(audioStreamer.getMediaPlayer().isPlaying()){
+								  audioStreamer.getMediaPlayer().stop();
+								  audioStreamer=null;
+							  }
+						  }
+					  }
+					  return true;
+				  }
+				  return false;
+			  }
+		  });
+	  }
+		@Override
+		public boolean onKeyUp(int keyCode, KeyEvent event) {
+			// TODO Auto-generated method stub
+			return super.onKeyUp(keyCode, event);
+		}
 }

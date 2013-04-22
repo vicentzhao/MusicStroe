@@ -1,3 +1,4 @@
+#Mon Apr 22 16:24:11 CST 2013
 eclipse.preferences.version=1
 encoding//src/com/ccdrive/musicdrive/util/UpdateVersion.java=UTF-8
 encoding//src/com/ccdrive/musicstore/adapter/SoftwareListAdapter.java=UTF-8
@@ -6,7 +7,7 @@ encoding//src/com/ccdrive/musicstore/http/CopyOfHttpRequest.java=UTF-8
 encoding//src/com/ccdrive/musicstore/http/FileCache.java=UTF-8
 encoding//src/com/ccdrive/musicstore/http/HttpRequest.java=UTF-8
 encoding//src/com/ccdrive/musicstore/http/TokenHttpsUtil.java=UTF-8
-encoding//src/com/ccdrive/musicstore/main/MainActivity1.java=UTF-8
+encoding//src/com/ccdrive/musicstore/main/MainActivity.java=UTF-8
 encoding//src/com/ccdrive/musicstore/suffix/CryptUtil.java=UTF-8
 encoding//src/com/ccdrive/musicstore/suffix/StrBinaryTurn.java=UTF-8
 encoding/<project>=UTF-8
